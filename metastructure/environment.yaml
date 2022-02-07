@@ -1,0 +1,7 @@
+name: cadquery
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - cadquery=master
+prefix: /home/rage/anaconda3/envs/cadquery
