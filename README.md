@@ -11,10 +11,20 @@ Repository structure:
 Todos:
 
 [ ] Optimise the number of vertices metastrucuture
+
 [ ] Logging: number of voxels, time to voxelise, to generate metastructure etc
+
 [ ] Multithreading final mesh generation
+
 [ ] Metastructure on boundaries?
 
+# Installation
+I used conda enviroment to manage packages. There are two environments, one for the generate the metastructure and one to generate the final mesh.
+
+You can install them both by running:
+
+```conda create --name cadquery --file ./metastructure/env.txt```
+```conda create --name open3d --file ./code/env.txt```
 
 # Performance
 
