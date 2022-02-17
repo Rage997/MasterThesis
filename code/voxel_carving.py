@@ -61,11 +61,8 @@ def preprocess(model: o3d.geometry.TriangleMesh) -> o3d.geometry.TriangleMesh:
 def voxel_carving(obj: o3d.geometry.TriangleMesh,
                   camera_path,
                   cubic_size,
-                  voxel_resolution,
-                  w=300,
-                  h=300,
-                  use_depth=True,
-                  surface_method='pointcloud'):
+                  voxel_resolution
+                  ):
     
     obj.compute_vertex_normals()
     camera_sphere = o3d.io.read_triangle_mesh(camera_path)
@@ -85,7 +82,7 @@ def voxel_carving(obj: o3d.geometry.TriangleMesh,
 
     # setup visualizer to render depthmaps
     vis = o3d.visualization.Visualizer()
-    vis.create_window(width=w, height=h, visible=False)
+    vis.create_window(width=300, height=300, visible=False)
     vis.add_geometry(obj)
     vis.get_render_option().mesh_show_back_face = True
     ctr = vis.get_view_control()
@@ -112,30 +109,16 @@ def voxel_carving(obj: o3d.geometry.TriangleMesh,
             param.extrinsic,
             depth_scale=1)
 
-        # depth map carving method
-        if use_depth:
-            voxel_carving.carve_depth_map(o3d.geometry.Image(depth), param)
-        else:
-            voxel_carving.carve_silhouette(o3d.geometry.Image(depth), param)
-        print("Carve view %03d/%03d" % (cid + 1, len(camera_sphere.vertices)))
+        voxel_carving.carve_depth_map(o3d.geometry.Image(depth), param)
+        if cid%100 == 0:
+            print("Carve view %03d/%03d" % (cid + 1, len(camera_sphere.vertices)))
     vis.destroy_window()
 
-    # add voxel grid survace
-    print('Surface voxel grid from %s' % surface_method)
-    if surface_method == 'pointcloud':
-        voxel_surface = o3d.geometry.VoxelGrid.create_from_point_cloud_within_bounds(
-            pcd_agg,
-            voxel_size=cubic_size / voxel_resolution,
-            min_bound=(-cubic_size / 2, -cubic_size / 2, -cubic_size / 2),
-            max_bound=(cubic_size / 2, cubic_size / 2, cubic_size / 2))
-    elif surface_method == 'mesh':
-        voxel_surface = o3d.geometry.VoxelGrid.create_from_triangle_mesh_within_bounds(
-            obj,
-            voxel_size=cubic_size / voxel_resolution,
-            min_bound=(-cubic_size / 2, -cubic_size / 2, -cubic_size / 2),
-            max_bound=(cubic_size / 2, cubic_size / 2, cubic_size / 2))
-    else:
-        raise Exception('invalid surface method')
+    voxel_surface = o3d.geometry.VoxelGrid.create_from_point_cloud_within_bounds(
+        pcd_agg,
+        voxel_size=cubic_size / voxel_resolution,
+        min_bound=(-cubic_size / 2, -cubic_size / 2, -cubic_size / 2),
+        max_bound=(cubic_size / 2, cubic_size / 2, cubic_size / 2))
     voxel_carving_surface = voxel_surface + voxel_carving
 
     return voxel_carving_surface, voxel_carving, voxel_surface
