@@ -29,3 +29,9 @@ You can install them both by running:
 # Performance
 
 The code is fast. To fill a voxelGrid of 715597 voxels, it took 43 seconds on my machine (Ryzen 3700).
+
+# Printing
+
+Printing the metastructure is exceptionally hard due to its fine details. Lower your wall line width to something like half the wall thickness (i.e. 0.225 mm) and see if that works. With a standard 0.4 mm nozzle I've had success printing tiny details with 0.2 mm line width or smaller. In Cura (not sure about other slicers) you also need to set the "Outer wall inset" to zero.
+You also need to drastically decrease the print speed. I've been printing at ~12 mm/s. After the first layer, you can slightly increase the speed.
+You may also 
