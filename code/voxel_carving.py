@@ -29,6 +29,12 @@ def get_extrinsic(xyz):
     trans[:3, 3] = t
     return trans
 
+def get_scale(model: o3d.geometry.TriangleMesh):
+    min_bound = model.get_min_bound()
+    max_bound = model.get_max_bound()
+    scale = np.linalg.norm(max_bound - min_bound) / 2.0
+    return scale
+
 def preprocess(model: o3d.geometry.TriangleMesh) -> o3d.geometry.TriangleMesh:
     """Pre-process an object by centering it to [0, 0, 0] and uniformly scaling it to [1, 1, 1]
      
@@ -37,8 +43,9 @@ def preprocess(model: o3d.geometry.TriangleMesh) -> o3d.geometry.TriangleMesh:
 
     Returns:
         o3d.geometry.TriangleMesh: Pre-processed model
-    """    
-    
+    """
+    global scale
+
     min_bound = model.get_min_bound()
     max_bound = model.get_max_bound()
     center = min_bound + (max_bound - min_bound) / 2.0
@@ -46,6 +53,9 @@ def preprocess(model: o3d.geometry.TriangleMesh) -> o3d.geometry.TriangleMesh:
     vertices = np.asarray(model.vertices)
     vertices -= center
     model.vertices = o3d.utility.Vector3dVector(vertices / scale)
+
+    # save for debugging
+    # o3d.io.write_triangle_mesh(f'../data/preprocess.stl', model)
     return model
 
 def voxel_carving(obj: o3d.geometry.TriangleMesh,
@@ -130,16 +140,26 @@ def voxel_carving(obj: o3d.geometry.TriangleMesh,
 
     return voxel_carving_surface, voxel_carving, voxel_surface
 
-def get_voxel_grid(obj_path):
-    '''Returns the voxel grid of a given stl'''
+def get_voxel_grid(obj_path: str):
+    """Given a path to a stl, it returns a voxel grid in unit coordinates and the
+        world matrix of the original mesh
+
+    Args:
+        obj_path (_type_): path to stl
+
+    Returns:
+        o3d.VoxelGrid: VoxelGrid in unit coordinates
+
+    """    
     
-    global cubic_size, voxel_resolution, camera_path
+    global cubic_size, voxel_resolution, camera_path, scale
 
     base_obj = o3d.io.read_triangle_mesh(obj_path)
     voxel_grid, _, _ = voxel_carving(
         base_obj, camera_path, cubic_size, voxel_resolution)
 
-    return voxel_grid
+    print(f'The scale of the object is: {scale}')
+    return voxel_grid, scale
 
 if __name__ == '__main__':
     # Testing library

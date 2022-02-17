@@ -3,7 +3,7 @@ from voxel_carving import get_voxel_grid
 import open3d as o3d
 # import threading
 import timeit
-from settings import output_filename, meta_path
+from settings import output_filename, meta_path, obj_path
 
 
 def populate_voxel(voxel):
@@ -11,7 +11,7 @@ def populate_voxel(voxel):
     result_mesh = meta_to_voxel(voxel)
     stop = timeit.default_timer()
     print('Generating the mesh took: ', stop - start)
-    return post_process(result_mesh)
+    return result_mesh
 
 def meta_to_voxel(voxel: o3d.geometry.Voxel):
     '''Insert a metastructure in a voxel'''
@@ -28,11 +28,11 @@ def meta_to_voxel(voxel: o3d.geometry.Voxel):
 
     return result_mesh
 
-def post_process(obj: o3d.geometry.TriangleMesh):
-    # obj.translate([0.5,0.5,0.5], relative=True)
-    # obj.scale(voxel_size, [0,0,0])
+def post_process(obj: o3d.geometry.TriangleMesh, scale = 1):
+    obj.translate([0, 0, 0], relative=True)
+    obj.scale(scale, center=[0, 0, 0])
     # obj.translate(voxel_grid.origin, relative=True)
-    # obj.merge_close_vertices(0.0000001)
+    obj.merge_close_vertices(0.0000001)
     obj = o3d.geometry.TriangleMesh.compute_triangle_normals(obj)
     return obj
 
