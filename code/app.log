@@ -1,0 +1,5 @@
+INFO[main.py:25]:Started
+DEBUG[voxel_carving.py:61]:Saving STL of pre-processed mesh.
+DEBUG[voxel_carving.py:61]:Saving STL of pre-processed mesh.
+DEBUG[combine.py:15]:Generating the mesh took: 0.008756120999997563
+INFO[main.py:36]:Finished

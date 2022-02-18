@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 from voxel_carving import get_voxel_grid
 import open3d as o3d
@@ -5,13 +6,13 @@ import open3d as o3d
 import timeit
 from settings import output_filename, meta_path, \
                     obj_path, visualization
-
+import logging
 
 def populate_voxel(voxel):
     start = timeit.default_timer()
     result_mesh = meta_to_voxel(voxel)
     stop = timeit.default_timer()
-    print('Generating the mesh took: ', stop - start)
+    logging.debug(f'Generating the mesh took: {stop - start}')
     return result_mesh
 
 def meta_to_voxel(voxel: o3d.geometry.Voxel):
@@ -41,6 +42,7 @@ def mesh_to_stl(mesh, path = output_filename):
     o3d.io.write_triangle_mesh(path, mesh)
 
 def show_mesh(mesh):
+    logging.debug('Rendering mesh...wait...')
     o3d.visualization.draw_geometries([mesh])
 
 if __name__ == '__main__':

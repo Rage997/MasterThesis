@@ -3,6 +3,7 @@ import numpy as np
 # import copy
 # import os
 from settings import output_filename, camera_path, visualization, cubic_size, voxel_resolution
+import logging
 
 def xyz_spherical(xyz):
     x = xyz[0]
@@ -33,6 +34,7 @@ def get_scale(model: o3d.geometry.TriangleMesh):
     min_bound = model.get_min_bound()
     max_bound = model.get_max_bound()
     scale = np.linalg.norm(max_bound - min_bound) / 2.0
+    logging.debug(f'The scale of the object is: {scale}')
     return scale
 
 def preprocess(model: o3d.geometry.TriangleMesh) -> o3d.geometry.TriangleMesh:
@@ -55,7 +57,9 @@ def preprocess(model: o3d.geometry.TriangleMesh) -> o3d.geometry.TriangleMesh:
     model.vertices = o3d.utility.Vector3dVector(vertices / scale)
 
     # save for debugging
-    # o3d.io.write_triangle_mesh(f'../data/preprocess.stl', model)
+    if (logging.CRITICAL >= logging.root.level):
+        logging.CRITICAL('Saving STL of pre-processed mesh.')
+        o3d.io.write_triangle_mesh(f'../data/preprocess.stl', model)
     return model
 
 def voxel_carving(obj: o3d.geometry.TriangleMesh,
@@ -137,11 +141,12 @@ def get_voxel_grid(obj_path: str):
     
     global cubic_size, voxel_resolution, camera_path, scale
 
+    logging.info("Generating Voxel Grid.")
     base_obj = o3d.io.read_triangle_mesh(obj_path)
     voxel_grid, _, _ = voxel_carving(
         base_obj, camera_path, cubic_size, voxel_resolution)
-
-    print(f'The scale of the object is: {scale}')
+    logging.debug(f'The scale of the object is: {scale}')
+    logging.info("Voxel Grid created.")
     return voxel_grid, scale
 
 if __name__ == '__main__':
