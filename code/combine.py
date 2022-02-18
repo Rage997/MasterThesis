@@ -3,7 +3,8 @@ from voxel_carving import get_voxel_grid
 import open3d as o3d
 # import threading
 import timeit
-from settings import output_filename, meta_path, obj_path
+from settings import output_filename, meta_path, \
+                    obj_path, visualization
 
 
 def populate_voxel(voxel):
@@ -32,7 +33,7 @@ def post_process(obj: o3d.geometry.TriangleMesh, scale = 1):
     obj.translate([0, 0, 0], relative=True)
     obj.scale(scale, center=[0, 0, 0])
     # obj.translate(voxel_grid.origin, relative=True)
-    obj.merge_close_vertices(0.0000001)
+    # obj.merge_close_vertices(0.0000001)
     obj = o3d.geometry.TriangleMesh.compute_triangle_normals(obj)
     return obj
 
