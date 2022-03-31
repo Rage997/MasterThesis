@@ -1,0 +1,5 @@
+name: invasive-species
+channels:
+  - conda-forge
+  - defaults
+prefix: /home/rage/anaconda3/envs/invasive-species
