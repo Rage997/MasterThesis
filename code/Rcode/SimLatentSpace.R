@@ -1,6 +1,6 @@
 # Params
 negBin=F
-alpha = 3
+alpha = 3 # pioisson alpha
 # n.iter = 10
 p = 10
 p.y = p*(p-1)/2
@@ -18,7 +18,6 @@ sender.true = rep(0, p)
 receiver.true = rep(0, p)
 spline.time.true = rep(alpha, n)
 
-# TODO: what is this?
 logis=function(time, a, b, c) a*(exp(10*(time/n-b))/(1 + exp(10*(time/n-b)))-.5) + c
 
 # Generate a, b, c from uniform distribution using diffrent parameters
@@ -44,25 +43,25 @@ for(i in 1:(p*d.true))X[, i] = logis(time, a[i], b[i], c[i])
 matplot(X, ty="l")
 
 
-# TODO: no idea? estimating lambda?
+# Estimating Lambda from data
 lambda.true = array(NA, dim = c(p, p, n))
 Y.array = array(NA, dim = c(p, p, n))
 for(t in 1:n)for(i in 1:p)for(j in 1:p){
   if( i!=j ){
     lambda.true[i,j,t] = exp(  spline.time.true[t] + sender.true[i] + receiver.true[j] - as.numeric(dist(matrix(X[ t, c((i-1)*d.true + 1:d.true, (j-1)*d.true + 1:d.true) ], ncol = d.true, byrow=T))^2) ) 
-    Y.array[ i, j, t] = if(negBin==T){rnbinom( 1, 1, mu=lambda.true[ i, j, t])}else{rpois( 1, lambda.true[ i, j, t])}
+    Y.array[ i, j, t] = if(negBin==T){rnbinom( 1, 1, mu=lambda.true[ i, j, t])}else{rpois( 1, lambda.true[ i, j, t])} # rnbinm not necessary. Sample from poisson
   }
 }
 
-# plot(time, lambda.true[ 1, 2, ], ylim=c(0, max(Y.array, na.rm = T)), ty="l")
-
+# Plot lambdas
+plot(time, lambda.true[ 1, 2, ], ylim=c(0, max(Y.array, na.rm = T)), ty="l")
 for(i in 1:p)for(j in 1:p){
   if( i!=j ){
     lines(time, lambda.true[ i, j, ], col=i+j)
   }
 }
 
-# TODO: go over this again?
+# LAtent space is symmetric. Sum the rates 
 Y.kf = matrix( NA, n, p*(p-1)/2 )
 lambda.true.sum = matrix(NA, n, p*(p-1)/2) 
 for(t in 1:n){
@@ -74,10 +73,12 @@ for(t in 1:n){
   }
 }
 
-
+# Init with real values
 x_0  = as.vector(matrix( X[ 1, ], nrow=d.true)[1:d, ])
+# See in hazard function gam.sum.pred.vec
 gam.sum.pred.mat = matrix( 2*exp(alpha), n, p*(p-1)/2)  # its twice the rate!!!!!!!
 
+# Static = all the states "compressed" into 1
 Y.kf.static = apply(Y.kf, 2, sum)
 Y.kf.static = matrix(Y.kf.static, nrow=1)
 gam.sum.pred.mat.static = matrix( n*2*exp(alpha), 1, p*(p-1)/2)  # its twice the rate!!!!!!!
