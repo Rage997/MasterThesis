@@ -8,6 +8,11 @@ require(mgcv)
 # p.y = p*(p-1)/2
 # n = 100
 
+# transition matrix : KF post ~ T*prior 
+# transition noise: Q
+# observation matrix: taylor expansion hazard funciton
+# observation noise: var(poisson)
+# initial state prior: X0
 
 # hazard function / rate -> poisson variable
 h.function=function(x.vec, gam.sum.pred.vec) gam.sum.pred.vec * exp( -as.vector(dist(matrix(x.vec, ncol=d, byrow=T))^2))
@@ -21,7 +26,7 @@ d.h.function = function(x.i, x.j, gam.sum.pred.ij){
 X.prior = X.post = matrix(NA, n, p*d) # points in latent space (Expected value of X)
 P.prior = P.post = array(NA, dim=c(p*d,p*d,n)) # variance of X
 
-#tuning parameters
+#tuning parameters (transition noise)
 Q = diag(0.001, p*d) # X_t+1  = X_T + eps_t : sigma is var(eps)
 
 # Inizialization: starting points    TRY WITH DIFFERENT X STARTING POINTS!
@@ -88,6 +93,7 @@ for(iter in 1:n.iter){
     }
     # See page 9
     H = build.H(X.prior[ t, ], gam.sum.pred.mat[ t, ]) #first derivative (gam.sum is an offset) on X_prior
+    # you can do taylor: mu(x) = mu(x0) + d_h(x - x0)
     mu = h.function(X.prior[ t, ], gam.sum.pred.mat[ t, ]) # poisson parameter -> variance
     vv = mu 
     for(k in repeat.filter){ # not necessary
@@ -156,8 +162,7 @@ for(iter in 1:n.iter){
 }
 
 
-# TODO: what is this?
-#empirical Kullback Leibler
+# This is used for debugging
 E1 = matrix( NA, n, p*(p-1)/2 )
 # E2 = matrix( NA, n, p*(p-1)/2 )
 for(t in 1:n){
@@ -168,6 +173,7 @@ for(t in 1:n){
       j.ind = (j-1)*d + (1:d)
       x.i = X.smooth[t, i.ind]
       x.j = X.smooth[t, j.ind]
+      # pg 13 eq(10)
       E1[t, ii] = exp(-dist(rbind(x.i, x.j))^2) + 0.5 * sum(diag(hess(x.i, x.j) %*% P.smooth[ c(i.ind, j.ind), c(i.ind, j.ind), t]) )
       # E2[ii, t] = -dist(rbind(x.i, x.j)) + 0.5 * sum(diag(hess2(x.i, x.j) %*% P.smooth[ c(i.ind, j.ind), c(i.ind, j.ind), t]) )
       if(E1[t, ii]<0 | E1[t, ii]>1){
@@ -181,10 +187,24 @@ for(t in 1:n){
   }
 }
 
+#empirical Kullback Leibler
+# KL=NULL
+# for(k in 1:100){
+#   Y.gen = matrix(rpois( length(Y.kf), lambda.true.sum ), nrow(Y.kf), ncol(Y.kf))
+#   KL= c(KL, mean( dpois(Y.gen, lambda.true.sum, log=T) - dpois(Y.gen, E1*gam.sum.pred.mat, log=T)  ) )
+# }
+# KL=mean(KL)
 
-KL=NULL
-for(k in 1:100){
-  Y.gen = matrix(rpois( length(Y.kf), lambda.true.sum ), nrow(Y.kf), ncol(Y.kf))
-  KL= c(KL, mean( dpois(Y.gen, lambda.true.sum, log=T) - dpois(Y.gen, E1*gam.sum.pred.mat, log=T)  ) )
-}
-KL=mean(KL)
+#re-expand data
+# if(scale.data==T){
+# gam.sum.pred.mat = gam.sum.pred.mat %*% diag(1/res.fact) #rescale columns
+# Y.kf = Y.kf %*% diag(1/res.fact) #rescale columns
+# }
+
+# ref = fit.gam$coefficients[(length(fit.gam$coefficients)-2*p+1):length(fit.gam$coefficients)] - c(sender.true - mean(sender.true), receiver.true - mean(receiver.true)) 
+# ref = sqrt(sum(rss^2)/(2*p))
+
+
+#save(KL, compTime, file=paste("/home/artico/simulation1/EKF_simId", bbb,"_n", n,"_p", p,"_d", d,"_dTrue", d.true,"_dd", dd,".RData", sep="") )
+
+res = c( KL, as.numeric(compTime[3]) )
