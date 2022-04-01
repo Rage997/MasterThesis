@@ -142,7 +142,7 @@ for(iter in 1:n.iter){
       }  
     }
     B.save[ , , t] = B 
-  }
+  } -> compTime #system.time end
   
   x_0 = x_0.smooth
   P_0 = P_0.smooth
@@ -208,3 +208,20 @@ for(t in 1:n){
 #save(KL, compTime, file=paste("/home/artico/simulation1/EKF_simId", bbb,"_n", n,"_p", p,"_d", d,"_dTrue", d.true,"_dd", dd,".RData", sep="") )
 
 res = c( KL, as.numeric(compTime[3]) )
+
+
+# PLOTS
+lambda.est = matrix(NA, 100, p*(p-1)/2)
+for(t in 1:n){
+  lambda.est[ t, ] = h.function(X.smooth[t, ], gam.sum.pred.mat[t, ])
+}
+
+for(i in 1:45){
+  plot(Y.kf[, i], ty="p", main=i)
+  lines(lambda.true.sum[, i])
+  lines(lambda.est[, i], col=2)
+}
+
+
+matplot(X.smooth, ty="l")
+for(i in 1:n)plot(matrix(X.smooth[i,], ncol=2, byrow=T ), main=i)
