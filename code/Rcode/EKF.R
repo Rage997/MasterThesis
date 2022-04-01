@@ -2,11 +2,11 @@ require(Matrix)
 require(mgcv)
 
 # Taken from SimLatentSpace
-n.iter = 500
-d = 3
-p = 5
-p.y = p*(p-1)/2
-n = 100
+# n.iter = 500
+# d = 3
+# p = 5
+# p.y = p*(p-1)/2
+# n = 100
 
 
 # hazard function / rate -> poisson variable
@@ -155,6 +155,8 @@ for(iter in 1:n.iter){
   Q = diag(rep(apply(matrix(diag(Q.hat), ncol=p), 2, mean), each=d))  
 }
 
+
+# TODO: what is this?
 #empirical Kullback Leibler
 E1 = matrix( NA, n, p*(p-1)/2 )
 # E2 = matrix( NA, n, p*(p-1)/2 )
