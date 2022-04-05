@@ -8,6 +8,7 @@ X <- mat
 
 n <- dim(X)[2]
 # p, d hardcoded in python
-p <- 16
-d <- 20
+p <- 18
+d <- 31
 d.true <- d
+n.iter < 1
