@@ -1,3 +1,3 @@
 # Configuration file
 
-filename = 'GlobalAlienSpeciesFirstRecordDatabase_v2.xlsx'
+filename = '../data/GlobalAlienSpeciesFirstRecordDatabase_v2.xlsx'
