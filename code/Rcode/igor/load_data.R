@@ -2,8 +2,8 @@
 library(reticulate)
 np <- import("numpy")
 # import data
-mat <- np$load("../matrix.npy") # for matrix in R^{T, S, R}
-# mat <- np$load("../matrix_full.npy") # for full matrix in R^{T, S+R, S+R}
+# mat <- np$load("../matrix_full.npy") # for matrix in R^{T, S, R}
+mat <- np$load("../matrix_full.npy") # for full matrix in R^{T, S+R, S+R}
 Y.kf <- mat
 
 n <- dim(Y_kf)[1] # timesteps
