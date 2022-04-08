@@ -89,6 +89,6 @@ class InvasiveSpecies:
         # print(n_s, n_r)
         M = self.M.reshape(len(self.time), self.Ns*self.Nr)
         # M = M.reshape(len(time), (p)**2) # if full matix
-        # print(f's = {n_s}, r = {n_r}')
-        # print(M.shape)
-        np.save('matrix_full.npy', M)
+        print(f's = {self.Ns}, r = {self.Nr}')
+        print(M.shape)
+        np.save('../data/matrix.npy', M)

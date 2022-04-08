@@ -1,62 +1,41 @@
 import pandas as pd
 import numpy as np
+# import scipy
+# from scipy.spatial import distance_matrix
+# see: https://sparrow.dev/pairwise-distance-in-numpy/
+# may be useful if we want to run some code on gpu
+from scipy.spatial.distance import cdist
 
+# TODO remove this import and refactor the class to reduce coupling
+from config import d
 class EKR:
-    def __init__(self, dataset: pd.DataFrame) -> None:
-        # TODO there's a high coupling with the dataset structure here
-        # If I want to make it more general I should replace data with 
-        # sender and receiver or something like it.
+    def __init__(self, Y_kf: np.array) -> None:
+       self.Y_kf = Y_kf
 
-        self.df = dataset
-        self.species = self.df['TaxonName'].unique()
-        self.region = self.df['Region'].unique()
-        self.Ns = len(self.species)
-        self.Nr = len(self.region)
+    def h(self, X: np.array, gam: np.array):
+        # Compute pairwise distance
+        X = X.reshape((-1, d))
+        D = cdist(X[:, 0], X[:, 1]) #TODO should I square?
+        # Distances are symmetric -> get lower triangular
+        # and flaten it to vector
+        D = D[np.tril(D) != 0].flatten()
+        return gam * np.exp(D)
 
-        t_min = self.df['FirstRecord'].min()
-        t_max = self.df['FirstRecord'].max()
-        self.time = np.arange(t_min, t_max, 2)
+    def d_h(self, xi, xj, gam_ij):  
+        dist = np.linalg.norm(xi - xj)
+        return 2*gam_ij * np.exp(-dist) * np.concatenate((xj - xi, xi - xj), axis=0)
 
-    # TODO get methods for:
-    # Get specie name by id and viceversa
-    # def get_spec_idx(name: str)->int:
-        
+    def build_H(self, x_prior: np.array, gam: np.array) -> np.array:
+        # Populate H_ij = [derivative function(i,j)] -> sparse matrix
+        H = np.zeros((p, p*d))
 
-    def build_matrix(self)->np.array:
-        
-        # species = df['TaxonName'].unique()
-        # region = df['Region'].unique()
+    def run(self):
+        x_prior = x_post = np.zeros((n, p*d))
+        p_prior = p_post = np.zeros((p*d, p*d, n))
+        Q = np.diag(np.full(p*d, 0.001))
 
-        # # Buld matrix
-        # n_s = len(species)
-        # n_r = len(region)
+        P0_smooth = P_0 = Q # Starting points
+        x0_smooth = x0 = np.random.randn(p*d)
 
-        # t_min = df['FirstRecord'].min()
-        # t_max = df['FirstRecord'].max()
-        # time = np.arange(t_min, t_max, 2)
+        self.build_H(x_prior, 0) #TODO
 
-        p = self.Ns + self.Nr
-        M = np.zeros((len(self.time), self.Ns, self.Nr))
-        # M = np.zeros((len(time), p, p)) # if full
-
-        for i, t in enumerate(self.time):
-            df_now = self.df[(self.df['FirstRecord'] >= t) & (self.df['FirstRecord'] < t+1)]
-            for index, row in df_now.iterrows():
-                s = row['TaxonName']
-                r = row['Region']
-                # print(f'Species {s} invaded region {r} at time {t}')
-
-                s_idx = np.where(self.species == s)
-                r_idx = np.where(self.region == r)
-                M[i, s_idx, r_idx] = 1
-        print(M.shape)
-        return M
-
-    def export_to_R(self):
-        # Export data and then import it into R
-        # print(n_s, n_r)
-        M = M.reshape(len(self.time), self.Ns*self.Nr)
-        # M = M.reshape(len(time), (p)**2) # if full matix
-        # print(f's = {n_s}, r = {n_r}')
-        # print(M.shape)
-        np.save('matrix_full.npy', M)
