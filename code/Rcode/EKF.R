@@ -1,5 +1,6 @@
 require(Matrix)
 require(mgcv)
+require(raster)
 
 # Taken from SimLatentSpace
 # n.iter = 500
