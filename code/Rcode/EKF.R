@@ -147,63 +147,6 @@ for(iter in 1:n.iter){
 }
 
 
-# ----------------------- not used -------------------------------
-hess = function(x.i, x.j){
-  dist.tmp=dist(rbind(x.i, x.j))^2
-  res = matrix(NA, 2*d, 2*d)
-  
-  diag(res)[1:d] = diag(res)[(d+1):(2*d)] = ( 4*((x.i-x.j)^2) - 2 ) * exp(-dist.tmp)
-  if(d==1){
-    res[1, 2] = res[2, 1] = - res[1, 1]
-  }
-  if(d==2){
-    res[1, 3] = res[3, 1] = - res[1, 1]
-    res[2, 4] = res[4, 2] = - res[2, 2]
-    
-    res[1, 4] = res[4, 1] = res[2, 3] = res[3, 2] = -4*(x.i-x.j)[1]*(x.i-x.j)[2] * exp(-dist.tmp)
-    res[1, 2] = res[2, 1] = res[3, 4] = res[4, 3] = - res[1, 4]
-  }
-  if(d==3){
-    res[1, 4] = res[4, 1] = - res[1, 1]
-    res[2, 5] = res[5, 2] = - res[2, 2]
-    res[3, 6] = res[6, 3] = - res[3, 3]
-    
-    res[1, 5] = res[5, 1] = res[2, 4] = res[4, 2] = -4*(x.i-x.j)[1]*(x.i-x.j)[2] * exp(-dist.tmp)
-    res[1, 6] = res[6, 1] = res[3, 4] = res[4, 3] = -4*(x.i-x.j)[1]*(x.i-x.j)[3] * exp(-dist.tmp)
-    res[2, 6] = res[6, 2] = res[3, 5] = res[5, 3] = -4*(x.i-x.j)[2]*(x.i-x.j)[3] * exp(-dist.tmp)
-    res[1, 2] = res[2, 1] = res[4, 5] = res[5, 4] = - res[1, 5]
-    res[1, 3] = res[3, 1] = res[4, 6] = res[6, 4] = - res[1, 6]
-    res[2, 3] = res[3, 2] = res[5, 6] = res[6, 5] = - res[2, 6]
-  }
-  res
-}
-
-# This is used for debugging
-E1 = matrix( NA, n, p*(p-1)/2 )
-# E2 = matrix( NA, n, p*(p-1)/2 )
-for(t in 1:n){
-  ii=1
-  for(i in 1:(p-1)){
-    for(j in (i+1):p){
-      i.ind = (i-1)*d + (1:d)
-      j.ind = (j-1)*d + (1:d)
-      x.i = X.smooth[t, i.ind]
-      x.j = X.smooth[t, j.ind]
-      # pg 13 eq(10)
-      E1[t, ii] = exp(-dist(rbind(x.i, x.j))^2) + 0.5 * sum(diag(hess(x.i, x.j) %*% P.smooth[ c(i.ind, j.ind), c(i.ind, j.ind), t]) )
-      # E2[ii, t] = -dist(rbind(x.i, x.j)) + 0.5 * sum(diag(hess2(x.i, x.j) %*% P.smooth[ c(i.ind, j.ind), c(i.ind, j.ind), t]) )
-      if(E1[t, ii]<0 | E1[t, ii]>1){
-        print(paste("Nodes too close at iteration ", iter, ", time, ", t,", at pair (", i,", ", j, ")", sep = ""))
-        E1[t, ii] = exp(-dist(rbind(x.i, x.j))^2)
-        print(E1[t, ii])
-        if(E1[t, ii] == 0) print(paste("Error: infinite distance at iteration ", iter, ", time, ", t,", at pair (", i,", ", j, ")", sep = ""))
-      }
-      ii = ii + 1
-    }
-  }
-}
-# --------------------------------------------------------------
-
 #empirical Kullback Leibler
 # KL=NULL
 # for(k in 1:100){
