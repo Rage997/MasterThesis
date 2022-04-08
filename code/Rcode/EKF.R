@@ -171,17 +171,22 @@ for(iter in 1:n.iter){
 
 
 # PLOTS
-lambda.est = matrix(NA, 100, p*(p-1)/2)
+lambda.est = matrix(NA, n, p.y)
 for(t in 1:n){
   lambda.est[ t, ] = h.function(X.smooth[t, ], gam.sum.pred.mat[t, ])
+    if(t>1 & apply.zero.rate)lambda.est[ t, ] = lambda.est[ t, ]*zero.rate(matrix(Y.kf[1:(t-1), ], ncol=p.y))
 }
 
-for(i in 1:45){
+i.samp  = sample(p.y, 50)
+for(i in i.samp){
   plot(Y.kf[, i], ty="p", main=i)
-  lines(lambda.true.sum[, i])
+  lines(lambda.true[, i])
   lines(lambda.est[, i], col=2)
 }
 
+#get estimate for alpha and Q
+diag(Q)
+alpha.est
 
 matplot(X.smooth, ty="l")
 for(i in 1:n)plot(matrix(X.smooth[i,], ncol=2, byrow=T ), main=i)
