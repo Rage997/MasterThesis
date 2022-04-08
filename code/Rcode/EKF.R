@@ -15,12 +15,11 @@ require(mgcv)
 # initial state prior: X0
 
 # hazard function / rate -> poisson variable
-# Done
-h.function=function(x.vec, gam.sum.pred.vec) {
-  gam.sum.pred.vec * exp( -as.vector(dist(matrix(x.vec, ncol=d, byrow=T))^2))
+h.function=function(x.vec, gam.sum.pred.vec){
+  gam.sum.pred.vec * exp( -as.vector(t(pointDistance(matrix(x.vec[1:(s*d)], ncol=d, byrow=T), matrix(x.vec[(s*d+1):((s+r)*d)], ncol=d, byrow=T), lonlat=F, allpairs = T )^2)))
 }
-#DOne
-  d.h.function = function(x.i, x.j, gam.sum.pred.ij){
+
+d.h.function = function(x.i, x.j, gam.sum.pred.ij){
   # First derivative (taylor's expansion) -> latent space
   dist.tmp = dist(rbind(x.i, x.j))^2
   2 * gam.sum.pred.ij * exp(- dist.tmp) * c(x.j - x.i, x.i - x.j)
