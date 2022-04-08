@@ -1,8 +1,13 @@
-\documentclass[mscthesis]{usiinfthesis}
+\documentclass[11pt]{usiinfthesis}
+%All standrad LaTeX font sizes are supported. 11pt is recommended
 \usepackage{lipsum}
-
-
+\usepackage{tikz}
+\usetikzlibrary{automata}
 \usepackage{listings}
+
+%change 'sl' to 'bf' for bold, or 'normalfont' for no special
+%formatting
+\captionsetup{labelfont={sl,sf}}
 
 \lstdefinelanguage{algebra}
 {morekeywords={import,sort,constructors,observers,transformers,axioms,if,
@@ -11,26 +16,34 @@ sensitive=false,
 morecomment=[l]{//s},
 }
 
-
-
-\title{My Dissertation - A very long title\\ which runs over two
-  lines} %compulsory
-\specialization{Dependable Distributed Systems}%optional
+\author{Philo S. Doctor} %compulsory
+\title{My Dissertation - A very long title\\ which runs over two lines} %compulsory
 \subtitle{Subtitle: Reinventing the World} %optional 
-\author{Master Student} %compulsory
-\begin{committee}
-\advisor{Prof.}{Student's}{Advisor} %compulsory
-\coadvisor{Prof.}{Student's}{Co-Advisor}{} %optional
-\end{committee}
 \Day{Yesterday} %compulsory
 \Month{September} %compulsory
 \Year{2010} %compulsory, put only the year
 \place{Lugano} %compulsory
+\programDirector{Prof. Michele Lanza} %compulsory
+
+
+\begin{committee}
+  \advisor[Politecnico di Milano, Italy]{Prof.}{Carlo}{Ghezzi}
+  \advisor{Prof.}{Mehdi}{Jazayeri}
+  \coadvisor{Prof.}{Peter}{Naur}{K\o benhavns Universitet, Denmark}
+  \coadvisor{Prof.}{M. Douglas}{McIlroy}{Dartmouth College, USA}
+  \internalmember[Advanced Learning and Research Institute, Switzerland]{Prof. Ing.}{Luigi}{Dadda}
+  \internalmember{Prof.}{Walter}{Binder}
+  \externalmember{}{Albert}{Endres}{IBM Academy of Technology}
+  \externalmember{Prof.}{Bertrand}{Meyer}{Eidgen\"ossische Technische Hochschule Z\"urich, Switzerland}
+  \externalmember{Prof.}{Jeff}{Kramer}{Imperial College London, United
+  Kingdom}
+\end{committee}
+
 
 \dedication{To my beloved} %optional
 \openepigraph{Someone said \dots}{Someone} %optional
 
-%\makeindex %optional, also comment out \theindex at the end
+\makeindex %optional, also comment out \theindex at the end
 
 \begin{document}
 
@@ -63,6 +76,8 @@ language
 \mainmatter
 
 \chapter{Introduction}
+\lipsum[1-4]
+\section{Let's start!}
 
 \lipsum
 
@@ -73,10 +88,39 @@ language
 
 \lipsum[1-2]
 
-\section{The first section}
+\begin{figure}
+\centering
+\includegraphics[scale=0.5,angle=90]{bounded_loop_automaton}
+\caption{\textsc{Automaton} for something or other. A caption can be rather
+long and \emph{should} then consist of complete sentences ended with a `.'}
+\end{figure}
+
+\section{The first \textsc{Section}}
+
+Here is some text with \textsc{SmallCaps} in normal font.
+
 \lipsum[3-4]
 
  \section{The second, math section}
+\begin{center}
+  \begin{tikzpicture}[shorten >=1pt,node distance=2cm,auto, initial text=, >=stealth] 
+    \node[state, initial] (q0) {$q_0$};
+    \node[state] (q1) [right of=q0] {$q_1$};
+    \node[state] (q2) [right of=q1] {$q_2$};
+    \node[state, accepting] (q3) [right of=q2] {$q_3$};
+    \path[->]
+    (q0) 
+    edge [loop above] node {0,1} ()
+    edge  node {0} (q1)
+    (q1)
+    edge  node {1} (q2)
+    (q2)
+    edge node {0} (q3)
+    (q3)
+    edge [loop above] node {0,1} ()
+;
+  \end{tikzpicture}
+\end{center}
 
 \textbf{Theorem 1 (Residue Theorem).}
 Let $f$ be analytic in the region $G$ except for the isolated singularities $a_1,a_2,\ldots,a_m$. If $\gamma$ is a closed rectifiable curve in $G$ which does not pass through any of the points $a_k$ and if $\gamma\approx 0$ in $G$ then
@@ -137,12 +181,12 @@ define something weird based on the BPEL specification
 
 %\bibliographystyle{alpha}
 %\bibliographystyle{dcu}
-\bibliographystyle{plainnat}
+\bibliographystyle{abbrvnat}
 \bibliography{biblio}
 
 %\cleardoublepage
 %\theindex %optional, use only if you have an index, must use
 	  %\makeindex in the preamble
-\lipsum
+%\lipsum
 
 \end{document}
