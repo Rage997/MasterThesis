@@ -1,5 +1,5 @@
-require(Matrix)
-require(mgcv)
+# require(Matrix)
+# require(mgcv)
 require(raster)
 
 # Taken from SimLatentSpace
@@ -68,18 +68,19 @@ for(iter in 1:n.iter){
     # you can do taylor: mu(x) = mu(x0) + d_h(x - x0)
     mu = h.function(X.prior[ t, ], gam.sum.pred.mat[ t, ]) # poisson parameter -> variance
     if(t>1 & apply.zero.rate){
-      mu = mu*zero.rate(matrix(Y.kf[1:(t-1), ], ncol=p.y))
-      H = H*zero.rate(matrix(Y.kf[1:(t-1), ], ncol=p.y))
+      # Check if at least one interaction happened in the past [1:t-1] between S and R
+      mu = mu*zero.rate(matrix(Y.kf[1:(t-1), ], ncol=p.y)) # -> this makes the linear predictor do not consider re-invasion 
+      H = H*zero.rate(matrix(Y.kf[1:(t-1), ], ncol=p.y))# see: we set the gradient to zero if an interaction happened in the past
     }
     vv = mu 
-      R = diag(vv)
-      R.inv = diag(1/vv)
-      R.inv[R.inv==Inf] = 0
-      # Sherman-Morrison-Woodbury identity (page 31) -> kinda a lie but okay
-      K = tcrossprod(solve(solve(P.prior[ , , t], tol = 1e-70) + crossprod(H, crossprod(R.inv, H)), tol = 1e-70),  t( crossprod(H, R.inv)) )
-      
-      X.post[ t, ] = X.prior[ t, ] + crossprod(t(K), ( Y.kf[ t, ] - mu )) # see algo 1 pg 10: expected value
+    R = diag(vv)
+    R.inv = diag(1/vv)
+    R.inv[R.inv==Inf] = 0
+    # Sherman-Morrison-Woodbury identity (page 31) -> kinda a lie but okay
+    K = tcrossprod(solve(solve(P.prior[ , , t], tol = 1e-70) + crossprod(H, crossprod(R.inv, H)), tol = 1e-70),  t( crossprod(H, R.inv)) )
     
+    X.post[ t, ] = X.prior[ t, ] + crossprod(t(K), ( Y.kf[ t, ] - mu )) # see algo 1 pg 10: expected value
+  
     P.post[ , , t] = crossprod(t(diag(p*d) - crossprod(t(K), H) ), P.prior[ , , t]) # see algo 1 pg 10: variance
     P.post[ , , t] = (P.post[ , , t] + t(P.post[ , , t]))/2
     if(any( eigen(P.post[ , , t])$values<=0 ) ){
@@ -133,7 +134,7 @@ for(iter in 1:n.iter){
   Q.hat = Q.hat/n
   Q = diag(rep(apply(matrix(diag(Q.hat), ncol=p), 2, mean), each=d))
 
-    #fit additional parameters in linear predictor
+  #fit additional parameters in linear predictor
   D=Y.kf
   for(t in 1:n){
     x.vec = X.smooth[t, ]
@@ -178,10 +179,11 @@ for(t in 1:n){
     if(t>1 & apply.zero.rate)lambda.est[ t, ] = lambda.est[ t, ]*zero.rate(matrix(Y.kf[1:(t-1), ], ncol=p.y))
 }
 
+i.samp  = (1:p.y)[apply(Y.kf,2, function(x)any(x>0) )]
 i.samp  = sample(p.y, 50)
 for(i in i.samp){
   plot(Y.kf[, i], ty="p", main=i)
-  lines(lambda.true[, i])
+  #lines(lambda.true[, i])
   lines(lambda.est[, i], col=2)
 }
 
@@ -189,5 +191,5 @@ for(i in i.samp){
 diag(Q)
 alpha.est
 
-matplot(X.smooth, ty="l")
-for(i in 1:n)plot(matrix(X.smooth[i,], ncol=2, byrow=T ), main=i)
+matplot(X.smooth, ty="l")e
+for(i in 1:n)plot(matrix(X.smooth[i,], ncol=2, byrow=T ), main=i, ylim=c(-2, 4), xlim=c(-2, 3))

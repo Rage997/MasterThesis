@@ -22,6 +22,7 @@ alpha <- 1
 # See in hazard function gam.sum.pred.vec
 gam.sum.pred.mat = matrix( exp(alpha), n, p.y ) 
 apply.zero.rate = TRUE # enable censoring of repeated events
+set.seed = 1
 x_0 = rnorm(p*d, 0, 1)
 #then run kalman algorithm
 
