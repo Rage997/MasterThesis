@@ -9,10 +9,7 @@ to a matrix to be lately processed with a REM model
 
 class InvasiveSpecies:
     def __init__(self, filename: str) -> None:
-        # TODO there's a high coupling with the dataset structure here
-        # If I want to make it more general I should replace data with 
-        # sender and receiver or something like it.
-
+       
         try:
             self.df = self._read_data(filename)
         except FileNotFoundError as e:
@@ -54,25 +51,16 @@ class InvasiveSpecies:
             print(f'{p}[{len(animals)}]', end=', ')
 
     def build_matrix(self)->np.array:
-        
-        # species = df['TaxonName'].unique()
-        # region = df['Region'].unique()
 
-        # # Buld matrix
-        # n_s = len(species)
-        # n_r = len(region)
-
-        # t_min = df['FirstRecord'].min()
-        # t_max = df['FirstRecord'].max()
-        # time = np.arange(t_min, t_max, 2)
-
-        p = self.Ns + self.Nr
+        # Non square matrix M \in R^{T, Ns, Nr}
         M = np.zeros((len(self.time), self.Ns, self.Nr))
+        # or...build full matrix
+        # p = self.Ns + self.Nr
         # M = np.zeros((len(time), p, p)) # if full
 
         for i, t in enumerate(self.time):
             df_now = self.df[(self.df['FirstRecord'] >= t) & (self.df['FirstRecord'] < t+1)]
-            for index, row in df_now.iterrows():
+            for _, row in df_now.iterrows():
                 s = row['TaxonName']
                 r = row['Region']
                 # print(f'Species {s} invaded region {r} at time {t}')
