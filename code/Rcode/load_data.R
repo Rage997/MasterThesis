@@ -9,8 +9,8 @@ Y.kf <- np$load("../data/matrix.npy") # for full matrix in R^{T, S+R, S+R}
 
 n <- dim(Y.kf)[1] # timesteps
 # s, r hardcoded in python
-s <- 18
-r <- 31
+s <- 3494
+r <- 233
 
 p <- s+r
 p.y = s*r
