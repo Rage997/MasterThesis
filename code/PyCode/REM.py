@@ -27,7 +27,17 @@ class EKR:
 
     def build_H(self, x_prior: np.array, gam: np.array) -> np.array:
         # Populate H_ij = [derivative function(i,j)] -> sparse matrix
-        H = np.zeros((p, p*d))
+        H = np.zeros((self.p_y, self.p_y*self.self.d))
+        ii = 0
+        for s in range(self.Ns):
+            for r in range(self.Ns+1, self.p_y):
+                # TODO not sure if it's self.d-1 or just self.d, check it
+                sub_idx1 = self.d*s - np.arange(self.d-1, -1, -1) # index species
+                sub_idx2 = self.d*r - np.arange(self.d-1, -1, -1) # index regions
+                query = np.hstack((sub_idx1, sub_idx2))
+                H[ii, query] = self.d_h(x_prior[sub_idx1], x_prior[sub_idx2], gam[ii])
+                ii += 1
+            
 
     def run(self):
         x_prior = x_post = np.zeros((n, p*d))
