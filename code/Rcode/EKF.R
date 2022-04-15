@@ -173,30 +173,6 @@ for(iter in 1:n.iter){
   gam.sum.pred.mat = matrix( exp(alpha.est), n, p.y )
 }
 
-
-#empirical Kullback Leibler
-# KL=NULL
-# for(k in 1:100){
-#   Y.gen = matrix(rpois( length(Y.kf), lambda.true.sum ), nrow(Y.kf), ncol(Y.kf))
-#   KL= c(KL, mean( dpois(Y.gen, lambda.true.sum, log=T) - dpois(Y.gen, E1*gam.sum.pred.mat, log=T)  ) )
-# }
-# KL=mean(KL)
-
-#re-expand data
-# if(scale.data==T){
-# gam.sum.pred.mat = gam.sum.pred.mat %*% diag(1/res.fact) #rescale columns
-# Y.kf = Y.kf %*% diag(1/res.fact) #rescale columns
-# }
-
-# ref = fit.gam$coefficients[(length(fit.gam$coefficients)-2*p+1):length(fit.gam$coefficients)] - c(sender.true - mean(sender.true), receiver.true - mean(receiver.true)) 
-# ref = sqrt(sum(rss^2)/(2*p))
-
-
-#save(KL, compTime, file=paste("/home/artico/simulation1/EKF_simId", bbb,"_n", n,"_p", p,"_d", d,"_dTrue", d.true,"_dd", dd,".RData", sep="") )
-
-#res = c( KL, as.numeric(compTime[3]) )
-
-
 # PLOTS
 lambda.est = matrix(NA, n, p.y)
 for(t in 1:n){
