@@ -34,6 +34,10 @@ deviance = NULL
 X.prior = X.post = matrix(NA, n, p*d) # points in latent space (Expected value of X)
 P.prior = P.post = array(NA, dim=c(p*d,p*d,n)) # variance of X
 
+
+# To increase resolution (10 -> 5 timesteps) set scaled starting points
+# i.e. for t=10 we use Q=0.1, for t=5 Q/2 and exp(alpha)/2, and for t=1 Q/10 and exp(alpha)/10
+
 #tuning parameters (transition noise)
 Q = diag(0.1, p*d) # X_t+1  = X_T + eps_t : sigma is var(eps)
 
