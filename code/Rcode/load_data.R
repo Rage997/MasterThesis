@@ -5,17 +5,21 @@ np <- import("numpy")
 # mat <- np$load("../matrix.npy") # for matrix in R^{T, S, R}
 #setwd("~/Downloads/igor")
 Y.kf <- np$load("../data/matrix.npy") # for full matrix in R^{T, S+R, S+R}
- 
+#Y.kf <- as(Y.kf, "dgCMatrix") 
+
+# To increase resolution (10 -> 5 timesteps) set scaled starting points
+# per esempio usando intervalli con  intervalli di lunghezza t=5, settando exp(alpha)/2 e Q/2
+
 
 n <- dim(Y.kf)[1] # timesteps
 # s, r hardcoded in python
-s <- 3494
-r <- 233
+s <- 67
+r <- 27
 
 p <- s+r
 p.y = s*r
 d <- 2
-n.iter <- 10
+n.iter <- 50
 
 alpha <- 1
 

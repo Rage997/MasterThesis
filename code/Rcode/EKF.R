@@ -65,6 +65,7 @@ zero.rate = function(y)apply(y, 2, function(x)!any(x>0))
 eps = 1e-5
 
 for(iter in 1:n.iter){
+  n.iter
   for(t in 1:n){ #Kalmann Filter
     if(t==1){ # init (page 9 igor paper)
       X.prior[ t, ] = x_0
