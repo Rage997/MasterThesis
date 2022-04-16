@@ -44,7 +44,7 @@ Q = diag(0.1, p*d) # X_t+1  = X_T + eps_t : sigma is var(eps)
 # Inizialization: starting points    
 P_0.smooth = P_0 = diag(0.01, p*d) 
 #x_0.smooth = x_0 = runif(p*d, -1, 1)
-x_0 = rnorm(p*d, 0, 1)
+#x_0 = rnorm(p*d, 0, 1)
 summary(h.function(x_0, 1))
 x_0.smooth = x_0 #= X[1, ]#rnorm(p*d, 0, 1)
   #as.vector(matrix( X[ 1, ], nrow=d.true)[1:d, ])

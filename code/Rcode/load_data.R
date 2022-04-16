@@ -19,7 +19,7 @@ r <- 27
 p <- s+r
 p.y = s*r
 d <- 2
-n.iter <- 50
+n.iter <- 25
 
 alpha <- 1
 
