@@ -15,3 +15,11 @@ conda env create--file  environment.yml
 ```numpy.core._exceptions.MemoryError: Unable to allocate 215. GiB for an array with shape (4510, 23191, 276) and data type float64```
 
 I should try to use a sparse matrix.
+
+
+# TODO
+
+Using Igor's starting points
+
+1. Use 5 years rather than 10
+2. 

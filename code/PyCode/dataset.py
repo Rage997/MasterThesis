@@ -80,6 +80,8 @@ class InvasiveSpecies:
         # update class variables
         self.region = df['Region'].unique()
         self.species = df['TaxonName'].unique()
+        self.Ns = len(self.species)
+        self.Nr = len(self.region)
         self.df = df
 
     def log_species_info(df: pd.DataFrame)->None:
