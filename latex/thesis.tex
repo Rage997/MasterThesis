@@ -38,8 +38,16 @@ morecomment=[l]{//s},
 \frontmatter %generates the frontmatter, this is FIXED
 
 \begin{abstract}
-During the last centuries human research on the interaction of species substantially intensified. However, we know little to nothing about the underlying process that shape the behaviours of alien species invasion across regions, countries and ecosystems. The invasion of species can be understood in terms of actions, or events, which can be properly described as a set of discrete events in which one individual, in our case a species, emits a directed interaction with another, the region or area of invasion. Under this framework, we can describe the invasion of species in time as a temporal bipartite species-region graph. We then present a relation event model (REM) to model the study of co-invasion of species. We then apply this model to a dataset of (TODO size of dataset) ranging from (TODO years dataset). The aim of this paper is hence to study what group of species have the tendency to co-invade a region. 
+% Topic introduction
+During the last centuries human research on the interaction of species substantially intensified. However, we know little to nothing about the underlying process that shape the behaviours of alien species invasion across regions, countries and ecosystems. 
 
+% What we do here
+In this paper we present a relational event model (REM) to study the the invasion of alien species, which are that are abnormally found outside of their native land. 
+Under this framework, we can describe the invasion of species in time as a temporal unidirectional bipartite species-region graph. We then present a relation event model (REM) to model the study of co-invasion of species. We then apply this model to a subset of the dataset of (TODO size of dataset) ranging from (TODO years dataset). The aim of this paper is hence to study what group of species have the tendency to co-invade a region
+.
+
+% What we got
+Using years of first records of (number) invasion of alien species from (number) taxonomic groups we show how a custom relational event model can be used to model the dynamics of species invasion.
 
 %TODO should I put reference in introduction?
 %TODO should I tak briefly
@@ -64,7 +72,10 @@ During the last centuries human research on the interaction of species substanti
 % 4. Briefly introduce how I will study the dataset
 % 5. TODO briefly report the results
 
-The increase of the rate on which alien species invade countries has increased over the last century and it's becoming an issue. The economic impact of alien species in Europe is estimated to be close to 13 billion dollars annually \citet{intro:rate}. The interest of the study of the dynamics of invasion species has been increasing in the years for this reason. Unfortunately, due to the complexity of the problem, is hard to come up with real actions. Intuitively, the invasion rate of species differs belong taxonomic groups, however, a comprehensive global invasion dynamics study of the last centuries subdivided by taxonomic groups is still lacking. \citet{intro:dataset} first tackled the problems by generating a large dataset of invasive species in multiple geographic regions worldwide. To further extend this study \citet{intro:ecological} fitted a REM on the dataset.
+The increase of the rate on which alien species invade countries has increased over the last century and it's becoming an issue. The economic impact of alien species in Europe is estimated to be close to 13 billion dollars annually \citet{intro:rate}. The interest of the study of the dynamics of invasion species has been increasing in the years for this reason. Unfortunately, due to the complexity of the problem, is hard to come up with real actions. Intuitively, the invasion rate of species differs belong taxonomic groups, however, a comprehensive global invasion dynamics study of the last centuries subdivided by taxonomic groups is still lacking. \citet{intro:dataset} first tackled the problems by generating a large dataset of invasive species in multiple geographic regions worldwide. To further extend this study \citet{intro:ecological} fitted a REM on the dataset. \\
+
+% Structure of the thesis
+In section 2 we present the dataset of the invasive species and provide a formulation of the latent space relational event model. In section 3 we propose an efficient algorithm to make inferences about the latent space. In section 4 we present our results by applying our model to the dataset. In section 5 we discuss our result.
 
 %TODO I can't find the "Analysing ecological dynamics with relational event
 models: the case of invasion events" paper
@@ -75,18 +86,41 @@ models: the case of invasion events" paper
 
 \section{Background}
 \subsection{Relational event models (REM)}
-%TODO math background of REM model
+%TODO should I cover REM in breadth or our custom model?
+
+
+%TODO cite BUTTS
+Every invasion of a species $i$ and region $j$ can be modelled as a multivariate Poisson counting measure $$N_t(i, j) = count{invasion i -> j \; in \; interval \; [0, t]}$$
+
+However, due to the nature of the dataset, a invasion can happen only once, hence the count process is bounded by 1. For each species $i$ and region $j$ we define $T(i, j)$ return the time of invasion. Hence, the function $N$ can either take value 1 or zero depending wether an invasion happened previously to t for a determinated region and species.
+
+% TODO ask igor how to formulate this properly
+\[
+N_t(i, j) = 0 \; if \; t < T(i, j)
+\]
+\[
+N_t(i, j) = 1 \; if \; t >= T(i, j)
+\]
+
+The stochastic intensity of $N$ is model by the function $\lambda$. Heuristically, 
 
 \subsection{Data}
 %TODO in-depth overview of the dataset
 
+%TODO add citation
+The Alien Species First Records database (Seebens et al., 2017) contains the years of the first enstablishment of alien species in regions wordlwide. The original dataset has been succesfully updated (TODO add papers where they update it) and the latest version includes (TODO put the numbers). Fig TODO shows how the dataset is subdivided across different taxomic groups. 
 
-\subsection{Model}
-%TODO how we apply the REM to the dataset
+%TODO plot a table of how the dataset is subdivided
+
+%TODO cite pienote
+\footnote{Regions generally correspond to countries but there are also many islands large enough to be relevant.}
+
+We processed the dataset by taking the time interval from 1800 to 2020. Furthermore, we removed from the dataset all the species that did not invade a significant amount of regions and all the regions that were not invaded by a significant number of species to reduce the space complexity of the dataset. With these restrictions the dataset has been reduced from TODO to TODO number of iteractions.
+
 
 \subsection{Implementation specifications}
 %TODO what framework do we use - how we solved the computational cost problem
-
+The size of the dataset is problematic under a computational point of view. However, most of the entries of the matrix are zero. Therefore we can employ an efficient data structure by saving in memory only the non-zero entries and the indexes in the matrix memory. 
 
 \section{The second, math section}
 
