@@ -73,17 +73,27 @@ Using years of first records of (number) invasion of alien species from (number)
 % 4. Briefly introduce how I will study the dataset
 % 5. TODO briefly report the results
 
-The increase of the rate on which alien species invade countries has increased over the last century and it's becoming an issue. The economic impact of alien species in Europe is estimated to be close to 13 billion dollars annually \citet{intro:rate}. The interest of the study of the dynamics of invasion species has been increasing in the years for this reason. Unfortunately, due to the complexity of the problem, is hard to come up with real actions. Intuitively, the invasion rate of species differs belong taxonomic groups, however, a comprehensive global invasion dynamics study of the last centuries subdivided by taxonomic groups is still lacking. \citet{intro:dataset} first tackled the problems by generating a large dataset of invasive species in multiple geographic regions worldwide. To further extend this study \citet{intro:ecological} fitted a REM on the dataset. \\
+The rate at which alien species invade countries have increased over the last century and it's becoming an issue. The economic impact of alien species in Europe is estimated to be close to 13 billion dollars annually (\citet{intro:rate}). The interest in the study of the dynamics of alien species has been increasing over the years for this reason. Unfortunately, due to the complexity of the problem, is hard to come up with real actions. Intuitively, the invasion rate of species differs belonging to different taxonomic groups, however, a comprehensive global invasion dynamics study of the last centuries subdivided by taxonomic groups is still lacking. 
+
+% General REM introduction
+The dynamics of invasive species are driven by a multitude of factors simultaneously. These factors can be complex involving exogenous, endogenous, sociological, ecological and socio-economic factors. (\citet{intro:factors}). Given the complexity of the subject, it's important to develop a framework capable of studying and analyzing all the underlying effects simultaneously. 
+
+Relational event modelling was first developed in the field of social network analysis (\citet{rem:butts}). A relational event is an interaction between a sender and a receiver at a specific timestamp. A relational event model studies the temporal sequence of such relational events. This framework has many advantages in the fact that it's able to study underlying temporal patterns, can efficiently deal with time-varying variables and it's a suitable diagnostic tool to test a hypothesis model on actual data. Due to its versatility, it was then applied in a large number of different fields such as animal-animal interaction (\citet{intro:cattle}), TODO cite 2 more.
+
+%TODO examples, examples and examples
+In the years, there have been a large number of different statistical approaches to relation event models to predict the appearance and spread of alien species.  
+
+%TODO review this
+To tackle the problem a dataset containing an extensive amount of invasive species in multiple geographic regions worldwide.  has been created (\citet{intro:dataset}). To further extend this study \citet{intro:ecological} fitted a REM on the dataset. \\
+%TODO I can't find the "Analysing ecological dynamics with relational event
+%models: the case of invasion events" paper
+
+In this paper, we introduce a novel custom relational event model to study the dynamics of co-invasion of species in a latent space. The model takes into consideration multiple species simultaneously and studies the underlying relationship between different species co-invading regions by training on the most exhaustive source of first records of alien species in multiple regions in the world (TODO add ref). By studying the proximity of species and regions in the latent space, our model is capable of determining the group of species that have the tendency to co-invade a region and, in an analogous way, the group of regions that are more likely to be invaded by the same group of species.
+
+
 
 % Structure of the thesis
-In section 2 we present the dataset of the invasive species and provide a formulation of the latent space relational event model. In section 3 we propose an efficient algorithm to make inferences about the latent space. In section 4 we present our results by applying our model to the dataset. In section 5 we discuss our result.
-
-%TODO I can't find the "Analysing ecological dynamics with relational event
-models: the case of invasion events" paper
-
-
-%TODO it would be nice to include some plots of the dataset.
-
+%In section 2 we present the dataset of the invasive species and provide a formulation of the latent space relational event model. In section 3 we propose an efficient algorithm to make inferences about the latent space. In section 4 we present our results by applying our model to the dataset. In section 5 we discuss our result.
 
 \section{Background}
 \subsection{Relational event models (REM)}
