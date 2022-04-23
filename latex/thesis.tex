@@ -11,6 +11,8 @@ sensitive=false,
 morecomment=[l]{//s},
 }
 
+% Variables
+\newcommand\numberevents{59256 }
 
 
 \title{Alien species modelling via relational event models} %compulsory
@@ -39,18 +41,17 @@ morecomment=[l]{//s},
 
 \begin{abstract}
 % Topic introduction
-During the last centuries human research on the interaction of species substantially intensified. However, we know little to nothing about the underlying process that shape the behaviours of alien species invasion across regions, countries and ecosystems. 
+During the last centuries human research on the interaction of species substantially intensified. However, we know little to nothing about the underlying process that shape the behaviours of alien species invasion across regions, countries and ecosystems.
 
 % What we do here
-In this paper we present a relational event model (REM) to study the the invasion of alien species, which are that are abnormally found outside of their native land. 
-Under this framework, we can describe the invasion of species in time as a temporal unidirectional bipartite species-region graph. We then present a relation event model (REM) to model the study of co-invasion of species. We then apply this model to a subset of the dataset of (TODO size of dataset) ranging from (TODO years dataset). The aim of this paper is hence to study what group of species have the tendency to co-invade a region
+In this paper we present a custom relational event model to study the the invasion of alien species, which are that are abnormally found outside of their native land. We describe the invasion of species as a temporal unidirectional bipartite species-region graph. Under this framework, We present a relation event model to model the study of co-invasion of species. We then apply this model to a subset of the dataset of \numberevents events ranging from (TODO years dataset). The aim of this paper is hence to study what group of species have the tendency to co-invade a region
 .
 
 % What we got
-Using years of first records of (number) invasion of alien species from (number) taxonomic groups we show how a custom relational event model can be used to model the dynamics of species invasion.
+Using years of first records of (number) invasion of alien species from (number) taxonomic groups we show how a custom relational event model can be used to model the dynamics of species invasion. Due to the high size of the dataset, we also present an high performance implementation in python of our model.
 
 %TODO should I put reference in introduction?
-%TODO should I tak briefly
+%TODO should I tak briefly about previous research?
 %TODO introduce briefly computational challenge and HPC
 
 \end{abstract}
