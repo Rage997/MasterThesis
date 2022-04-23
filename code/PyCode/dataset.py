@@ -7,7 +7,8 @@ This package contains function for handling the dataset, filtering
 with revelant data, reporting information about it and converting it
 to a matrix to be lately processed with a REM model
 '''
-class InvasiveSpecies:
+
+class InvasiveSpecies():
     def __init__(self, filename: str) -> None:
        
         try:
@@ -130,3 +131,21 @@ class InvasiveSpecies:
         print(f's = {self.Ns}, r = {self.Nr}')
         print(M.shape)
         np.save('../data/matrix.npy', M)
+
+
+class GeneratedDataset():
+    def __init__(self, d, n, s, r):
+        self.d, self.n, self.s, self.r = d, n, s, r
+        self.n_nodes = s+r
+
+        self.time = np.arange(0, self.n)
+        self.X_true = np.zeros((n, self.n_nodes, d))
+        self.alpha = 3
+
+
+    def build_matrix(self):
+        self.Y = np.zeros((self.n, self.s, self.r))
+        for t in self.time:
+            self.Y[t, :, :]= tfd.Poisson(log_rate = alpha + tf.matmul(X_true[t,:s,:], X_true[t,s:,:], transpose_b=True)).sample(1)
+
+        self.Y = np.reshape(Y, (n, s*r))
