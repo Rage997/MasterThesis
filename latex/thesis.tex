@@ -40,7 +40,7 @@ morecomment=[l]{//s},
 \author{Niccol\`o Zuppichini} %compulsory
 \begin{committee}
 \advisor{Prof.}{Ernst-Jan Camiel}{Wit} %compulsory
-\coadvisor{Prof.}{Igor}{Artico}{} %optional
+\coadvisor{}{Igor}{Artico}{} %optional
 \end{committee}
 \Day{15} %compulsory
 \Month{June} %compulsory
@@ -63,7 +63,7 @@ morecomment=[l]{//s},
 During the last centuries human research on the interaction of species substantially intensified. However, we know little to nothing about the underlying process that shape the behaviours of alien species invasion across regions, countries and ecosystems.
 
 % What we do here
-In this paper we present a custom relational event model to study the the invasion of alien species, which are that are abnormally found outside of their native land. We describe the invasion of species as a temporal unidirectional bipartite species-region graph. Under this framework, we present a relation event model to model the study of co-invasion of species. We then apply this model to a subset of the dataset of \numberevents events ranging from (TODO years dataset). The aim of this paper is hence to study what group of species have the tendency to co-invade a region.
+In this paper we present a custom relational event model to study the the invasion of alien species, which are that are abnormally found outside of their native land. We describe the invasion of species as a temporal unidirectional bipartite species-region graph. Under this framework, we present a relation event model to model the study of co-invasion of species. We then apply this model to a subset of the dataset of \numberevents events ranging from 1800 to nowadays. The aim of this paper is hence to study what group of species have the tendency to co-invade a region.
 
 % What we got
 Using years of first records of (number) invasion of alien species from (number) taxonomic groups we show how a custom relational event model can be used to model the dynamics of species invasion. Due to the high size of the dataset, we also present an high performance implementation in python of our model.
@@ -103,12 +103,31 @@ Relational event modelling was first developed in the field of social network an
 %%TODO I can't find the "Analysing ecological dynamics with relational event
 %%models: the case of invasion events" paper
 
-In this paper, we introduce a novel custom relational event model to study the dynamics of co-invasion of species in a latent space. The model takes into consideration multiple species simultaneously and studies the underlying relationship between different species co-invading regions by training on the most exhaustive source of first records of alien species in multiple regions in the world (TODO add ref). By studying the proximity of species and regions in the latent space, our model is capable of determining the group of species that have the tendency to co-invade a region and, in an analogous way, the group of regions that are more likely to be invaded by the same group of species.
+
+In this paper, we introduce a novel custom latent space relational event model to study the dynamics of co-invasion of species for a bipartite graph. The model takes into consideration multiple species simultaneously and studies the underlying relationship between different species co-invading regions by training on the most exhaustive source of first records of alien species in multiple regions in the world (TODO add ref). Traditional statistical tools, such as multidimensional scaling, fail to capture the similarity of nodes on this dataset due to its bipartite nature (i.e. no iteraction of the kind species-species and region-region). By studying the proximity of species and regions in the latent space, our model is capable of determining the group of species that have the tendency to co-invade a region and, in an analogous way, the group of regions that are more likely to be invaded by the same group of species. 
 
 % Structure of the thesis
 In chapter 2 we present an exaustive statistical background of the methods used for the reader. In chapter 3 we make a preliminary study of the  dataset of the alien species, provide a formulation of our latent space relational event model and propose an efficient algorithm to make inferences about the latent space. In chapter 4 we discuss implementation specifications and frameworks used. In chapter 5 we present our results by applying our model to the dataset. In chapter 5 we discuss our result.
 
 \chapter{Background}
+
+\section{Latent space}
+Given a relation event model with actors $V=(1...p)$ we define a vector space $V$ where each actor is a vector and the position of each vector is constrained by the distance to all the other vectors inside $V$. The distance in this space represents an affinity of each actor (i.e. vector) $i$ to create a connection to another actor $j$ in the relation event model. On the latent space the dynamics are assumed to be a random walk where the jumps between two time intervals are fixed
+
+
+\begin{eqfloat}
+\begin{equation}
+    \begin{cases}
+      x_k = x_{k-1} + \epsilon \; , \quad \epsilon ~ N(0, \Sigma) \\
+      y_k \approx Poi(\lambda_k) \; , \quad \lambda^{s, r, k} = exp(\alpha-dist(x_s(k), x_r(k)) \cdot \lambda_1(k) \\
+      \textrm{for} \; k = [0, ..., n]
+    \end{cases}\,.
+\label{eq:latent_randomwalk}
+\end{equation}
+\caption{Latent space}
+\end{eqfloat}
+
+
 \section{Relational event models (REM)}
 
 Butts (\citet{rem:butts}) proposed a statistical modeling framework capable of analysing temporal information and evolution of a sequence of relational events. Given a set of receiver nodes, a set of sender nodes and a timeframe, a relational event \textit{e} is a triplet of a sender, a receiver and a timestamp. Depending on the underlying data, the sender set and receiver set may be disjoint to represent relationships. As instance, for studying the interaction between domestic animals the sender and receiver nodes belong to the same set (\citep{intro:cattle}). In contrast, when studying alien species invasion the species are the senders, the regions the receivers and they belong in disjoint sets. In general, a REM specifies time-varying event-rates for all dyads as a function of past events $E=(e_1, ..., e_N)$ where each event $e_i$ is defined as
@@ -117,7 +136,7 @@ Butts (\citet{rem:butts}) proposed a statistical modeling framework capable of a
 e_i = (s_i, r_i, t_i)
 \]
 
-In the above notation, $s_i \in S_{t_i} $ is the sender node, $r_i \in R_{t_i}$ the receiver node and $t_i$ is the time of the interaction. The sets $S_t, R_t$ respectively contain all the receiver and senders nodes at the current timestep $t_i$. The cross product of these two sets is called \textit{risk set} $R_{t_i}$  \footnote{\label{riskset_footnote}To avoid confusion, note that Butts originally called this set the \textit{support set}.}
+In the above notation, $s_i \in S_{t_i} $ is the sender node, $r_i \in R_{t_i}$ the receiver node and $t_i$ is the time of the interaction. The sets $S_t, R_t$ respectively contain all the receiver and senders nodes at the current timestamp $t_i$. The cross product of these two sets is called \textit{risk set} $R_{t_i}$  \footnote{\label{riskset_footnote}To avoid confusion, note that Butts originally called this set the \textit{support set}.}
 
 
 
@@ -125,17 +144,23 @@ In the above notation, $s_i \in S_{t_i} $ is the sender node, $r_i \in R_{t_i}$ 
 R_{t_i} = S_{t_i} \times R_{t_i}
 \]
 
-The risk set is the set of all dyads for which an event $e_{t_i}$ may occurr, hence, any relation event at time $t_i$ belongs to the risk set.
+The risk set is the set of all dyads for which an event $e_{t_i}$ may occurr, hence, at a given timestamp $t_i$ any relational event that occurs belongs to the risk set.
 
 \[
-\forall e_{i} \in R_{t_i}
+R_{t_i} = \{e_{t_i} | e \; occurs \; at \; t_i\}
 \]
 
-The hazard function $\lambda$ is defined as
+The waiting time $T_{s,r}$ for a dyad to happend between a species $s$ and a region $r$ is exponentially distributed 
 
-%TODO you can write the formula better using REM_02 notes
 \[
-\lambda(s, r, t) = \lim_{\delta T \lim 0} \frac{P(t \leq T \leq t + \delta t | t \leq T}{\delta t}
+T_{s,r} \approx Exp(\lambda(s, r, t)
+\]
+
+
+In the above equation, the hazard function $\lambda$ is defined as
+
+\[
+\lambda(s, r, t) = \lim_{\delta t \lim 0^+} \frac{P(t \leq T_{s,r} \leq t + \delta t | t \leq T_{s,r})}{\delta t}
 \]
 
 With some ease, the hazard function can be interpreted as the expected number of relational events in a time interval of lenght one, conditionally on the previous network events. The most common used hazard function is the Cox proportional hazard model. 
@@ -146,18 +171,20 @@ With some ease, the hazard function can be interpreted as the expected number of
 \lambda(s, r, t|G, \theta) = \lambda_0(t) \cdot \lambda_1(s, r, t|G, \theta)
 \]
 \[
+\lambda_0(t) =  exp(dist(x_s, x_r))
+\]
+\[
 \lambda_1(s, r, t|G, \theta) = exp(\sum_{j=1}^k \theta_j \cdot p_j(s, r|G)
 \]
 
-In this equation, $\lambda_0$ represents a baseline harzard for all dyads in the risk set - the function $\lambda_1$ is the propability that an event at $t$ happens between a node $s$ and a node $r$. To estimate the parameters $\theta$ we maximise the partial likelihood of the Cox proportional hazard model 
+In this equation, $\lambda_0$ represents a baseline harzard for all dyads in the risk set exponentially distributed as the distance species-region in the latent space - the function $\lambda_1$ is the propability that an event at $t$ happens between a node $s$ and a node $r$. To estimate the parameters $\theta$ we maximise the partial likelihood of the Cox proportional hazard model 
 
+%TODO this equation is wrong. lambda_0 does not cancel out. Check igor paper
 \[
 L(\lambda) =  \prod_{e \in E} \frac{\lambda_1(s_i, r_i, t_i | G, \theta}{ \sum_{s \in R_{t_i}} \lambda_1(s, r, t_i | G, \theta}
 \]
 
-
-
-In a REM study we are generally interested in the factors that increase, or decrease, the hazard function.
+Our research interest is twofold: to infer the structure of the latent space $X$ and to estimate the factors that increase, or decrease, the hazard function $\lambda$, more specifically, the parameter $\theta$.
 
 
 \section{Extended Kalman Filter}
@@ -177,36 +204,16 @@ In 1960 R.E. Kalman published his paper describing a recursive solution to the d
     \label{fig:kalman_cycle}
 \end{figure}
 
-Let's consider a non-linear system, $\epsilon$ captures uncertainity in the model, $v$ denotes the measurement noise. Both variables are white noises, random distributions with zero mean and uncorellated with the initial state $x_0$. The initial state $x_0$ is a random vector with known mean $\mu_0 = E[x_0]$ and variance $V_0 = E[(x_0-\mu_0)(x_0-\mu_0)^T]$.
+Let's consider a non-linear system, $\epsilon$ captures uncertainity in the model, $v$ denotes the measurement noise. Both variables are white noises, random distributions with zero mean and uncorellated. 
 
 \[
-x_t = f(x_{t-1}) + \epsilon \; , \; \epsilon ~ N(0, \Sigma)
+x_k \sim f(x_{k-1}) + \epsilon_k \; , \; \epsilon ~ N(0, \Sigma)
 \]
 \[
-y_t = h(x_{t}) + v_{t} \; , \; \epsilon ~ N(0, \Delta)
+y_k \sim h(x_{k}) + v_{k} \; , \; v ~ N(0, \Delta)
 \]
 
-Providing that $f, y \in C^1$, we can linearize the process around the mean
-
-
-We define $\hat{x}_t^-$ to be our a-priori estimate of the state $x$ at time $t$, given the knowledge of the previous state. Similarly, we define $\hat{x}_t$ to be our a-posteriori estimate at time $t$ given a measurement $y_t$. The goal of the Kalman filter is to express the a-posteriori state $\hat{x}_t^-$ in terms of a linear combination of the a-priori state and the difference an actual measurement $y$ and a measurement prediction $H\hat{x}_t^-$ state. 
-
-\[
-\hat{x}_t \in span(\hat{x}_t^-, y_t - H\hat{x}_t^-) 
-\]
-\[
-\hat{x}_t = H\hat{x}_t^- + K (y_t - H_t \hat{x}_t^-)
-\]
-
-For a statistical motivation, I redirect the reader to \citet{paper:Maybeck79}. The difference $y_t - H_t \hat{x}_t^-$ is a residual of the estimation against the measurement, reflecting the error between the predicted measurement and the real measurement. The matrix $K$ is called Kalman gain matrix and is defined as 
-
-\[
-K_t = V_t^- H^T_t (H_t V_t^- H^T_t + R_t)^{-1} 
-\]
-
-The Kalman gain matrix goal is to minimise the a-posteriori covariance error matrix $V_t$ at time $t$. With some ease, a way of thinking $K$ is that as the measurement error covariance $R$ is close to zero the measurement $y$ is trusted more and the predicted measurement $H\hat{x}_t^-$ is on the other hand trusted less. On contrary, if the a-priori estimate error covariance $P^-$ is close to zero, the acual measurement $y$ is less trusted and the predicted meausrement $H\hat{x}_t^-$ trust is increased. The "trust" is then reflected into the weights of the Kalman gain matrix $K$. 
-
-The initial state of the algorithm is given by
+The initial state $x_0$ is a random vector with known mean and variance.
 
 \begin{eqfloat}
 \begin{equation}
@@ -219,7 +226,31 @@ The initial state of the algorithm is given by
 \caption{Initialization}
 \end{eqfloat}
 
-We forecast an update of the estimation of $\hat{x} \approx x$
+Providing that $f, y \in C^1$, we can linearize the process around the mean
+
+
+We define $\hat{x}_k^-$ to be our a-priori estimate of the state $x$ at time $k$, given the knowledge of the previous state. Similarly, we define $\hat{x}_k$ to be our a-posteriori estimate at time $k$ given a measurement $y_k$. The goal of the Kalman filter is to express the a-posteriori state $\hat{x}_k^-$ in terms of a linear combination of the a-priori state and the difference an actual measurement $y$ and a measurement prediction $H(\hat{x}_k^-)$ state. 
+
+%\[
+%\hat{x}_t \in span(\hat{x}_t^-, y_t - H\hat{x}_t^-) 
+%\]
+\[
+\hat{x}_k = H\hat{x}_k^- + K (y_k - H_k \hat{x}_k^-)
+\]
+\[
+V_k = (I-K_k H_k)V_k^-
+\]
+
+
+For a statistical motivation, I redirect the reader to \citet{paper:Maybeck79}. The difference $y_t - h_t(\hat{x}_t^-)$ is a residual of the estimation against the measurement, reflecting the error between the predicted measurement and the real measurement. The matrix $K$ is called Kalman gain matrix and is defined as 
+
+\[
+K_k = V_k^- H^T_k (H_k V_k^- H^T_k + R_k)^{-1}  \quad , \; H_k = \frac{d}{dx} h(x)
+\]
+
+The Kalman gain matrix goal is to minimise the a-posteriori covariance error matrix $V_t$ at time $t$. With some ease, a way of thinking $K$ is that as the measurement error covariance $R$ is close to zero the measurement $y$ is trusted more and the update is made with high precision. On contrary, if the a-priori estimate error covariance $P^-$ is close to zero, the acual measurement $y$ is less trusted and the predicted meausrement $H\hat{x}_t^-$ trust is increased. The "trust" is then reflected into the weights of the Kalman gain matrix $K$. We forecast an update of the estimation of $\hat{x} \approx x$
+
+%TODO rewrite the Algorithm with steps.
 
 \begin{eqfloat}
 \begin{equation}
@@ -253,109 +284,94 @@ Where K is the Kalman gain
 %TODO why kalman filter is good?
 % The Kalman filter is an extremely powerful algorithm for several aspects. 
 
-\section{Latent space}
-Given a relation event model with actors $V=(1...p)$ we define a vector space $V$ where each actor is a vector and the position of each vector is constrained by the distance to all the other vectors inside $V$. The distance in this space represents an affinity of each actor (i.e. vector) $i$ to create a connection to another actor $j$ in the relation event model. On the latent space the dynamics are assumed to be a random walk
-
-
-\begin{eqfloat}
-\begin{equation}
-    \begin{cases}
-      x_t = x_{t-1} + \epsilon \; , \quad \epsilon ~ N(0, \Sigma) \\
-      y_t \approx Poi(\lambda_t) \; , \quad \lambda^{i,j} = exp(\alpha - D_t(x_i, x_j))
-    \end{cases}\,.
-\label{eq:latent_randomwalk}
-\end{equation}
-\caption{Latent space}
-\end{eqfloat}
-
-
-
-\chapter{Materials and methods}
-
-\section{Empirical setting}
-
-\subsection{Data}
-%TODO in-depth overview of the dataset
-
-%TODO add citation
-The Alien Species First Records database (Seebens et al., 2017) contains the years of the first enstablishment of alien species in regions wordlwide. The original dataset has been succesfully updated (TODO add papers where they update it) and the latest version includes (TODO put the numbers). Fig TODO shows how the dataset is subdivided across different taxomic groups. 
-
-%TODO plot a table of how the dataset is subdivided
-
-%TODO cite pienote
-\footnote{Regions generally correspond to countries but there are also many islands large enough to be relevant.}
-
-We processed the dataset by taking the time interval from 1800 to 2020. Furthermore, we removed from the dataset all the species that did not invade a significant amount of regions and all the regions that were not invaded by a significant number of species to reduce the space complexity of the dataset. With these restrictions the dataset has been reduced from TODO to TODO number of iteractions.
-
-\subsection{Latent space REM}
-In our study, the sender and receiver sets are disjoint due to the fact that each relational event represent the invasion of a species into a region. Infact, our graph is bipartite. 
-Every invasion of a species $i$ and region $j$ can be modelled as a multivariate Poisson counting measure $$N_t(i, j) = count{invasion i -> j \; in \; interval \; [0, t]}$$
-
-However, due to the nature of the dataset, a invasion can happen only once, hence the count process is bounded by 1. For each species $i$ and region $j$ we define $T(i, j)$ return the time of invasion. Hence, the function $N$ can either take value 1 or zero depending wether an invasion happened previously to t for a determinated region and species.
-
-% TODO ask igor how to formulate this properly
-\[
-N_t(i, j) = 0 \; if \; t < T(i, j)
-\]
-\[
-N_t(i, j) = 1 \; if \; t >= T(i, j)
-\]
-
-The stochastic intensity of $N$ is model by the function $\lambda$. Heuristically, 
-
-
-\subsection{Implementation specifications}
-%TODO what framework do we use - how we solved the computational cost problem
-The size of the dataset is problematic under a computational point of view. However, most of the entries of the matrix are zero. Therefore we can employ an efficient data structure by saving in memory only the non-zero entries and the indexes in the matrix memory. 
-
-\section{The second, math section}
-
-\textbf{Theorem 1 (Residue Theorem).}
-Let $f$ be analytic in the region $G$ except for the isolated singularities $a_1,a_2,\ldots,a_m$. If $\gamma$ is a closed rectifiable curve in $G$ which does not pass through any of the points $a_k$ and if $\gamma\approx 0$ in $G$ then
-\[
-\frac{1}{2\pi i}\int_\gamma f = \sum_{k=1}^m n(\gamma;a_k) \text{Res}(f;a_k).
-\]
-\textbf{Theorem 2 (Maximum Modulus).}
-\emph{Let $G$ be a bounded open set in $\mathbb{C}$ and suppose that $f$ is a continuous function on $G^-$ which is analytic in $G$. Then}
-\[
-\max\{|f(z)|:z\in G^-\}=\max \{|f(z)|:z\in \partial G \}.
-\]
-
-\section[third]{A very very long section, titled ``The third section'', with
-  a rather  short text alternative (third)}
-\lipsum \texttt{Some Test}
-\lstset{language=algebra,linewidth=0.95\linewidth,breaklines=true,numbers=left,
-basicstyle=\ttfamily,numberstyle=\tiny,escapeinside={//*}{\^^M},
-mathescape=true}
-\begin{lstlisting}
-import IntSpec, ItemSpec;
-
-sort cart; //*\label{sort}
-
-constructors //*\label{begin-sig}
-create() $\longrightarrow$ cart;
-insert(cart, item) $\longrightarrow$ cart;
-observers
-amount(cart) $\longrightarrow$ int;
-transformers
-delete(cart, item) $\longrightarrow$ cart; //*\label{end-sig}
-
-axioms //*\label{begin-axioms}
-forall c: cart, i, j: item 
-
-amount(create()) $=$ 0; //*\label{begin-amount}
-amount(insert(c,i)) $=$ amount(c) $+$ price(i); //*\label{end-amount}
-delete(create(),i) $=$ create(); //*\label{begin-delete}
-delete(insert(c,i),j) $=$
-if (i =$\:$= j) c
-else insert(delete(c,j),i); //*\label{end-axioms}
-end
-\end{lstlisting}
-
-As you can easily see from the above listing \citet{bbggs:iet07}
-define something weird based on the BPEL specification
-\citep{bpelspec}.
-\nocite{*}
+%
+%
+%\chapter{Materials and methods}
+%
+%\section{Empirical setting}
+%
+%\subsection{Data}
+%%TODO in-depth overview of the dataset
+%
+%%TODO add citation
+%The Alien Species First Records database (Seebens et al., 2017) contains the years of the first enstablishment of alien species in regions wordlwide. The original dataset has been succesfully updated (TODO add papers where they update it) and the latest version includes (TODO put the numbers). Fig TODO shows how the dataset is subdivided across different taxomic groups. 
+%
+%%TODO plot a table of how the dataset is subdivided
+%
+%%TODO cite pienote
+%\footnote{Regions generally correspond to countries but there are also many islands large enough to be relevant.}
+%
+%We processed the dataset by taking the time interval from 1800 to 2020. Furthermore, we removed from the dataset all the species that did not invade a significant amount of regions and all the regions that were not invaded by a significant number of species to reduce the space complexity of the dataset. With these restrictions the dataset has been reduced from TODO to TODO number of iteractions.
+%
+%\subsection{Latent space REM}
+%In our study, the sender and receiver sets are disjoint due to the fact that each relational event represent the invasion of a species into a region. Infact, our graph is bipartite. 
+%Every invasion of a species $i$ and region $j$ can be modelled as a multivariate Poisson counting measure $$N_t(i, j) = count{invasion i -> j \; in \; interval \; [0, t]}$$
+%
+%However, due to the nature of the dataset, a invasion can happen only once, hence the count process is bounded by 1. For each species $i$ and region $j$ we define $T(i, j)$ return the time of invasion. Hence, the function $N$ can either take value 1 or zero depending wether an invasion happened previously to t for a determinated region and species.
+%
+%% TODO ask igor how to formulate this properly
+%\[
+%N_t(i, j) = 0 \; if \; t < T(i, j)
+%\]
+%\[
+%N_t(i, j) = 1 \; if \; t >= T(i, j)
+%\]
+%
+%The stochastic intensity of $N$ is model by the function $\lambda$. Heuristically, 
+%
+%
+%\subsection{Implementation specifications}
+%%TODO what framework do we use - how we solved the computational cost problem
+%The size of the dataset is problematic under a computational point of view. However, most of the entries of the matrix are zero. Therefore we can employ an efficient data structure by saving in memory only the non-zero entries and the indexes in the matrix memory. 
+%
+%\section{The second, math section}
+%
+%\textbf{Theorem 1 (Residue Theorem).}
+%Let $f$ be analytic in the region $G$ except for the isolated singularities $a_1,a_2,\ldots,a_m$. If $\gamma$ is a closed rectifiable curve in $G$ which does not pass through any of the points $a_k$ and if $\gamma\approx 0$ in $G$ then
+%\[
+%\frac{1}{2\pi i}\int_\gamma f = \sum_{k=1}^m n(\gamma;a_k) \text{Res}(f;a_k).
+%\]
+%\textbf{Theorem 2 (Maximum Modulus).}
+%\emph{Let $G$ be a bounded open set in $\mathbb{C}$ and suppose that $f$ is a continuous function on $G^-$ which is analytic in $G$. Then}
+%\[
+%\max\{|f(z)|:z\in G^-\}=\max \{|f(z)|:z\in \partial G \}.
+%\]
+%
+%\section[third]{A very very long section, titled ``The third section'', with
+%  a rather  short text alternative (third)}
+%\lipsum \texttt{Some Test}
+%\lstset{language=algebra,linewidth=0.95\linewidth,breaklines=true,numbers=left,
+%basicstyle=\ttfamily,numberstyle=\tiny,escapeinside={//*}{\^^M},
+%mathescape=true}
+%\begin{lstlisting}
+%import IntSpec, ItemSpec;
+%
+%sort cart; //*\label{sort}
+%
+%constructors //*\label{begin-sig}
+%create() $\longrightarrow$ cart;
+%insert(cart, item) $\longrightarrow$ cart;
+%observers
+%amount(cart) $\longrightarrow$ int;
+%transformers
+%delete(cart, item) $\longrightarrow$ cart; //*\label{end-sig}
+%
+%axioms //*\label{begin-axioms}
+%forall c: cart, i, j: item 
+%
+%amount(create()) $=$ 0; //*\label{begin-amount}
+%amount(insert(c,i)) $=$ amount(c) $+$ price(i); //*\label{end-amount}
+%delete(create(),i) $=$ create(); //*\label{begin-delete}
+%delete(insert(c,i),j) $=$
+%if (i =$\:$= j) c
+%else insert(delete(c,j),i); //*\label{end-axioms}
+%end
+%\end{lstlisting}
+%
+%As you can easily see from the above listing \citet{bbggs:iet07}
+%define something weird based on the BPEL specification
+%\citep{bpelspec}.
+%\nocite{*}
 
 %\appendix %optional, use only if you have an appendix
 
