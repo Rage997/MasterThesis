@@ -1,5 +1,5 @@
 from time import time
-from tkinter.font import families
+# from tkinter.font import families
 import pandas as pd
 import numpy as np
 import config
@@ -17,7 +17,10 @@ class InvasiveSpecies():
             self.df = self._read_data(filename)
         except FileNotFoundError as e:
             raise FileNotFoundError('File not found. Check data path in config.py')
-        
+
+        self.time_resolution = 5
+        self.update_info() 
+
     def update_info(self):
         self.families = self.df['LifeForm'].unique()
         self.species = self.df['TaxonName'].unique()
@@ -102,10 +105,10 @@ class InvasiveSpecies():
             animals = df_s['TaxonName'].unique()
             print(f'{p}[{len(animals)}]', end=', ')
 
-    def build_matrix(self, time_resolution:int=5)->np.array:
+    def build_matrix(self)->np.array:
 
         t_min, t_max = self.get_time_interval()
-        self.time = np.arange(t_min, t_max, time_resolution)
+        self.time = np.arange(t_min, t_max, self.time_resolution)
 
         # Non square matrix M \in R^{T, Ns, Nr}
         M = np.zeros((len(self.time), self.Ns, self.Nr))
@@ -114,7 +117,7 @@ class InvasiveSpecies():
         # M = np.zeros((len(self.time), p, p)) # if full
     
         for i, t in enumerate(self.time):
-            df_now = self.df[(self.df['FirstRecord'] >= t) & (self.df['FirstRecord'] < t+(time_resolution-1))]
+            df_now = self.df[(self.df['FirstRecord'] >= t) & (self.df['FirstRecord'] < t+(self.time_resolution-1))]
             for _, row in df_now.iterrows():
                 s = row['TaxonName']
                 r = row['Region']
