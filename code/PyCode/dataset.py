@@ -1,6 +1,8 @@
 from time import time
+from tkinter.font import families
 import pandas as pd
 import numpy as np
+import config
 
 '''
 This package contains function for handling the dataset, filtering
@@ -16,8 +18,8 @@ class InvasiveSpecies():
         except FileNotFoundError as e:
             raise FileNotFoundError('File not found. Check data path in config.py')
         
-        self.filter_data()
-
+    def update_info(self):
+        self.families = self.df['LifeForm'].unique()
         self.species = self.df['TaxonName'].unique()
         self.region = self.df['Region'].unique()
         self.Ns = len(self.species)
@@ -36,8 +38,10 @@ class InvasiveSpecies():
 
     def filter_data(self)->None:
         # self.df = self.df[self.df['LifeForm'] == 'Viruses']
-        self.df = self.df[self.df['FirstRecord'] > 1950]
-        # return df
+        self.df = self.df.dropna()
+        self.df = self.df[self.df['FirstRecord'] > 1800]
+        self.update_info()
+        return self.df
 
     def remove_irrelevant(self, species_tol: int, region_tol: int):
         '''Removes irrelevant nodes'''
@@ -79,19 +83,19 @@ class InvasiveSpecies():
         print(f'Removed {region_removed} region')
         
         # update class variables
-        self.region = df['Region'].unique()
-        self.species = df['TaxonName'].unique()
-        self.Ns = len(self.species)
-        self.Nr = len(self.region)
         self.df = df
+        self.update_info()
 
-    def log_species_info(df: pd.DataFrame)->None:
-        family = df['LifeForm'].unique()
-        region = df['Region'].unique()
+    def log_species_info(self)->None:
+        # family = df['LifeForm'].unique()
+        # region = df['Region'].unique()
+        family = self.families
+        region = self.region
+        df = self.df
 
         print(f'There are {len(family)} families and {len(region)} regions')
-        species = df['TaxonName'].unique()
-
+        # species = df['TaxonName'].unique()
+        species = self.species
         print(f'There are {len(species)} species.')
         for p in family:
             df_s = df[df['LifeForm'] == p]
