@@ -1,6 +1,37 @@
 \documentclass[mscthesis]{usiinfthesis}
 \usepackage{lipsum}
 
+\usepackage[linesnumbered,nosemicolon,noline]{algorithm2e}
+\usepackage{algpseudocode}
+\usepackage{environ}
+
+%For substeps in algo environment
+\newcounter{parentAlgoLine}
+\SetKwBlock{BEGIN}{}{}
+
+\makeatletter
+\NewEnviron{substeps}{%
+  \refstepcounter{AlgoLine}% <---- remove if necessary
+  \protected@edef\theparentequation{\theequation}%
+  \setcounter{parentAlgoLine}{\value{AlgoLine}}%
+  \setcounter{AlgoLine}{0}%
+  \def\theAlgoLine{\theparentAlgoLine.\arabic{AlgoLine}}%
+  \BEGIN{\BODY}%
+  \setcounter{AlgoLine}{\value{parentAlgoLine}}%
+  \ignorespacesafterend
+}
+\makeatother
+
+%For algo sub-state
+
+\newcounter{algsubstate}
+\renewcommand{\thealgsubstate}{\alph{algsubstate}}
+\newenvironment{algsubstates}
+  {\setcounter{algsubstate}{0}%
+   \renewcommand{\State}{%
+     \stepcounter{algsubstate}%
+     \Statex {\footnotesize\thealgsubstate:}\space}}
+  {}
 
 \usepackage{listings}
 \graphicspath{ {./figures/} }
@@ -66,7 +97,7 @@ During the last centuries human research on the interaction of species substanti
 In this paper we present a custom relational event model to study the the invasion of alien species, which are that are abnormally found outside of their native land. We describe the invasion of species as a temporal unidirectional bipartite species-region graph. Under this framework, we present a relation event model to model the study of co-invasion of species. We then apply this model to a subset of the dataset of \numberevents events ranging from 1800 to nowadays. The aim of this paper is hence to study what group of species have the tendency to co-invade a region.
 
 % What we got
-Using years of first records of (number) invasion of alien species from (number) taxonomic groups we show how a custom relational event model can be used to model the dynamics of species invasion. Due to the high size of the dataset, we also present an high performance implementation in python of our model.
+Using years of first records of 55451 invasion of alien species from 17 taxonomic groups spanning from 1800 to 2020 we show how a custom relational event model can be used to model the dynamics of species invasion. Due to the high size of the dataset, we also present an high performance implementation in python of our model.
 
 %TODO should I put reference in introduction?
 %TODO should I tak briefly about previous research?
@@ -167,7 +198,7 @@ In the above equation, the hazard function $\lambda$ is defined as
 
 With some ease, the hazard function can be interpreted as the expected number of relational events in a time interval of lenght one, conditionally on the previous network events. The most common used hazard function is the Cox proportional hazard model. 
 
-%TODO Theta is what we usually called beta (change it?)
+%%Theta is what thet called beta in Igor's paper (change it?)
 
 \[
 \lambda(s, r, t|G, \theta) = \lambda_0(t) \cdot \lambda_1(s, r, t|G, \theta)
@@ -262,6 +293,7 @@ The Kalman gain matrix goal is to minimise the a-posteriori covariance error mat
 \label{eq:kalman_predict}
 \end{equation}
 \caption{Prediction step}
+\label{eq:kalmann_prediction}
 \end{eqfloat}
 
 Where $J(x)$ is the Jacobian of $f(x)$ and $Q_{t-1}$ the process noise covariance matrix.
@@ -277,21 +309,52 @@ V_t = (I-K_t H_t)V_t^-
 \label{eq:kalman_update}
 \end{equation}
 \caption{Update step}
+\label{eq:kalmann_update}
 \end{eqfloat}
 
-Where K is the Kalman gain.
+Where K is the Kalmann gain. By combining equations (\ref{eq:kalmann_prediction}), (\ref{eq:kalmann_update}) we get an algorithm for the Extended Kalmann Filter process is shown in Algorithm \ref{algo:kalmann}. 
 
-%TODO why kalman filter is good?
-% The Kalman filter is an extremely powerful algorithm for several aspects. 
-
-%TODO rewrite the Algorithm with steps.
-for k=1, ..., n:
-	1. Predition step
-	2. Update step
-
+\begin{algorithm}
+\textbf{Initialize: }
+\begin{substeps}
+$\hat{x}_0 = \mu_0 = E[x_0]$ \;
+$\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
+\end{substeps}
+\For{k=1,...,n}{
+  Prediction step (Eq. \ref{eq:kalmann_prediction})
+  \begin{substeps}
+  $\hat{x}_t^- = f(\hat{x}_{t-1})$ \;
+  $\hat{V}_t^- = J(x^f_{t-1}) V_{t-1} J(x^f_{t-1})^T + W_{t-1} Q_{t-1} W_{t-1}^T$\;
+  \end{substeps}
+  Update step (Eq. \ref{eq:kalmann_update})
+  \begin{substeps}
+  $K_t = V_t^- H^T_t (H_t V_t^- H^T_t + R_t)^{-1}$ \;
+  $\hat{x}_t = x_t^- + K (z_t - h(\hat{x}_t^-))$\;
+  $V_t = (I-K_t H_t)V_t^-$\;
+  \end{substeps}
+}
+  \caption{Extended Kalmann Filter}
+  \label{algo:kalmann}
+\end{algorithm}
 
 \section{Expectation Maximization}
-%TODO write it lol
+
+A Maximum likelihood estimation seeks for a set of parameters that results in the best fit for the joint probability distribution of the data sample. However, a major limitation of this appraoch is that it assumes the dataset to be complete, which means that the dataset contains all the relevant variables. However, in most real world dataset this is generally not true. There may be variables that affect other variables but are hidden and not present in the dataset. These variables are referred to as latent variables (see section TODO add ref). Expectation maximization algorithm offes an appropiate forumlation of the maximum likelihood estimation taking into account latent variables in the optimization of model parameters. 
+
+The expectation maximization algorithm is an iterative approach that cycles between two functions until convergence is reached. The procedure first estimates the values of the latent variables, then optimises the model. These two steps are repeated until convergence. This approach is extremely effective and is commonly used to estimate models with missing data such as clustering problems like Gaussian Mixture models. \\
+
+%TODO I probably should move the whole algo to section 3 when we talk about our model
+\begin{algorithm}
+\While{not converged}{
+  Expectation step
+  \begin{substeps}
+  Extended Kalmann filter \ref{eq:kalman_init} \;
+  Smoother\;
+  \end{substeps}
+  Maximization step
+}
+  \caption{Model}
+\end{algorithm}
 
 \chapter{Materials and methods}
 
@@ -300,32 +363,66 @@ for k=1, ..., n:
 %TODO add citation
 The Alien Species First Records database (Seebens et al., 2017) contains the years of the first enstablishment of alien species in regions wordlwide. The original dataset has been later updated to include a more depth invasion dataset (TODO add papers where they update it) and the latest version includes (TODO put the numbers). 
 
-We processed the dataset by taking the time interval from 1800 to 2020. By trimming the dataset, we removed 2495 relational event that happened before 1800. The dataset includes 19 taxonomic families and 276 regions. In all taxonomic families there's a total of 23039 species. The species are: Algae, Amphibians, Arthropods p.p. (Myriapods, Diplopods etc.), Bacteria and protozoans, Birds, Bryophytes, Bryozoa, Crustaceans, Fishes, Fungi, Insects, Invertebrates (excl. Arthropods, Molluscs), Mammals, Molluscs, Reptiles, Spiders, Vascular plants, Viruses. As Fig. \ref{fig:hist_tax_fam} shows, most of the species lie in the 'Vascular Platns" taxonomic family.
+We processed the dataset by taking the time interval from 1800 to 2020. By trimming the dataset, we removed 2495 relational event that happened before 1800. Specifically, we removed TODO species and TODO regions interactions. The subset of the dataset we take into consideration includes 19 taxonomic (listed in Tab. \ref{table:families}) families and 276 regions \footnote{Regions generally correspond to countries but there are also many islands large enough to be relevant.}. Considering all taxonomic families there's a total of 23039 species. As Fig. \ref{fig:hist_tax_fam} shows, most of the species in the dataset lie in the 'Vascular Platns" taxonomic family.
 
-\begin{figure}[h]
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+Algae      & Birds       & Fishes        & Mammals  & Vascular plants \\ \hline
+Amphibians & Bryophytes  & Fungi         & Molluscs & Viruses         \\ \hline
+Arthropods & Bryozoa     & Insects       & Reptiles &                 \\ \hline
+Bacteria   & Crustaceans & Invertebrates & Spiders  &                 \\ \hline             
+\end{tabular}
+\caption{The 19 taxonomic families.}
+\label{table:families}
+\end{table}
+
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{histogram_taxfam}
     \caption{Histogram of Taxonomic Families and their respective number of species.}
     \label{fig:hist_tax_fam}
 \end{figure}
 
-%TODO plot of the sparsity of the dataset. Stress it out that the matrix is sparse.
+%TODO Cite previous paper on ecological, they mentioned it
+Intuitively due The amount invasion per year increases during time due to worldwide effects such as the grow of intercontinental trading etc...
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{invasion_per_year.png}
+    \caption{Histogram of Taxonomic Families and their respective number of species.}
+    \label{fig:pdf_invasion}
+\end{figure}
 
 
-%TODO should I move this to the next section?
-Furthermore, we removed from the dataset all the species that did not invade a significant amount of regions and all the regions that were not invaded by a significant number of species to reduce the space complexity of the dataset. With these restrictions the dataset has been reduced from TODO to TODO number of iteractions.
+The dataset is extremely sparse. Fig. \ref{fig:pdf_invasion} shows the probability density function of the number of region each species invades during the entire timeframe of the study (1800-2020).  The average number of invasion per species is 4. The distribution is largely skewed. The mean is 4, and standard deviation is 5. The are a few outsiders that invade
+
+%TODO do the same plot for regions
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{species_region_invasion.png}
+    \caption{Probability density function of of the number of invasions.}
+    \label{fig:pdf_invasion}
+\end{figure}
 
 
-%TODO plot a table of how the dataset is subdivided
+Due to the high sparsity of the dataset and the large computational cost, we removed from the dataset all the species that did not invade a significant amount of regions and all the regions that were not invaded by a significant number of species to reduce the space complexity of the dataset. Fig. \ref{pdf_invasion} shows how the majority of species invaded only a few number of regions. We make the assumption that a any species not invading at least 15 regions out of 276 has no relevant contribution to the model. With these restrictions the dataset has been reduced from 20473 species and 276 regions (55451 invasions in total) to 446 species and 238 regions (10275 invasions in total) number of invasions which is computationally managenable. 
 
-%TODO cite pienote
-\footnote{Regions generally correspond to countries but there are also many islands large enough to be relevant.}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{species_region_invasion_filtering.png}
+    \caption{Probability density function of of the number of invasions.}
+    \label{fig:pdf_invasion}
+\end{figure}
 
 
-%\subsection{Implementation specifications}
+\subsection{Implementation specifications}
+We implemented the method discussed in TODO section in Tensorflow (TODO add cite) 
+
 %%TODO what framework do we use - how we solved the computational cost problem
-%The size of the dataset is problematic under a computational point of view. However, most of the entries of the matrix are zero. Therefore we can employ an efficient data structure by saving in memory only the non-zero entries and the indexes in the matrix memory. 
-%
+The size of the dataset is problematic under a computational point of view. In particular, the inversion of the matrix TODO and the memory requirements to allocate all the dataset are large. However, due to the filtering described in the previous section and using efficient data structure by saving in memory only the non-zero entries and the indexes in a sparse matrix and by using CUDA toolokits to accelerate the computation in GPU our implementation meets the computational requirements.
+ 
+
 %\section{The second, math section}
 %
 %\textbf{Theorem 1 (Residue Theorem).}
