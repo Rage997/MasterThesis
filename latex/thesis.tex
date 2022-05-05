@@ -111,6 +111,8 @@ In chapter 2 we present an exaustive statistical background of the methods used 
 
 \chapter{Background}
 
+In this section we cover all the necessary background tools to develop our latent space relational event model. First, we introduce the concept of latent space. Then we cover in depth the relational event model framework. We introduce then the reader to the Kalmann Filter and the Expectation Maximization algorithms. 
+
 \section{Latent space}
 Given a relation event model with actors $V=(1...p)$ we define a vector space $V$ where each actor is a vector and the position of each vector is constrained by the distance to all the other vectors inside $V$. The distance in this space represents an affinity of each actor (i.e. vector) $i$ to create a connection to another actor $j$ in the relation event model. On the latent space the dynamics are assumed to be a random walk where the jumps between two time intervals are fixed
 
@@ -226,7 +228,8 @@ The initial state $x_0$ is a random vector with known mean and variance.
 \caption{Initialization}
 \end{eqfloat}
 
-Providing that $f, y \in C^1$, we can linearize the process around the mean
+%TODO see star1
+Providing that $f, y \in C^1$, we can linearize the process around the mean. 
 
 
 We define $\hat{x}_k^-$ to be our a-priori estimate of the state $x$ at time $k$, given the knowledge of the previous state. Similarly, we define $\hat{x}_k$ to be our a-posteriori estimate at time $k$ given a measurement $y_k$. The goal of the Kalman filter is to express the a-posteriori state $\hat{x}_k^-$ in terms of a linear combination of the a-priori state and the difference an actual measurement $y$ and a measurement prediction $H(\hat{x}_k^-)$ state. 
@@ -249,8 +252,6 @@ K_k = V_k^- H^T_k (H_k V_k^- H^T_k + R_k)^{-1}  \quad , \; H_k = \frac{d}{dx} h(
 \]
 
 The Kalman gain matrix goal is to minimise the a-posteriori covariance error matrix $V_t$ at time $t$. With some ease, a way of thinking $K$ is that as the measurement error covariance $R$ is close to zero the measurement $y$ is trusted more and the update is made with high precision. On contrary, if the a-priori estimate error covariance $P^-$ is close to zero, the acual measurement $y$ is less trusted and the predicted meausrement $H\hat{x}_t^-$ trust is increased. The "trust" is then reflected into the weights of the Kalman gain matrix $K$. We forecast an update of the estimation of $\hat{x} \approx x$
-
-%TODO rewrite the Algorithm with steps.
 
 \begin{eqfloat}
 \begin{equation}
@@ -278,48 +279,49 @@ V_t = (I-K_t H_t)V_t^-
 \caption{Update step}
 \end{eqfloat}
 
-Where K is the Kalman gain
+Where K is the Kalman gain.
 
-%TODO add a cycle figure showing steps kalman filter
 %TODO why kalman filter is good?
 % The Kalman filter is an extremely powerful algorithm for several aspects. 
 
-%
-%
-%\chapter{Materials and methods}
-%
-%\section{Empirical setting}
-%
-%\subsection{Data}
-%%TODO in-depth overview of the dataset
-%
-%%TODO add citation
-%The Alien Species First Records database (Seebens et al., 2017) contains the years of the first enstablishment of alien species in regions wordlwide. The original dataset has been succesfully updated (TODO add papers where they update it) and the latest version includes (TODO put the numbers). Fig TODO shows how the dataset is subdivided across different taxomic groups. 
-%
-%%TODO plot a table of how the dataset is subdivided
-%
-%%TODO cite pienote
-%\footnote{Regions generally correspond to countries but there are also many islands large enough to be relevant.}
-%
-%We processed the dataset by taking the time interval from 1800 to 2020. Furthermore, we removed from the dataset all the species that did not invade a significant amount of regions and all the regions that were not invaded by a significant number of species to reduce the space complexity of the dataset. With these restrictions the dataset has been reduced from TODO to TODO number of iteractions.
-%
-%\subsection{Latent space REM}
-%In our study, the sender and receiver sets are disjoint due to the fact that each relational event represent the invasion of a species into a region. Infact, our graph is bipartite. 
-%Every invasion of a species $i$ and region $j$ can be modelled as a multivariate Poisson counting measure $$N_t(i, j) = count{invasion i -> j \; in \; interval \; [0, t]}$$
-%
-%However, due to the nature of the dataset, a invasion can happen only once, hence the count process is bounded by 1. For each species $i$ and region $j$ we define $T(i, j)$ return the time of invasion. Hence, the function $N$ can either take value 1 or zero depending wether an invasion happened previously to t for a determinated region and species.
-%
-%% TODO ask igor how to formulate this properly
-%\[
-%N_t(i, j) = 0 \; if \; t < T(i, j)
-%\]
-%\[
-%N_t(i, j) = 1 \; if \; t >= T(i, j)
-%\]
-%
-%The stochastic intensity of $N$ is model by the function $\lambda$. Heuristically, 
-%
-%
+%TODO rewrite the Algorithm with steps.
+for k=1, ..., n:
+	1. Predition step
+	2. Update step
+
+
+\section{Expectation Maximization}
+%TODO write it lol
+
+\chapter{Materials and methods}
+
+\section{Data}
+
+%TODO add citation
+The Alien Species First Records database (Seebens et al., 2017) contains the years of the first enstablishment of alien species in regions wordlwide. The original dataset has been later updated to include a more depth invasion dataset (TODO add papers where they update it) and the latest version includes (TODO put the numbers). 
+
+We processed the dataset by taking the time interval from 1800 to 2020. By trimming the dataset, we removed 2495 relational event that happened before 1800. The dataset includes 19 taxonomic families and 276 regions. In all taxonomic families there's a total of 23039 species. The species are: Algae, Amphibians, Arthropods p.p. (Myriapods, Diplopods etc.), Bacteria and protozoans, Birds, Bryophytes, Bryozoa, Crustaceans, Fishes, Fungi, Insects, Invertebrates (excl. Arthropods, Molluscs), Mammals, Molluscs, Reptiles, Spiders, Vascular plants, Viruses. As Fig. \ref{fig:hist_tax_fam} shows, most of the species lie in the 'Vascular Platns" taxonomic family.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{histogram_taxfam}
+    \caption{Histogram of Taxonomic Families and their respective number of species.}
+    \label{fig:hist_tax_fam}
+\end{figure}
+
+%TODO plot of the sparsity of the dataset. Stress it out that the matrix is sparse.
+
+
+%TODO should I move this to the next section?
+Furthermore, we removed from the dataset all the species that did not invade a significant amount of regions and all the regions that were not invaded by a significant number of species to reduce the space complexity of the dataset. With these restrictions the dataset has been reduced from TODO to TODO number of iteractions.
+
+
+%TODO plot a table of how the dataset is subdivided
+
+%TODO cite pienote
+\footnote{Regions generally correspond to countries but there are also many islands large enough to be relevant.}
+
+
 %\subsection{Implementation specifications}
 %%TODO what framework do we use - how we solved the computational cost problem
 %The size of the dataset is problematic under a computational point of view. However, most of the entries of the matrix are zero. Therefore we can employ an efficient data structure by saving in memory only the non-zero entries and the indexes in the matrix memory. 

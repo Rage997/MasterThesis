@@ -12,7 +12,7 @@ to a matrix to be lately processed with a REM model
 
 class InvasiveSpecies():
     def __init__(self, filename: str) -> None:
-       
+    #  TODO when importing the dataset, only select the columns I'm interested
         try:
             self.df = self._read_data(filename)
         except FileNotFoundError as e:
@@ -32,6 +32,9 @@ class InvasiveSpecies():
         df_orig = pd.read_excel(filename, sheet_name=None)
         # There are 3 sheets of the excel file. Get the correct one
         df = df_orig['GlobalAlienSpeciesFirstRecordDa']
+        col = ['TaxonName', 'Family', 'LifeForm', 'Region', 'FirstRecord']
+        df = df[col]
+        df = df.dropna()
         return df
 
     def get_time_interval(self):
@@ -89,7 +92,7 @@ class InvasiveSpecies():
         self.df = df
         self.update_info()
 
-    def log_species_info(self)->None:
+    def print_info(self)->None:
         # family = df['LifeForm'].unique()
         # region = df['Region'].unique()
         family = self.families
@@ -104,6 +107,8 @@ class InvasiveSpecies():
             df_s = df[df['LifeForm'] == p]
             animals = df_s['TaxonName'].unique()
             print(f'{p}[{len(animals)}]', end=', ')
+        print('')# new line
+        print(f'There are {len(self.df.index)} invasions')
 
     def build_matrix(self)->np.array:
 
@@ -130,7 +135,7 @@ class InvasiveSpecies():
         self.M = M.copy() # store it into class
         return self.M
 
-    def export_to_R(self):
+    def export_matrix(self):
         # Export data and then import it into R
         # print(n_s, n_r)
         M = self.M.reshape(len(self.time), self.Ns*self.Nr)
