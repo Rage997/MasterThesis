@@ -204,17 +204,17 @@ With some ease, the hazard function can be interpreted as the expected number of
 \lambda(s, r, t|G, \theta) = \lambda_0(t) \cdot \lambda_1(s, r, t|G, \theta)
 \]
 \[
-\lambda_0(t) =  exp(dist(x_s, x_r))
+\lambda_0(t) =  exp \left(dist(x_s, x_r) \right)
 \]
 \[
-\lambda_1(s, r, t|G, \theta) = exp(\sum_{j=1}^k \theta_j \cdot p_j(s, r|G)
+\lambda_1(s, r, t|G, \theta) = exp \left(\sum_{j=1}^k \theta_j \cdot p_j(s, r|G) \right)
 \]
 
 In this equation, $\lambda_0$ represents a baseline harzard for all dyads in the risk set exponentially distributed as the distance species-region in the latent space - the function $\lambda_1$ is the propability that an event at $t$ happens between a node $s$ and a node $r$. To estimate the parameters $\theta$ we maximise the partial likelihood of the Cox proportional hazard model 
 
 %TODO this equation is wrong. lambda_0 does not cancel out. Check igor paper
 \[
-L(\lambda) =  \prod_{e \in E} \frac{\lambda_1(s_i, r_i, t_i | G, \theta}{ \sum_{s \in R_{t_i}} \lambda_1(s, r, t_i | G, \theta}
+L(\lambda) =  \prod_{e \in E} \frac{\lambda_1(s_i, r_i, t_i | G, \theta)}{ \sum_{s \in R_{t_i}} \lambda_1(s, r, t_i | G, \theta)}
 \]
 
 Our research interest is twofold: to infer the structure of the latent space $X$ and to estimate the factors that increase, or decrease, the hazard function $\lambda$, more specifically, the parameter $\theta$.
@@ -282,7 +282,7 @@ For a statistical motivation, I redirect the reader to \citet{paper:Maybeck79}. 
 K_k = V_k^- H^T_k (H_k V_k^- H^T_k + R_k)^{-1}  \quad , \; H_k = \frac{d}{dx} h(x)
 \]
 
-The Kalman gain matrix goal is to minimise the a-posteriori covariance error matrix $V_t$ at time $t$. With some ease, a way of thinking $K$ is that as the measurement error covariance $R$ is close to zero the measurement $y$ is trusted more and the update is made with high precision. On contrary, if the a-priori estimate error covariance $P^-$ is close to zero, the acual measurement $y$ is less trusted and the predicted meausrement $H\hat{x}_t^-$ trust is increased. The "trust" is then reflected into the weights of the Kalman gain matrix $K$. We forecast an update of the estimation of $\hat{x} \approx x$
+The Kalman gain matrix goal is to minimise the a-posteriori covariance error matrix $V_t$ at time $t$. With some ease, a way of thinking $K$ is that as the measurement error covariance $R$ is close to zero the measurement $y$ is trusted more and the update is made with high precision. On contrary, if the a-priori estimate error covariance $P^-$ is close to zero, the actual measurement $y$ is less trusted and the predicted meausrement $H\hat{x}_t^-$ trust is increased. The "trust" is then reflected into the weights of the Kalman gain matrix $K$. We forecast an update of the estimation of $\hat{x} \approx x$
 
 \begin{eqfloat}
 \begin{equation}
@@ -341,7 +341,7 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 
 A Maximum likelihood estimation seeks for a set of parameters that results in the best fit for the joint probability distribution of the data sample. However, a major limitation of this appraoch is that it assumes the dataset to be complete, which means that the dataset contains all the relevant variables. However, in most real world dataset this is generally not true. There may be variables that affect other variables but are hidden and not present in the dataset. These variables are referred to as latent variables (see section TODO add ref). Expectation maximization algorithm offes an appropiate forumlation of the maximum likelihood estimation taking into account latent variables in the optimization of model parameters. 
 
-The expectation maximization algorithm is an iterative approach that cycles between two functions until convergence is reached. The procedure first estimates the values of the latent variables, then optimises the model. These two steps are repeated until convergence. This approach is extremely effective and is commonly used to estimate models with missing data such as clustering problems like Gaussian Mixture models. \\
+The expectation maximization algorithm \citet{paper:EM} is an iterative approach that cycles between two functions until convergence is reached. The procedure first estimates the values of the latent variables, then optimises the model. These two steps are repeated until convergence. This approach is extremely effective and is commonly used to estimate models with missing data such as clustering problems like Gaussian Mixture models. \\
 
 %TODO I probably should move the whole algo to section 3 when we talk about our model
 \begin{algorithm}
