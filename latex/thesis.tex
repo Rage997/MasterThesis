@@ -73,7 +73,7 @@ morecomment=[l]{//s},
 \advisor{Prof.}{Ernst-Jan Camiel}{Wit} %compulsory
 \coadvisor{}{Igor}{Artico}{} %optional
 \end{committee}
-\Day{15} %compulsory
+\Day{23} %compulsory
 \Month{June} %compulsory
 \Year{2022} %compulsory, put only the year
 \place{Lugano} %compulsory
@@ -97,11 +97,7 @@ During the last centuries human research on the interaction of species substanti
 In this paper we present a custom relational event model to study the the invasion of alien species, which are that are abnormally found outside of their native land. We describe the invasion of species as a temporal unidirectional bipartite species-region graph. Under this framework, we present a relation event model to model the study of co-invasion of species. We then apply this model to a subset of the dataset of \numberevents events ranging from 1800 to nowadays. The aim of this paper is hence to study what group of species have the tendency to co-invade a region.
 
 % What we got
-Using years of first records of 55451 invasion of alien species from 17 taxonomic groups spanning from 1800 to 2020 we show how a custom relational event model can be used to model the dynamics of species invasion. Due to the high size of the dataset, we also present an high performance implementation in python of our model.
-
-%TODO should I put reference in introduction?
-%TODO should I tak briefly about previous research?
-%TODO introduce briefly computational challenge and HPC
+Using years of first records of 55451 invasion of alien species from 17 taxonomic groups spanning from 1850 to 2010 we show how a custom relational event model can be used to model the dynamics of species invasion. Due to the high size of the dataset, we also present an high performance implementation in python of our model.
 
 \end{abstract}
 
@@ -122,7 +118,7 @@ Using years of first records of 55451 invasion of alien species from 17 taxonomi
 % 4. Briefly introduce how I will study the dataset
 % 5. TODO briefly report the results
 
-The rate at which alien species invade countries have increased over the last century and it's becoming an issue. The economic impact of alien species in Europe is estimated to be close to 13 billion dollars annually (\citet{intro:rate}). The interest in the study of the dynamics of alien species has been increasing over the years for this reason. Unfortunately, due to the complexity of the problem, is hard to come up with real actions. Intuitively, the invasion rate of species differs belonging to different taxonomic groups, however, a comprehensive global invasion dynamics study of the last centuries subdivided by taxonomic groups is still lacking. The dynamics of invasive species are driven by a multitude of factors simultaneously. These factors can be complex involving exogenous, endogenous, sociological, ecological and socio-economic factors. (\citet{intro:factors}). Given the complexity of the subject, it's important to develop a framework capable of studying and analyzing all the underlying effects simultaneously. 
+The rate at which alien species invade countries have increased over the last century and it's becoming an issue. The economic impact of alien species in Europe is estimated to be close to 13 billion dollars annually (\cite{intro:rate}). The interest in the study of the dynamics of alien species has been increasing over the years for this reason. Unfortunately, due to the complexity of the problem, is hard to come up with real actions. Intuitively, the invasion rate of species differs belonging to different taxonomic groups, however, a comprehensive global invasion dynamics study of the last centuries subdivided by taxonomic groups is still lacking. The dynamics of invasive species are driven by a multitude of factors simultaneously. These factors can be complex involving exogenous, endogenous, sociological, ecological and socio-economic factors. (\citet{intro:factors}). Given the complexity of the subject, it's important to develop a framework capable of studying and analyzing all the underlying effects simultaneously. 
 
 Relational event modelling was first developed in the field of social network analysis (\citet{rem:butts}). A relational event is an interaction between a sender and a receiver at a specific timestamp. A relational event model studies the temporal sequence of such relational events. This framework has many advantages in the fact that it's able to study underlying temporal patterns, can efficiently deal with time-varying variables and it's a extremely adaptable hypothesis testing tool. Due to its versatility, in the years it's been applied in a large number of different fields such as animal-animal interaction (\citet{intro:cattle}), TODO cite 2 more.
 
@@ -142,24 +138,7 @@ In chapter 2 we present an exaustive statistical background of the methods used 
 
 \chapter{Background}
 
-In this section we cover all the necessary background tools to develop our latent space relational event model. First, we introduce the concept of latent space. Then we cover in depth the relational event model framework. We introduce then the reader to the Kalmann Filter and the Expectation Maximization algorithms. 
-
-\section{Latent space}
-Given a relation event model with actors $V=(1...p)$ we define a vector space $V$ where each actor is a vector and the position of each vector is constrained by the distance to all the other vectors inside $V$. The distance in this space represents an affinity of each actor (i.e. vector) $i$ to create a connection to another actor $j$ in the relation event model. On the latent space the dynamics are assumed to be a random walk where the jumps between two time intervals are fixed
-
-
-\begin{eqfloat}
-\begin{equation}
-    \begin{cases}
-      x_k = x_{k-1} + \epsilon \; , \quad \epsilon ~ N(0, \Sigma) \\
-      y_k \approx Poi(\lambda_k) \; , \quad \lambda^{s, r, k} = exp(\alpha-dist(x_s(k), x_r(k)) \cdot \lambda_1(k) \\
-      \textrm{for} \; k = [0, ..., n]
-    \end{cases}\,.
-\label{eq:latent_randomwalk}
-\end{equation}
-\caption{Latent space}
-\end{eqfloat}
-
+In this section we cover all the necessary background tools to develop our latent space relational event model. First, we introduce the concept of latent space. Then we cover in depth the relational event model framework. We introduce then the reader to the Kalman Filter and the Expectation Maximization algorithms. 
 
 \section{Relational event models (REM)}
 
@@ -220,9 +199,84 @@ L(\lambda) =  \prod_{e \in E} \frac{\lambda_1(s_i, r_i, t_i | G, \theta)}{ \sum_
 Our research interest is twofold: to infer the structure of the latent space $X$ and to estimate the factors that increase, or decrease, the hazard function $\lambda$, more specifically, the parameter $\theta$.
 
 
+\section{State space model}
+\label{sec:latent_space}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.35\textwidth]{statespace_diagram.png}
+    \caption{State space model diagram representation.}
+    \label{fig:pdf_invasion}
+\end{figure}
+
+
+A state space model is a class of temporal probabilistic models that describe the statistical dependency of latent variables and observed measurement. There are two vector space in the family of models, the state space $X \in R^d$ and the observed space $Y \in R^m$. On the state space model the dynamics are assumed to be a random walk where the jumps between two time intervals are fixed A first example of such models is the linear Gaussian state space model, given as follows
+
+\begin{eqfloat}
+\begin{equation}
+    \begin{cases}
+      x_k = A x_{k-1} + \epsilon \; , \quad \epsilon ~ N(0, \Sigma_1) \\
+      y_k = B x_k + \delta  \; , \quad \delta ~ N(0, \Sigma_2)  \\
+      \textrm{for} \; k = [0, ..., n]
+    \end{cases}\,.
+\label{eq:latent_randomwalk}
+\end{equation}
+\caption{State space model}
+\end{eqfloat}
+
+where the matrix $A \in R^{dxd}$ is the state-transition matrix where $d$ is the dimensionality of the state space $X$. Similarly, $B \in R^{mxm}$ is the observation-transition matrix where $m$ is the dimensionality of the observation space $Y$. The linear Gaussian model can be extended to different models. In our study, we consider a special case of state space models.
+
+Given a relation event model with $p$ actors, we define a vector space $V$ where each actor is a vector and the position of each vector is constrained by the distance to all the other vectors inside $V$. The distance in this space represents an affinity of each actor (i.e. vector) $i$ to create a connection to another actor $j$ in the relation event model.
+
+
+\begin{eqfloat}
+\begin{equation}
+    \begin{cases}
+      x_k = x_{k-1} + \epsilon \; , \quad \epsilon ~ N(0, \Sigma) \\
+      y_k \approx Poi(\lambda_k) \; , \quad \lambda^{s, r, k} = exp\left(\alpha-dist(x_s(k), x_r(k)) \cdot \lambda_1(k) \right) \\
+      \textrm{for} \; k = [0, ..., n]
+    \end{cases}\,.
+\label{eq:latent_randomwalk}
+\end{equation}
+\caption{Latent space}
+\end{eqfloat}
+
+The distance function can be defined in many different ways. The two most popular choices are euclidean distance and dot product. These two distances give a interpretation to the model. Using the euclidean distance will impose a symmetric interpretation, where using a dot product distance will, in contrast, impose an asymmetric interpretation.
+
+\begin{eqfloat}
+\begin{equation}
+\begin{array}{l}
+dist_{euc}(x, v) = |\sum_{i=0}^d x_i - v_i|^2 \\
+dist_{dot}(x, x) = x \cdot v
+\end{array}
+\label{eq:latent_randomwalk}
+\end{equation}
+\caption{Euclidean distance and dot product}
+\end{eqfloat}
+
+Generally speaking, the main interested in studying a state space model is to infer the state configuration $X$ and the rate function $\lambda$ based on temporal observation.
+
+\section{Expectation Maximization}
+
+To estimate the best parameters fit for a probability distribution a Maximum likelihood estimation is generally employed. However, a major limitation of this approach is that it assumes the dataset to be complete. In other words, it assumes that the dataset contains all the relevant variables. This is generally a bold assumption for real-world datasets. There may be variables that affect other variables but are hidden and not present in the dataset. These variables are referred to as latent variables (see section \ref{sec:latent_space}).
+
+
+The expectation maximization algorithm \cite{paper:EM} is an iterative approach that cycles between two functions until convergence is reached. The procedure first estimates the values of the latent variables, and then it optimises the model. These two steps are repeated until convergence. This approach is extremely effective and is commonly used to estimate models with missing data such as clustering problems like Gaussian Mixture models, as example. \\
+
+\begin{algorithm}
+\While{not converged}{
+  Expectation step (E-step) \;
+  Maximization step (M-step)
+}
+  \caption{Expectation Maximization algorithm.}
+\end{algorithm}
+
+
+%TODO explain the steps in detail
+
 \section{Extended Kalman Filter}
 
-In 1960 R.E. Kalman published his paper describing a recursive solution to the discrete-data linear filtering problem (\citet{paper:kalmanfilter}). Since then, the Kalman filter gained extremely popularity in the machine learning and robotics resaerch field, particularly in area of autonomous navigation systems. The Kalman filter estimates the evolution of a process by using a feedback control. The filter first computes an estimation of the current proces state at some time, then, it tries to "filter out" the measurement  noise in a iterative process. As such, the Kalman filter equations can be subdivided into two categories: prediction step and update step. The prediction step is responsible for projecting forward in time the current state of the system. The update step takes the a-prior estimate given from the prediction step and by taking new measurements of the errror tries to obtain an improved a-posteriore estimate of the state. Indeed, the general form of the algorithm resembles a predictor-corrector algorithm for solving numerical problems. In this chapter I will provide a brief non-technical overview of the Kalman filter. A reader interested in a more in-depth discussion of the formulation of the Kalman filter is advised to read \citet{paper:Maybeck79}.
+In 1960 R.E. Kalman published his paper describing a recursive solution to the discrete-data linear filtering problem (\citet{paper:kalmanfilter}). Since then, the Kalman filter gained extremely popularity in the machine learning and robotics research field, particularly in area of autonomous navigation systems. The Kalman filter estimates the evolution of a process by using a feedback control. The filter first computes an estimation of the current process state at some time, then, it tries to "filter out" the measurement  noise in a iterative process. As such, the Kalman filter equations can be subdivided into two categories: prediction step and update step. The prediction step is responsible for projecting forward in time the current state of the system. The update step takes the a-prior estimate given from the prediction step and by taking new measurements of the error tries to obtain an improved a-posteriore estimate of the state. Indeed, the general form of the algorithm resembles a predictor-corrector algorithm for solving numerical problems. In this chapter I will provide a brief non-technical overview of the Kalman filter. A reader interested in a more in-depth discussion of the formulation of the Kalman filter is advised to read \citet{paper:Maybeck79}.
 
 %A very “friendly” introduction to the
 %general idea of the Kalman filter can be found in Chapter 1 of [Maybeck79], while a more complete
@@ -237,7 +291,7 @@ In 1960 R.E. Kalman published his paper describing a recursive solution to the d
     \label{fig:kalman_cycle}
 \end{figure}
 
-Let's consider a non-linear system, $\epsilon$ captures uncertainity in the model, $v$ denotes the measurement noise. Both variables are white noises, random distributions with zero mean and uncorellated. 
+Let's consider a non-linear system, $\epsilon$ captures uncertainty in the model, $v$ denotes the measurement noise. Both variables are white noises, random distributions with zero mean and uncorrelated. 
 
 \[
 x_k \sim f(x_{k-1}) + \epsilon_k \; , \; \epsilon ~ N(0, \Sigma)
@@ -260,8 +314,7 @@ The initial state $x_0$ is a random vector with known mean and variance.
 \end{eqfloat}
 
 %TODO see star1
-Providing that $f, y \in C^1$, we can linearize the process around the mean. 
-
+Providing that $f, y \in C^1$, we can linearise the process around the mean. 
 
 We define $\hat{x}_k^-$ to be our a-priori estimate of the state $x$ at time $k$, given the knowledge of the previous state. Similarly, we define $\hat{x}_k$ to be our a-posteriori estimate at time $k$ given a measurement $y_k$. The goal of the Kalman filter is to express the a-posteriori state $\hat{x}_k^-$ in terms of a linear combination of the a-priori state and the difference an actual measurement $y$ and a measurement prediction $H(\hat{x}_k^-)$ state. 
 
@@ -284,7 +337,7 @@ K_k = V_k^- H^T_k (H_k V_k^- H^T_k + R_k)^{-1}  \quad , \; H_k = \frac{d}{dx} h(
 
 The Kalman gain matrix goal is to minimise the a-posteriori covariance error matrix $V_t$ at time $t$. With some ease, a way of thinking $K$ is that as the measurement error covariance $R$ is close to zero the measurement $y$ is trusted more and the update is made with high precision. On contrary, if the a-priori estimate error covariance $P^-$ is close to zero, the actual measurement $y$ is less trusted and the predicted meausrement $H\hat{x}_t^-$ trust is increased. The "trust" is then reflected into the weights of the Kalman gain matrix $K$. We forecast an update of the estimation of $\hat{x} \approx x$
 
-\begin{eqfloat}
+\begin{eqfloat}[H]
 \begin{equation}
 \begin{array}{l}
 \hat{x}_t^- = f(\hat{x}_{t-1}) \\
@@ -299,7 +352,7 @@ The Kalman gain matrix goal is to minimise the a-posteriori covariance error mat
 Where $J(x)$ is the Jacobian of $f(x)$ and $Q_{t-1}$ the process noise covariance matrix.
 
 
-\begin{eqfloat}
+\begin{eqfloat}[H]
 \begin{equation}
 \begin{array}{l}
 K_t = V_t^- H^T_t (H_t V_t^- H^T_t + R_t)^{-1} \\
@@ -314,7 +367,7 @@ V_t = (I-K_t H_t)V_t^-
 
 Where K is the Kalmann gain. By combining equations (\ref{eq:kalmann_prediction}), (\ref{eq:kalmann_update}) we get an algorithm for the Extended Kalmann Filter process is shown in Algorithm \ref{algo:kalmann}. 
 
-\begin{algorithm}
+\begin{algorithm}[H]
 \textbf{Initialize: }
 \begin{substeps}
 $\hat{x}_0 = \mu_0 = E[x_0]$ \;
@@ -337,24 +390,6 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
   \label{algo:kalmann}
 \end{algorithm}
 
-\section{Expectation Maximization}
-
-A Maximum likelihood estimation seeks for a set of parameters that results in the best fit for the joint probability distribution of the data sample. However, a major limitation of this appraoch is that it assumes the dataset to be complete, which means that the dataset contains all the relevant variables. However, in most real world dataset this is generally not true. There may be variables that affect other variables but are hidden and not present in the dataset. These variables are referred to as latent variables (see section TODO add ref). Expectation maximization algorithm offes an appropiate forumlation of the maximum likelihood estimation taking into account latent variables in the optimization of model parameters. 
-
-The expectation maximization algorithm \citet{paper:EM} is an iterative approach that cycles between two functions until convergence is reached. The procedure first estimates the values of the latent variables, then optimises the model. These two steps are repeated until convergence. This approach is extremely effective and is commonly used to estimate models with missing data such as clustering problems like Gaussian Mixture models. \\
-
-%TODO I probably should move the whole algo to section 3 when we talk about our model
-\begin{algorithm}
-\While{not converged}{
-  Expectation step
-  \begin{substeps}
-  Extended Kalmann filter \ref{eq:kalman_init} \;
-  Smoother\;
-  \end{substeps}
-  Maximization step
-}
-  \caption{Model}
-\end{algorithm}
 
 \chapter{Materials and methods}
 
@@ -385,17 +420,17 @@ Bacteria   & Crustaceans & Invertebrates & Spiders  &                 \\ \hline
     \label{fig:hist_tax_fam}
 \end{figure}
 
-%TODO Cite previous paper on ecological, they mentioned it
-Intuitively due The amount invasion per year increases during time due to worldwide effects such as the grow of intercontinental trading etc...
+Intuitively due The amount invasion per year increases during time mainly due to worldwide effects such as the grow of intercontinental trading and an increased worldwide connectivity (\citet{intro:ecological}). This claim is indeed supported by the dataset of our study. Fig. \ref{fig:invasion_per_year} shows how the number of invasion per year from 1800 to 2020 is monotonically increasing. The high spike after 2000 should not be trusted because the dataset is being constantly updated and recent data may still be lacking. Due to these reasons, we decided to sample the dataset from 1850 to 2010 to ensure reliability and trustness of the data.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{invasion_per_year.png}
     \caption{Histogram of Taxonomic Families and their respective number of species.}
-    \label{fig:pdf_invasion}
+    \label{fig:invasion_per_year}
 \end{figure}
 
 
-The dataset is extremely sparse. Fig. \ref{fig:pdf_invasion} shows the probability density function of the number of region each species invades during the entire timeframe of the study (1800-2020).  The average number of invasion per species is 4. The distribution is largely skewed. The mean is 4, and standard deviation is 5. The are a few outsiders that invade
+Because of the low number of invasions (i.e. the peak is around 2500 invasions near 2020 and the number of species is more than 50'000) The dataset is extremely sparse. Fig. \ref{fig:pdf_invasion} shows the probability density function of the number of region each species invades during the entire time frame of the study (1800-2020).  The average number of invasion per species is 4 out of 276 possible regions. The distribution is in fact largely skewed with a standard deviation of 5. It's worth mentioning that the maximum number of invasions is 97 with one outsider that invaded 176 regions.
 
 %TODO do the same plot for regions
 \begin{figure}[H]
@@ -406,21 +441,40 @@ The dataset is extremely sparse. Fig. \ref{fig:pdf_invasion} shows the probabili
 \end{figure}
 
 
-Due to the high sparsity of the dataset and the large computational cost, we removed from the dataset all the species that did not invade a significant amount of regions and all the regions that were not invaded by a significant number of species to reduce the space complexity of the dataset. Fig. \ref{pdf_invasion} shows how the majority of species invaded only a few number of regions. We make the assumption that a any species not invading at least 15 regions out of 276 has no relevant contribution to the model. With these restrictions the dataset has been reduced from 20473 species and 276 regions (55451 invasions in total) to 446 species and 238 regions (10275 invasions in total) number of invasions which is computationally managenable. 
+Due to the high sparsity of the dataset and the large computational cost, we removed all the species that did not invade a significant amount of regions and all the regions that were not invaded by a significant number of species with the goal of reducing the memory requirements to store the species-region interaction matrix. Fig. \ref{pdf_invasion} shows how the majority of species invaded only a few number of regions. We make the assumption that a any species not invading at least 15 regions out of 276 has no relevant contribution to the model. With these restrictions the dataset has been reduced from 20473 species and 276 regions (55451 invasions in total) to 446 species and 238 regions (10275 invasions in total) number of invasions which is computationally manageable. 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{species_region_invasion_filtering.png}
     \caption{Probability density function of of the number of invasions.}
-    \label{fig:pdf_invasion}
+    \label{fig:pdf_invasion_filtered}
 \end{figure}
 
 
-\subsection{Implementation specifications}
-We implemented the method discussed in TODO section in Tensorflow (TODO add cite) 
+\section{Latent space relational event model}
+%\subsection{Latent space REM}
+%In our study, the sender and receiver sets are disjoint due to the fact that each relational event represent the invasion of a species into a region. Infact, our graph is bipartite. 
+%Every invasion of a species $i$ and region $j$ can be modelled as a multivariate Poisson counting measure $$N_t(i, j) = count{invasion i -> j \; in \; interval \; [0, t]}$$
+%
+%However, due to the nature of the dataset, a invasion can happen only once, hence the count process is bounded by 1. For each species $i$ and region $j$ we define $T(i, j)$ return the time of invasion. Hence, the function $N$ can either take value 1 or zero depending wether an invasion happened previously to t for a determinated region and species.
+%
+%% TODO ask igor how to formulate this properly
+%\[
+%N_t(i, j) = 0 \; if \; t < T(i, j)
+%\]
+%\[
+%N_t(i, j) = 1 \; if \; t >= T(i, j)
+%\]
+%
+%The stochastic intensity of $N$ is model by the function $\lambda$. Heuristically, 
 
-%%TODO what framework do we use - how we solved the computational cost problem
-The size of the dataset is problematic under a computational point of view. In particular, the inversion of the matrix TODO and the memory requirements to allocate all the dataset are large. However, due to the filtering described in the previous section and using efficient data structure by saving in memory only the non-zero entries and the indexes in a sparse matrix and by using CUDA toolokits to accelerate the computation in GPU our implementation meets the computational requirements.
+
+%
+%\subsection{Implementation specifications}
+%We implemented the method discussed in TODO section in Tensorflow (TODO add cite) 
+%
+%%%TODO what framework do we use - how we solved the computational cost problem
+%The size of the dataset is problematic under a computational point of view. In particular, the inversion of the matrix TODO and the memory requirements to allocate all the dataset are large. However, due to the filtering described in the previous section and using efficient data structure by saving in memory only the non-zero entries and the indexes in a sparse matrix and by using CUDA toolokits to accelerate the computation in GPU our implementation meets the computational requirements.
  
 
 %\section{The second, math section}
@@ -484,9 +538,12 @@ The size of the dataset is problematic under a computational point of view. In p
 
 %\bibliographystyle{alpha}
 %\bibliographystyle{dcu}
-\bibliographystyle{plainnat}
-\bibliography{biblio}
+%\bibliographystyle{plainnat}
+%\bibliography{biblio}
 
+\bibliographystyle{abbrvnat}
+% \bibliographystyle{plain} % We choose the "plain" reference style
+\bibliography{biblio} % Entries are in the refs.bib file
 %\cleardoublepage
 %\theindex %optional, use only if you have an index, must use
 	  %\makeindex in the preamble
