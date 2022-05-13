@@ -17,3 +17,10 @@ code/PyCode/__pycache__/dataset.cpython-38.pyc
 code/Rcode/.RData
 code/Rcode/.Rhistory
 code/data/matrix.npy
+
+.DS_Store
+code/.DS_Store
+code/PyCode/__pycache__/config.cpython-39.pyc
+code/PyCode/__pycache__/dataset.cpython-39.pyc
+code/PyCode/__pycache__/make_plots.cpython-39.pyc
+code/PyCode/__pycache__/visuals.cpython-39.pyc
