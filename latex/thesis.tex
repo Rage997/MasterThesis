@@ -79,7 +79,7 @@ morecomment=[l]{//s},
 \place{Lugano} %compulsory
 
 \dedication{To my beloved} %optional
-\openepigraph{Someone said \dots}{Someone} %optional
+\openepigraph{Hello there \dots}{General Kenobi} %optional
 
 %\makeindex %optional, also comment out \theindex at the end
 
@@ -258,12 +258,12 @@ Generally speaking, the main interested in studying a state space model is to in
 
 \section{Expectation Maximization}
 
-Expectation Maximization (EM) family of algorithms have been introduced in 1977 by Dempster (TODO add citation) that iteratively cycles between two functions until convergence is satisfied. In doing so, it first computes a maximum likelihood (ML) estimate of the parameters and then maximise it. This approach is really powerful to problems where a direct solution of the posterior probability $p(x_{0:T}, \theta | y_{0:T})$ is computationally unfeasible. Furthermore, we are in particular interested in the application of this family of algorithms to problems where the full data is not available or some variables are latent (see Sec. \ref{sec:latent_space}). (TODO add citation of the first guy) \\
+Expectation Maximization (EM) family of algorithms have been introduced in 1977 by Dempster \cite{paper:dempster} that iteratively cycles between two functions until convergence is satisfied. In doing so, it first computes a maximum likelihood (ML) estimate of the parameters and then maximise it. This approach is really powerful to problems where a direct solution of the posterior probability $p(x_{0:T}, \theta | y_{0:T})$ is computationally unfeasible. Furthermore, we are in particular interested in the application of this family of algorithms to problems where the full data is not available or some variables are latent (see Sec. \ref{sec:latent_space}). \\
 
 The expectation procedure (called E-step ) computes the expectation of the logarithm of the complete data likelihood $Q$
 
 \[
-Q(\theta^n) = E_{\theta^n} \left( log(p(x, y | \theta) \right)
+Q(\theta^n) = E_{\x|y} \left( log(p(x, y | \theta^n) \right)
 \]
 
 then, with the updated parameter $\theta^n$ we maximizise $Q$ (M-step) and obtain $\theta^{n+1}$. The procedure is illustrated in Fig. \ref{em:cycle}. 
@@ -277,6 +277,7 @@ then, with the updated parameter $\theta^n$ we maximizise $Q$ (M-step) and obtai
   \caption{A general Expectation Maximization framework.}
 \end{algorithm}
 
+The expectation $E[Q(\theta^n)]$ is typically computationally untractable. Furthermore, it's complexity increases with the amount of data feeded to the model. There are many approaches available to estimate this quantity \cite{book:EMBook}. In this paper we are interested in a approach called Kalman Filter.
 
 %TODO more in detail??
 %\begin{eqfloat}
@@ -470,19 +471,27 @@ Intuitively due The amount invasion per year increases during time mainly due to
 \end{figure}
 
 
-Because of the low number of invasions (i.e. the peak is around 2500 invasions near 2020 and the number of species is more than 50'000) The dataset is extremely sparse. Fig. \ref{fig:pdf_invasion} shows the probability density function of the number of region each species invades during the entire time frame of the study (1800-2020).  The average number of invasion per species is 4 out of 276 possible regions. The distribution is in fact largely skewed with a standard deviation of 5. It's worth mentioning that the maximum number of invasions is 97 with one outsider that invaded 176 regions.
-
-%TODO do the same plot for regions
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{species_region_invasion.png}
-    \caption{Probability density function of of the number of invasions.}
-    \label{fig:pdf_invasion}
+    \includegraphics[width=0.75\textwidth]{coinvasion.png}
+    \caption{Symmetric interactions between insects in co-invading events. Each node represents a species and the edge represents the strength of the co-invasion factor. A thick edge indicates that a spread of one of the two species in the relationship is tipically followed by the invasion of the second. Image gently taken from \cite{intro:ecological}}
+    \label{fig:hist_tax_fam}
 \end{figure}
+
+Because of the low number of invasions (i.e. the peak is around 2500 invasions near 2020 and the number of species is more than 50'000) The dataset is extremely sparse. Fig. \ref{fig:pdf_invasion} shows the probability density function of the number of region each species invades during the entire time frame of the study (1800-2020).  The average number of invasion per species is 4 out of 276 possible regions. The distribution is in fact largely skewed with a standard deviation of 5. It's worth mentioning that the maximum number of invasions is 97 with one outsider that invaded 176 regions.
+
+% Ugly plot. Do not include
+%\begin{figure}[H]
+%    \centering
+%    \includegraphics[width=0.75\textwidth]{species_region_invasion.png}
+%    \caption{Probability density function of of the number of invasions.}
+%    \label{fig:pdf_invasion}
+%\end{figure}
 
 
 Due to the high sparsity of the dataset and the large computational cost, we removed all the species that did not invade a significant amount of regions and all the regions that were not invaded by a significant number of species with the goal of reducing the memory requirements to store the species-region interaction matrix. Fig. \ref{pdf_invasion} shows how the majority of species invaded only a few number of regions. We make the assumption that a any species not invading at least 15 regions out of 276 has no relevant contribution to the model. With these restrictions the dataset has been reduced from 20473 species and 276 regions (55451 invasions in total) to 446 species and 238 regions (10275 invasions in total) number of invasions which is computationally manageable. 
 
+%TODO do the same plot for regions
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{species_region_invasion_filtering.png}
