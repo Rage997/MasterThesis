@@ -18,7 +18,7 @@ class InvasiveSpecies():
         except FileNotFoundError as e:
             raise FileNotFoundError('File not found. Check data path in config.py')
 
-        self.time_resolution = 5
+        self.time_resolution = 10
         self.update_info() 
 
     def update_info(self):
@@ -45,7 +45,7 @@ class InvasiveSpecies():
     def filter_data(self)->None:
         # self.df = self.df[self.df['LifeForm'] == 'Viruses']
         self.df = self.df.dropna()
-        self.df = self.df[self.df['FirstRecord'] > 1800]
+        self.df = self.df[self.df['FirstRecord'] > 1850]
         self.update_info()
         return self.df
 
@@ -68,9 +68,9 @@ class InvasiveSpecies():
             reg_iter[idx] = len(df_s)
             # print(f'The species {s} has {spec_iter[idx]} iteractions')
 
-        # select the species that have less than 3 iteractions
+        # select the species that have less than <species_tol> iteractions
         remove_s_idx = np.where(spec_iter < species_tol)
-        # and regions that are invaded by less than 10 species
+        # and regions that are invaded by less than <region_tol> species
         remove_r_idx = np.where(reg_iter < region_tol)
 
         # Filter the dataset: remove all rows belonging to species with less than 3 iteractions
