@@ -45,7 +45,7 @@ class InvasiveSpecies():
     def filter_data(self)->None:
         # self.df = self.df[self.df['LifeForm'] == 'Viruses']
         self.df = self.df.dropna()
-        self.df = self.df[self.df['FirstRecord'] > 1850]
+        self.df = self.df[self.df['FirstRecord'] > 1800]
         self.update_info()
         return self.df
 
