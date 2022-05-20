@@ -18,7 +18,7 @@ class InvasiveSpecies():
         except FileNotFoundError as e:
             raise FileNotFoundError('File not found. Check data path in config.py')
 
-        self.time_resolution = 5
+        self.time_resolution = 10
         self.update_info() 
 
     def update_info(self):

@@ -5,7 +5,7 @@ import visuals
 import pickle
 
 InvSpec = None
-reset_data = False
+reset_data = True
 
 def load_data():
     global InvSpec
@@ -14,7 +14,7 @@ def load_data():
     InvSpec.filter_data()
     # InvSpec.remove_irrelevant(species_tol=3, region_tol=10)
     print(InvSpec.Ns, InvSpec.Nr)
-    M = InvSpec.build_matrix() # TODO time_resolution
+    # M = InvSpec.build_matrix() # TODO only need for some plots
 
 def run_plots():
     make_plots.histogram(InvSpec)
@@ -22,7 +22,7 @@ def run_plots():
     make_plots.species_region_invasion(InvSpec)
 
 def filtering():
-    InvSpec.remove_irrelevant(species_tol=15, region_tol=5)
+    InvSpec.remove_irrelevant(species_tol=25, region_tol=10)
     InvSpec.print_info()
     make_plots.species_region_invasion(InvSpec, filename='species_region_invasion_filtering.png')
 
@@ -44,4 +44,4 @@ if __name__ == '__main__':
     print('------ After filtering: ----------')
     InvSpec.print_info()
 
-    InvSpec.export_matrix()
+    # InvSpec.export_matrix()
