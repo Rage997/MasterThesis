@@ -24,7 +24,7 @@ def run_plots():
 def filtering():
     InvSpec.remove_irrelevant(species_tol=25, region_tol=10)
     InvSpec.print_info()
-    make_plots.species_region_invasion(InvSpec, filename='species_region_invasion_filtering.png')
+    # make_plots.species_region_invasion(InvSpec, filename='species_region_invasion_filtering.png')
 
 if __name__ == '__main__':
 

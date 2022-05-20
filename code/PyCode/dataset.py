@@ -68,9 +68,9 @@ class InvasiveSpecies():
             reg_iter[idx] = len(df_s)
             # print(f'The species {s} has {spec_iter[idx]} iteractions')
 
-        # select the species that have less than 3 iteractions
+        # select the species that have less than <species_tol> iteractions
         remove_s_idx = np.where(spec_iter < species_tol)
-        # and regions that are invaded by less than 10 species
+        # and regions that are invaded by less than <region_tol> species
         remove_r_idx = np.where(reg_iter < region_tol)
 
         # Filter the dataset: remove all rows belonging to species with less than 3 iteractions
