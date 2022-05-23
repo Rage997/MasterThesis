@@ -265,7 +265,7 @@ The expectation procedure (called E-step ) computes the expectation of the logar
 
 %TODO maybe change notation according to Sec latent space rem
 \[
-Q(\theta^n) = E_{\x|y} \left( log(p(x, y | \theta^n) \right)
+Q(\theta^n) = E_{x|y} \left( log(p(x, y | \theta^n) \right)
 \]
 
 then, with the updated parameter $\theta^n$ we maximizise $Q$ (M-step) and obtain $\theta^{n+1}$. The procedure is illustrated in Fig. \ref{em:cycle}. 
@@ -547,7 +547,7 @@ The stochastic intensity of the counting process $N$ is modelled by the function
 To infer on the structure of the latent space $X$, and the parameters $\theta$  and $\Sigma$ we use the Expectation Maximization (EM) algorithm (\ref{sec:em}). Since the latent state $X$ is not observed, a direct optimization of the maximum likelihood is not possible. We aim to maximise the $\int_x L(\theta, \Sigma ; y, x) dx$. As explained in the background section, the EM instead of directly maximise this integral, it iteratively computes an estimate $Q$ of the parameters $\theta, \Sigma$ conditionated on the previous estimate. 
 
 \[
-Q(\theta^{n}, \Sigma^{n}) = E_{\x|y} \left( log(p(x, y | \theta^{n-1}, \Sigma^{n-1}) \right)
+Q(\theta^{n}, \Sigma^{n}) = E_{x|y} \left( log(p(x, y | \theta^{n-1}, \Sigma^{n-1}) \right)
 \]
 
 %TODO 
