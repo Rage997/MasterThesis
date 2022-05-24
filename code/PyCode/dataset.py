@@ -47,7 +47,7 @@ class InvasiveSpecies():
         
         self.df = self.df[(self.df['FirstRecord'] >= 1850) & (self.df['FirstRecord'] <= 2010)]
         prev_len = len(self.df.index)
-        self.df =  self.df[ self.df['Island'] != 'yes']
+        self.df =  self.df[ self.df['Island'].str.lower() != 'yes']
         print(f'Removed {prev_len - len(self.df.index)} islands')
         col = ['TaxonName', 'Family', 'LifeForm', 'Region', 'FirstRecord']
         self.df = self.df[col]
