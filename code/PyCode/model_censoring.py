@@ -24,10 +24,11 @@ if gpus:
     print(e)
 
 # -------------------- Load real data -------------------------
+# TODO refactor this
 d = tf.constant(2, dtype =tf.int32)
-n = tf.constant(22, dtype =tf.int32)
-s = tf.constant(63, dtype =tf.int32) 
-r = tf.constant(209, dtype =tf.int32)
+n = tf.constant(16, dtype =tf.int32)
+s = tf.constant(42, dtype =tf.int32) 
+r = tf.constant(56, dtype =tf.int32)
 n_nodes = tf.constant(s+r, dtype =tf.int32)
 print(f'There are {n_nodes} nodes')
 time_interval = tf.constant(range(1, n+1), dtype =tf.int32)
@@ -173,14 +174,6 @@ V_kalman[0,:,:].assign(Sigma)
 
 # -------------------- Run model -------------------------
 # fit a censored process
-alpha = tf.constant(-3, dtype = tf.float32)
-Y = np.zeros((n, s, r))
-for t in range(n):
-  Y[t, :, :]= tfd.Poisson(log_rate = alpha + tf.matmul(X_true[t,:s,:], X_true[t,s:,:], transpose_b=True)).sample(1)
-
-Y = tf.reshape(Y, (n, s*r))
-
-
 censor_data = get_censoring(Y)
 Y = Y*censor_data
 
@@ -208,7 +201,7 @@ for t in range( n):
    Y_est[t, :].assign(h(X_kalman[t+1, :], c[t, :]))
 
 
-n_plots = 10
+n_plots = 3
 i = tf.random.uniform(shape = [n_plots], maxval = s, dtype = tf.int32)
 j = tf.random.uniform(shape = [n_plots], maxval = r, dtype = tf.int32)
 fig, axs = plt.subplots(n_plots, n_plots, figsize=(25,25))
@@ -216,5 +209,5 @@ for i in range(n_plots):
   for j in range(n_plots):
     axs[ i, j].plot( Y[:, i + j*r ])
     axs[ i, j].plot( Y_est[:, i + j*r ])
-
-plt.savefig('model_plots.png', dpi=1200)
+# plt.show()
+plt.savefig("model_result.png", dpi=75)
