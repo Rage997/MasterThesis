@@ -32,9 +32,9 @@ class InvasiveSpecies():
         df_orig = pd.read_excel(filename, sheet_name=None)
         # There are 3 sheets of the excel file. Get the correct one
         df = df_orig['GlobalAlienSpeciesFirstRecordDa']
-        col = ['TaxonName', 'Family', 'LifeForm', 'Region', 'FirstRecord']
-        df = df[col]
-        df = df.dropna()
+        # Filter columns of interest
+
+        # df = df.dropna()
         return df
 
     def get_time_interval(self):
@@ -44,8 +44,14 @@ class InvasiveSpecies():
 
     def filter_data(self)->None:
         # self.df = self.df[self.df['LifeForm'] == 'Viruses']
+        
+        self.df = self.df[(self.df['FirstRecord'] >= 1850) & (self.df['FirstRecord'] <= 2010)]
+        prev_len = len(self.df.index)
+        self.df =  self.df[ self.df['Island'] != 'yes']
+        print(f'Removed {prev_len - len(self.df.index)} islands')
+        col = ['TaxonName', 'Family', 'LifeForm', 'Region', 'FirstRecord']
+        self.df = self.df[col]
         self.df = self.df.dropna()
-        self.df = self.df[self.df['FirstRecord'] > 1800]
         self.update_info()
         return self.df
 

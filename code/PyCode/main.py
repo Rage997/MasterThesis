@@ -10,21 +10,23 @@ reset_data = True
 def load_data():
     global InvSpec
     InvSpec = InvasiveSpecies(config.filename) 
-    print(InvSpec.Ns, InvSpec.Nr)
+    print(f'Number of species {InvSpec.Ns} and regions {InvSpec.Nr} before filtering')
     InvSpec.filter_data()
-    # InvSpec.remove_irrelevant(species_tol=3, region_tol=10)
-    print(InvSpec.Ns, InvSpec.Nr)
+    print(f'Number of species {InvSpec.Ns} and regions {InvSpec.Nr} after filtering')
     # M = InvSpec.build_matrix() # TODO only need for some plots
 
 def run_plots():
     make_plots.histogram(InvSpec)
     make_plots.total_average_invasion_per_year(InvSpec)
     make_plots.species_region_invasion(InvSpec)
+    make_plots.region_species_invasion(InvSpec)
+
 
 def filtering():
-    InvSpec.remove_irrelevant(species_tol=25, region_tol=10)
+    
+    # First dataset
+    InvSpec.remove_irrelevant(species_tol=25, region_tol=50)
     InvSpec.print_info()
-    # make_plots.species_region_invasion(InvSpec, filename='species_region_invasion_filtering.png')
 
 if __name__ == '__main__':
 
@@ -38,10 +40,11 @@ if __name__ == '__main__':
 
         
     InvSpec.print_info()
-    # run_plots()
     filtering()
+    InvSpec.build_matrix() # required for some plots
+    run_plots()
     InvSpec.build_matrix() # Need to rebuild matrix after filtering
     print('------ After filtering: ----------')
     InvSpec.print_info()
 
-    # InvSpec.export_matrix()
+    InvSpec.export_matrix()
