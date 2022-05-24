@@ -16,6 +16,7 @@ def load_data():
     # M = InvSpec.build_matrix() # TODO only need for some plots
 
 def run_plots():
+    InvSpec.build_matrix() # required for some plots
     make_plots.histogram(InvSpec)
     make_plots.total_average_invasion_per_year(InvSpec)
     make_plots.species_region_invasion(InvSpec)
@@ -41,8 +42,7 @@ if __name__ == '__main__':
         
     InvSpec.print_info()
     filtering()
-    InvSpec.build_matrix() # required for some plots
-    run_plots()
+    # run_plots()
     InvSpec.build_matrix() # Need to rebuild matrix after filtering
     print('------ After filtering: ----------')
     InvSpec.print_info()
