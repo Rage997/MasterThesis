@@ -43,8 +43,6 @@ def species_region_invasion(data: InvasiveSpecies, filename='species_region_inva
         spec_inv.append(invasion)
     
     # Display the probability density function (pdf)
-    # TODO maybe use seaborn?
-    # https://stackoverflow.com/questions/71296986/how-to-draw-the-probability-density-function-pdf-plot-in-python
     fig = plt.figure()
     spec_inv.sort()
     # print(spec_inv[-3:]) # = [87, 88, 172] there's one specie that invades 172 regions
@@ -52,7 +50,31 @@ def species_region_invasion(data: InvasiveSpecies, filename='species_region_inva
     hmean = np.mean(spec_inv)
     hstd = np.std(spec_inv)
     pdf = stats.norm.pdf(spec_inv, hmean, hstd)
-    print(f'mean: {hmean}, std{hstd}')
+    print(f'Species invasion: mean: {hmean}, std{hstd}')
+    plt.plot(spec_inv, pdf) 
+    plt.savefig(plot_dir + filename, dpi=1200)
+    # plt.show()
+
+
+def region_species_invasion(data: InvasiveSpecies, filename='region_species_invasion.png'):
+    '''Plots the amount of invasion for each region'''
+
+    spec_inv = []
+    for r in data.region:
+        df_r = data.df[data.df['Region'] == r]
+        invasion = df_r['TaxonName'] # get all the invasion of species s
+        invasion = len(invasion)
+        spec_inv.append(invasion)
+    
+    # Display the probability density function (pdf)
+    fig = plt.figure()
+    spec_inv.sort()
+    # print(spec_inv[-3:]) # = [87, 88, 172] there's one specie that invades 172 regions
+    spec_inv = spec_inv[:-1] # remove it from plot
+    hmean = np.mean(spec_inv)
+    hstd = np.std(spec_inv)
+    pdf = stats.norm.pdf(spec_inv, hmean, hstd)
+    print(f'Region invasion: mean: {hmean}, std{hstd}')
     plt.plot(spec_inv, pdf) 
     plt.savefig(plot_dir + filename, dpi=1200)
     # plt.show()
