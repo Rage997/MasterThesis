@@ -10,10 +10,14 @@ reset_data = True
 def load_data():
     global InvSpec
     InvSpec = InvasiveSpecies(config.filename) 
-    print(f'Number of species {InvSpec.Ns} and regions {InvSpec.Nr} before filtering')
+    print(f'----------Opening dataset----------------')
+    InvSpec.print_info()
+    # print(f'Number of species {InvSpec.Ns} and regions {InvSpec.Nr} before filtering')
+    print(f'-------------Filtering elements of interest-------------')
     InvSpec.filter_data()
-    print(f'Number of species {InvSpec.Ns} and regions {InvSpec.Nr} after filtering')
-    # M = InvSpec.build_matrix() # TODO only need for some plots
+    InvSpec.print_info()
+    # print(f'Number of species {InvSpec.Ns} and regions {InvSpec.Nr} after filtering')
+    print(f'--------------------------')
 
 def run_plots():
     InvSpec.build_matrix() # required for some plots
@@ -23,10 +27,10 @@ def run_plots():
     make_plots.region_species_invasion(InvSpec)
 
 
-def filtering():
+def filtering(n, s):
     
     # First dataset
-    InvSpec.remove_irrelevant(species_tol=25, region_tol=50)
+    InvSpec.remove_irrelevant(species_tol=n, region_tol=s)
     InvSpec.print_info()
 
 if __name__ == '__main__':
@@ -40,8 +44,7 @@ if __name__ == '__main__':
             InvSpec = pickle.load(f)
 
         
-    InvSpec.print_info()
-    filtering()
+    filtering(15, 15)
     # run_plots()
     InvSpec.build_matrix() # Need to rebuild matrix after filtering
     print('------ After filtering: ----------')

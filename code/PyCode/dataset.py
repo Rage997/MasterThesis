@@ -48,7 +48,7 @@ class InvasiveSpecies():
         self.df = self.df[(self.df['FirstRecord'] >= 1850) & (self.df['FirstRecord'] <= 2010)]
         prev_len = len(self.df.index)
         self.df =  self.df[ self.df['Island'].str.lower() != 'yes']
-        print(f'Removed {prev_len - len(self.df.index)} islands')
+        # print(f'Removed {prev_len - len(self.df.index)} events')
         col = ['TaxonName', 'Family', 'LifeForm', 'Region', 'FirstRecord']
         self.df = self.df[col]
         self.df = self.df.dropna()
@@ -141,11 +141,12 @@ class InvasiveSpecies():
         self.M = M.copy() # store it into class
         return self.M
 
-    def export_matrix(self):
+    def export_matrix(self, path='../data/matrix.npy'):
         # Export data and then import it into R
         # print(n_s, n_r)
-        M = self.M.reshape(len(self.time), self.Ns*self.Nr)
+        # M = self.M.reshape(len(self.time), self.Ns*self.Nr)
         # M = M.reshape(len(time), (p)**2) # if full matix
+        # Do not reshape
         print(f's = {self.Ns}, r = {self.Nr}')
-        print(M.shape)
-        np.save('../data/matrix.npy', M)
+        print(self.M.shape)
+        np.save(path, self.M)

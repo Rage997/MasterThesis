@@ -25,10 +25,16 @@ if gpus:
 
 # -------------------- Load real data -------------------------
 # TODO refactor this
+# Load data from memory
+Y = np.load('../data/matrix.npy')
 d = tf.constant(2, dtype =tf.int32)
-n = tf.constant(16, dtype =tf.int32)
-s = tf.constant(42, dtype =tf.int32) 
-r = tf.constant(56, dtype =tf.int32)
+n = tf.constant(Y.shape[0], dtype =tf.int32)
+s = tf.constant(Y.shape[1], dtype =tf.int32) 
+r = tf.constant(Y.shape[2], dtype =tf.int32)
+
+Y = Y.reshape(n, s*r)
+Y = tf.Variable(Y, dtype = tf.float32) #flatten it to array
+
 n_nodes = tf.constant(s+r, dtype =tf.int32)
 print(f'There are {n_nodes} nodes')
 time_interval = tf.constant(range(1, n+1), dtype =tf.int32)
@@ -40,10 +46,6 @@ for i in range(n_nodes):
     X_true[ :, i, j] = (tf.keras.activations.sigmoid(np.random.uniform(-2, 2, 1)*10*(time_interval/n-np.random.uniform(0.2, 0.8, 1))) -0.5)*np.random.uniform(1, 3, 1) + np.random.uniform(-0.5, 0.5, 1)
 
 X_true = tf.constant(X_true, dtype = tf.float32)
-# or load it from memory
-Y = np.load('../data/matrix.npy')
-print(Y.shape)
-Y = tf.Variable(Y, dtype = tf.float32)
 
 # ------------------- Model declaration -------------
 def h(x, c):
