@@ -141,7 +141,7 @@ class InvasiveSpecies():
         self.M = M.copy() # store it into class
         return self.M
 
-    def export_matrix(self, path='../data/matrix.npy'):
+    def export_matrix(self, name='matrix.npy'):
         # Export data and then import it into R
         # print(n_s, n_r)
         # M = self.M.reshape(len(self.time), self.Ns*self.Nr)
@@ -149,4 +149,5 @@ class InvasiveSpecies():
         # Do not reshape
         print(f's = {self.Ns}, r = {self.Nr}')
         print(self.M.shape)
+        path = '../data/' + name
         np.save(path, self.M)

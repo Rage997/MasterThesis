@@ -26,7 +26,7 @@ if gpus:
 # -------------------- Load real data -------------------------
 # TODO refactor this
 # Load data from memory
-Y = np.load('../data/matrix.npy')
+Y = np.load('../data/matrix_412_58.npy')
 d = tf.constant(2, dtype =tf.int32)
 n = tf.constant(Y.shape[0], dtype =tf.int32)
 s = tf.constant(Y.shape[1], dtype =tf.int32) 
@@ -213,3 +213,6 @@ for i in range(n_plots):
     axs[ i, j].plot( Y_est[:, i + j*r ])
 # plt.show()
 plt.savefig("model_result.png", dpi=75)
+
+
+#TODO save X_kalman and Y_est

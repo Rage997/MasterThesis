@@ -4,11 +4,11 @@ import make_plots
 import visuals
 import pickle
 
-InvSpec = None
+# InvSpec = None
 reset_data = True
 
 def load_data():
-    global InvSpec
+    # global InvSpec
     InvSpec = InvasiveSpecies(config.filename) 
     print(f'----------Opening dataset----------------')
     InvSpec.print_info()
@@ -18,8 +18,9 @@ def load_data():
     InvSpec.print_info()
     # print(f'Number of species {InvSpec.Ns} and regions {InvSpec.Nr} after filtering')
     print(f'--------------------------')
+    return InvSpec
 
-def run_plots():
+def run_plots(InvSpec):
     InvSpec.build_matrix() # required for some plots
     make_plots.histogram(InvSpec)
     make_plots.total_average_invasion_per_year(InvSpec)
@@ -27,27 +28,35 @@ def run_plots():
     make_plots.region_species_invasion(InvSpec)
 
 
-def filtering(n, s):
+def filtering(data, n, s):
     
     # First dataset
-    InvSpec.remove_irrelevant(species_tol=n, region_tol=s)
-    InvSpec.print_info()
+    data.remove_irrelevant(species_tol=n, region_tol=s)
+    data.print_info()
 
 if __name__ == '__main__':
 
     if reset_data:
-        load_data()
+        InvSpec = load_data()
         with open('invspec_obj.pkl', 'wb+') as f:
             pickle.dump(InvSpec, f)
     else:
         with open('invspec_obj.pkl', 'rb') as f:
             InvSpec = pickle.load(f)
 
-        
-    filtering(15, 15)
-    # run_plots()
-    InvSpec.build_matrix() # Need to rebuild matrix after filtering
-    print('------ After filtering: ----------')
-    InvSpec.print_info()
-
-    InvSpec.export_matrix()
+    original_dataset = InvSpec
+    # Do some filtering and save depending on dataset size
+    
+    filterS = [5, 7, 10, 15]
+    filterR = [10, 15, 20, 25]
+    
+    for s in filterS:
+        for r in filterR:
+            tmp = InvSpec # tbh not sure if it's deep copy
+            filtering(tmp, s, r)
+            # run_plots()
+            tmp.build_matrix() # Need to rebuild matrix after filtering
+            print(f'------ After filtering for (s,r) = ({s},{r}) ,:  ----------')
+            # tmp.print_info()
+            name = 'matrix_' + str(tmp.Ns) + '_' + str(tmp.Nr)
+            tmp.export_matrix(name)
