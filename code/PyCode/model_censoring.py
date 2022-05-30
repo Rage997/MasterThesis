@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 
 # Hide GPU from visible devices
-# tf.config.set_visible_devices([], 'GPU')
+tf.config.set_visible_devices([], 'GPU')
 
 gpus = tf.config.list_physical_devices('GPU')
 if gpus:
