@@ -47,8 +47,8 @@ if __name__ == '__main__':
     original_dataset = InvSpec
     # Do some filtering and save depending on dataset size
     
-    filterS = [5, 7, 10, 15]
-    filterR = [10, 15, 20, 25]
+    filterS = [8]
+    filterR = [0]
     
     for s in filterS:
         for r in filterR:
