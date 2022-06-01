@@ -369,7 +369,7 @@ The expectation $E[Q(\theta^n)]$ is typically computationally untractable. Furth
 %There exist many other parameter estimation methods for state space models and for more general statistical models, but here we concentrate on these, because these approaches are the most widely used (probabilistic methods) in the state space context.
 % ----------------------------------------------------
 
-\section{Extended Kalman Filter}
+\section{Kalman Filter}
 \label{sec:kalman}
 
 In 1960 R.E. Kalman published his paper describing a recursive solution to the discrete-data linear filtering problem (\citet{paper:kalmanfilter}). Since then, the Kalman filter gained extreme popularity in the machine learning and robotics research field, particularly in the area of autonomous navigation systems. The Kalman filter estimates the evolution of a process by using feedback control. The filter first computes an estimation of the current process state at some time, then, tries to "filter out" the measurement noise in an iterative process. As such, the Kalman filter equations can be subdivided into two categories: the prediction step and the update step. The prediction step is responsible for projecting forward in time the current state of the system. The update step takes the a-prior estimate given from the prediction step and by taking new measurements of the error tries to obtain an improved a-posterior estimate of the state. Indeed, the general form of the algorithm resembles a predictor-corrector algorithm for solving numerical problems. In this chapter, a brief non-technical overview of the Kalman filter is provided. A reader interested in a more in-depth discussion of the formulation of the Kalman filter is advised to read \citet{paper:Maybeck79}.
@@ -387,7 +387,98 @@ In 1960 R.E. Kalman published his paper describing a recursive solution to the d
     \label{fig:kalman_cycle}
 \end{figure}
 
-%TODO cover the linear KF here
+Let's consider the general problem of trying to estimate the configuration of the state $x \in \mathcal{R}^n$ of a linear process evolution in discrete time
+
+\[
+x_k = A x_{k-1} + v \; , \quad v ~ N(0, \Sigma)
+\]
+
+with a measurement $y_k \in \mathcal{R}^m$ 
+
+\[
+y_k = H_k x_k + w \; , \quad w  ~ N(0, \delta) \\
+\]
+
+The normal distributed random variables $v, w$ represent noises in the process and in the observation, respectively, and are assumed to be conditionally independent of each other. The matrix $A \in \mathcal{R}^{n, n}$ forwards the state $x_{k-1}$ to the next state $x_k$. The matrix $H \in \mathcal{R}^{m,n}$ relates the measurement $y$ to the process $x$.
+
+The initial state $x_0$ is a random vector with a known mean and variance.
+
+\begin{eqfloat}
+\begin{equation}
+\begin{array}{l}
+\hat{x}_0 = \mu_0 = E[x_0] \\
+\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T] 
+\end{array}
+\label{eq:linear_kalman_init}
+\end{equation}
+\caption{Initialization}
+\end{eqfloat}
+
+
+We define $\hat{x}_k^-$ to be our a-priori estimate of the state $x$ at time $k$, given the knowledge of the previous state. Similarly, we define $\hat{x}_k$ to be our a-posteriori estimate at time $k$ given a measurement $y_k$. The goal of the Kalman filter is to express the a-posteriori state $\hat{x}_k^-$ in terms of a linear combination of the a-priori state and the difference between an actual measurement $y$ and a measurement prediction $H(\hat{x}_k^-)$ state. 
+
+
+\[
+\hat{x}_k = H\hat{x}_k^- + K (y_k - H_k \hat{x}_k^-)
+\]
+\[
+V_k = (I-K_k H_k)V_k^-
+\]
+
+
+For a statistical motivation, I redirect the reader to \citet{paper:Maybeck79}. The difference $y_t - h_t(\hat{x}_t^-)$ is a residual of the estimation against the measurement, reflecting the error between the predicted measurement and the real measurement. The matrix $K$ is called the Kalman gain matrix and is defined as 
+
+
+\[
+K_k = V_k^- H^T_k (H_k V_k^- H^T_k + R_k)^{-1}  \quad , \; H_k = \frac{d}{dx} h(x)
+\]
+
+
+The Kalman gain matrix goal is to minimize the a-posteriori covariance error matrix $V_t$ at time $t$. With some ease, a way of thinking $K$ is that as the measurement error covariance $R$ is close to zero the measurement $y$ is trusted more and the update is made with high precision. On contrary, if the a-priori estimate error covariance $P^-$ is close to zero, the actual measurement $y$ is less trusted and the predicted measurement $H\hat{x}_t^-$ trust is increased. The "trust" is then reflected in the weights of the Kalman gain matrix $K$.
+
+We forecast an update of the estimation of $\hat{x} \approx x$ in time
+
+\begin{eqfloat}[H]
+\begin{equation}
+\begin{array}{l}
+\hat{x}_k^- = A_k \hat{x}_k  \\
+\hat{V}_k^- = A_k \hat{V}_k^- A_k^T + \Sigma_k \\
+\end{array}
+\label{eq:kalman_predict}
+\end{equation}
+\caption{Prediction step}
+\label{eq:linear_kalmann_prediction}
+\end{eqfloat}
+
+Where $\Sigma_{t}$ the process noise covariance matrix. Then, on the update step, we filter the noise out of the predicted step a priori estimate and obtain a new estimate $\hat{x}_k$
+
+\begin{eqfloat}[H]
+\begin{equation}
+\begin{array}{l}
+K_k = V_k^- H^T_k (H_k V_k^- H^T_k + R_k)^{-1} \\
+\hat{x}_k = x_k^- + K (y_k - h(\hat{x}_k^-)) \\
+V_k = (I-K_k H_k)V_k^-
+\end{array}
+\label{eq:kalman_update}
+\end{equation}
+\caption{Update step}
+\label{eq:linear_kalmann_update}
+\end{eqfloat}
+
+The choice of $\Sigma$ is not much deterministic. In a practical way, the noise source $\Sigma$ is often used to capture uncertainity in the process model. Hence, a poor model choice can suffice by simply chosing a large enough uncertainity, by selecting a large covariance $\Sigma$. 
+
+
+%\begin{eqfloat}
+%\begin{equation}
+%    \begin{cases}
+%      x_k = A x_{k-1} + v \; , \quad v ~ N(0, \Sigma) \\
+%      y_k = H_k x_k + w \; , \quad w  ~ N(0, \Sigma) \\
+%      \end{cases}\,.
+%\label{eq:latentspace}
+%\end{equation}
+%\caption{Latent space}
+%\end{eqfloat}
+
 
 \chapter{Model}
 
@@ -481,7 +572,10 @@ The expectation of the log-likelihood can be estimated using an extended Kalman 
 
 %---------------------------------------------------------------------------------------------------
 
-%TODO move all this to model section
+%TODO review this
+% I should mention that our process is not linear,however, we can linearise it and apply an Extended KF
+% also mention that only one step is required for convergence
+
 Let's consider a non-linear system, $\epsilon$ captures uncertainty in the model, $v$ denotes the measurement noise. Both variables are white noises, random distributions with zero mean, and uncorrelated. 
 
 %TODO why is this more general?
@@ -491,43 +585,44 @@ x_k \sim f(x_{k-1}) + \epsilon_k \; , \; \epsilon ~ N(0, \Sigma)
 \[
 y_k \sim h(x_{k}) + v_{k} \; , \; v ~ N(0, \Delta)
 \]
-
-The initial state $x_0$ is a random vector with a known mean and variance.
-
-\begin{eqfloat}
-\begin{equation}
-\begin{array}{l}
-\hat{x}_0 = \mu_0 = E[x_0] \\
-\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T] 
-\end{array}
-\label{eq:kalman_init}
-\end{equation}
-\caption{Initialization}
-\end{eqfloat}
+%
+%The initial state $x_0$ is a random vector with a known mean and variance.
+%
+%\begin{eqfloat}
+%\begin{equation}
+%\begin{array}{l}
+%\hat{x}_0 = \mu_0 = E[x_0] \\
+%\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T] 
+%\end{array}
+%\label{eq:kalman_init}
+%\end{equation}
+%\caption{Initialization}
+%\end{eqfloat}
 
 Providing that $f, y \in C^1$, we can linearise the process around the mean. 
-
-We define $\hat{x}_k^-$ to be our a-priori estimate of the state $x$ at time $k$, given the knowledge of the previous state. Similarly, we define $\hat{x}_k$ to be our a-posteriori estimate at time $k$ given a measurement $y_k$. The goal of the Kalman filter is to express the a-posteriori state $\hat{x}_k^-$ in terms of a linear combination of the a-priori state and the difference between an actual measurement $y$ and a measurement prediction $H(\hat{x}_k^-)$ state. 
-
+%
+%We define $\hat{x}_k^-$ to be our a-priori estimate of the state $x$ at time $k$, given the knowledge of the previous state. Similarly, we define $\hat{x}_k$ to be our a-posteriori estimate at time $k$ given a measurement $y_k$. The goal of the Kalman filter is to express the a-posteriori state $\hat{x}_k^-$ in terms of a linear combination of the a-priori state and the difference between an actual measurement $y$ and a measurement prediction $H(\hat{x}_k^-)$ state. 
+%
+%%\[
+%%\hat{x}_t \in span(\hat{x}_t^-, y_t - H\hat{x}_t^-) 
+%%\]
 %\[
-%\hat{x}_t \in span(\hat{x}_t^-, y_t - H\hat{x}_t^-) 
+%\hat{x}_k = H\hat{x}_k^- + K (y_k - H_k \hat{x}_k^-)
 %\]
-\[
-\hat{x}_k = H\hat{x}_k^- + K (y_k - H_k \hat{x}_k^-)
-\]
-\[
-V_k = (I-K_k H_k)V_k^-
-\]
+%\[
+%V_k = (I-K_k H_k)V_k^-
+%\]
+%
+%
+%For a statistical motivation, I redirect the reader to \citet{paper:Maybeck79}. The difference $y_t - h_t(\hat{x}_t^-)$ is a residual of the estimation against the measurement, reflecting the error between the predicted measurement and the real measurement. The matrix $K$ is called the Kalman gain matrix and is defined as 
+%
+%
+%\[
+%K_k = V_k^- H^T_k (H_k V_k^- H^T_k + R_k)^{-1}  \quad , \; H_k = \frac{d}{dx} h(x)
+%\]
+%TODO mention that the Kalman matrix here is different
 
-
-For a statistical motivation, I redirect the reader to \citet{paper:Maybeck79}. The difference $y_t - h_t(\hat{x}_t^-)$ is a residual of the estimation against the measurement, reflecting the error between the predicted measurement and the real measurement. The matrix $K$ is called the Kalman gain matrix and is defined as 
-
-
-\[
-K_k = V_k^- H^T_k (H_k V_k^- H^T_k + R_k)^{-1}  \quad , \; H_k = \frac{d}{dx} h(x)
-\]
-
-The Kalman gain matrix goal is to minimize the a-posteriori covariance error matrix $V_t$ at time $t$. With some ease, a way of thinking $K$ is that as the measurement error covariance $R$ is close to zero the measurement $y$ is trusted more and the update is made with high precision. On contrary, if the a-priori estimate error covariance $P^-$ is close to zero, the actual measurement $y$ is less trusted and the predicted measurement $H\hat{x}_t^-$ trust is increased. The "trust" is then reflected in the weights of the Kalman gain matrix $K$. We forecast an update of the estimation of $\hat{x} \approx x$
+ We forecast an update of the estimation of $\hat{x} \approx x$
 
 \begin{eqfloat}[H]
 \begin{equation}
