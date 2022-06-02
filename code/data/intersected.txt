@@ -1,0 +1,210 @@
+turkey
+cyprus
+greece
+israel
+spain
+bulgaria
+romania
+ukraine
+canada
+united states
+netherlands
+egypt
+france
+russia
+italy
+norway
+united kingdom
+portugal
+denmark
+germany
+sweden
+australia
+chile
+china
+south africa
+poland
+brazil
+ireland
+algeria
+belgium
+malta
+tunisia
+new zealand
+faroe islands
+iceland
+lebanon
+bahamas
+mexico
+croatia
+monaco
+georgia
+lithuania
+finland
+latvia
+albania
+slovenia
+fiji
+estonia
+argentina
+japan
+puerto rico
+indonesia
+panama
+guam
+anguilla
+aruba
+barbados
+bermuda
+colombia
+dominica
+french guiana
+grenada
+guadeloupe
+guyana
+jamaica
+martinique
+saint barthelemy
+saint vincent and the grenadines
+trinidad and tobago
+venezuela
+costa rica
+taiwan
+cayman islands
+malaysia
+philippines
+singapore
+cuba
+dominican republic
+ecuador
+switzerland
+antigua and barbuda
+british virgin islands
+kazakhstan
+kyrgyzstan
+austria
+turkmenistan
+vanuatu
+american samoa
+haiti
+micronesia, federated states of
+montserrat
+new caledonia
+northern mariana islands
+palau
+saint kitts and nevis
+saint lucia
+solomon islands
+thailand
+tuvalu
+mauritius
+reunion
+saint helena
+czech republic
+kenya
+india
+sri lanka
+armenia
+guatemala
+jordan
+united arab emirates
+hong kong
+tokelau
+christmas island
+samoa
+tonga
+bahrain
+kuwait
+oman
+qatar
+saudi arabia
+botswana
+brunei darussalam
+comoros
+cook islands
+french polynesia
+iraq
+kiribati
+lesotho
+maldives
+marshall islands
+mayotte
+mozambique
+norfolk island
+uzbekistan
+seychelles
+zambia
+equatorial guinea
+luxembourg
+eritrea
+pakistan
+yemen
+madagascar
+mali
+namibia
+peru
+andorra
+belarus
+saint pierre and miquelon
+san marino
+slovakia
+el salvador
+mauritania
+cape verde
+uruguay
+zimbabwe
+afghanistan
+angola
+azerbaijan
+bangladesh
+belize
+benin
+bhutan
+bolivia
+bosnia and herzegovina
+burkina faso
+cambodia
+cameroon
+chad
+cote d'ivoire
+djibouti
+ethiopia
+gambia
+ghana
+gibraltar
+guinea
+guinea-bissau
+honduras
+hungary
+liberia
+liechtenstein
+mongolia
+montenegro
+morocco
+nepal
+nicaragua
+niger
+nigeria
+paraguay
+senegal
+serbia
+sierra leone
+somalia
+sudan
+tajikistan
+togo
+uganda
+western sahara
+sao tome and principe
+cocos (keeling) islands
+nauru
+pitcairn islands
+greenland
+malawi
+suriname
+central african republic
+burundi
+gabon
+rwanda
+niue
+saint martin
