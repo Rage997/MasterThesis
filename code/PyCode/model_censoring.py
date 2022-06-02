@@ -177,7 +177,7 @@ V_kalman[0,:,:].assign(Sigma)
 # -------------------- Run model -------------------------
 # fit a censored process
 censor_data = get_censoring(Y)
-Y = Y*censor_data
+# Y = Y*censor_data
 
 # train_dataset = tf.data.Dataset.from_tensor_slices((Y, censor_data))
 # train_dataset = train_dataset.batch(batch_size=1)
@@ -214,10 +214,10 @@ for i in range(n_plots):
 # plt.show()
 plt.savefig("model_result.png", dpi=75)
 
-
-#TODO save X_kalman and Y_est
 # Save results
+path = f'../data/{s}_{r}/'
+plt.savefig(path+"model_result.png", dpi=75)
 
-name = 'result_' + str(s) + '_' + str(r)
-path = '../data/results' + name
+# Save results
+path = f'result'
 np.save(path, X_kalman)

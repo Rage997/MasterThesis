@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 
 # Hide GPU from visible devices
-tf.config.set_visible_devices([], 'GPU')
+# tf.config.set_visible_devices([], 'GPU')
 
 gpus = tf.config.list_physical_devices('GPU')
 if gpus:
@@ -26,7 +26,7 @@ if gpus:
 
 # -------------------- Load real data -------------------------
 # Load data from memory
-Y = np.load('../data/matrix_730_123.npy')
+Y = np.load('../data/451_133/matrix.npy')
 d = tf.constant(2, dtype =tf.int32)
 n = tf.constant(Y.shape[0], dtype =tf.int32)
 s = tf.constant(Y.shape[1], dtype =tf.int32) 
@@ -50,10 +50,10 @@ X_true = tf.constant(X_true, dtype = tf.float32)
 
 # ------------------- Model declaration -------------
 
-def h_b(X_b, b, c):
-  species = tf.reshape(X_b[:, :(s*d)], (b, s, d))
-  region = tf.reshape(X_b[:, (s*d):], (b, r, d))
-  return tf.exp( c + tf.reshape(tf.matmul(species, region, transpose_b=True), (b, s*r)))
+# def h_b(X_b, b, c):
+#   species = tf.reshape(X_b[:, :(s*d)], (b, s, d))
+#   region = tf.reshape(X_b[:, (s*d):], (b, r, d))
+#   return tf.exp( c + tf.reshape(tf.matmul(species, region, transpose_b=True), (b, s*r)))
 
 def h(x, c):
   species = tf.reshape(x[:(s*d)], (s, d))
@@ -70,7 +70,7 @@ def get_h_H(x, c):
   with tf.GradientTape(persistent=True) as tape:
     tape.watch(x)
     h_current = h(x, c)
-  H = tape.jacobian(target = h_current, sources = x, parallel_iterations=500 , experimental_use_pfor=True)
+  H = tape.jacobian(target = h_current, sources = x, parallel_iterations=1000 , experimental_use_pfor=True)
   return h_current, H
 
 
@@ -95,7 +95,8 @@ class Kalman_model(tf.Module):
     R_inv = 1/mu
     if(censoring != None):
       censoring = tf.squeeze(censoring)
-      H = tf.matmul(tf.linalg.diag(censoring), H)
+      H = tf.transpose(censoring * tf.transpose(H))
+      # H = tf.matmul(tf.linalg.diag(censoring), H)
       R_inv = 1/mu * censoring
       mu = mu * censoring
     S_chol = tf.linalg.cholesky(tf.linalg.diag(1/self.V) + tf.matmul(H, tf.transpose(R_inv * tf.transpose(H)), transpose_a=True))
@@ -149,7 +150,8 @@ def fit_glm(z, y, offset, censor_data):
   return (model_coefficients, log_likelihood)
 
 
-censor_data = None
+# censor_data = None
+censor_data = get_censoring(Y)
 
 train_dataset = tf.data.Dataset.from_tensor_slices((Y, censor_data))
 train_dataset = train_dataset.batch(batch_size=1)
@@ -167,21 +169,24 @@ Z = tf.ones((n, s*r), dtype=tf.float32)
 
 #x_0 = tf.random.uniform(shape = [n_nodes * d] , minval= -1, maxval= 1, dtype=tf.float32)
 x_0 = tf.reshape(X_true[0, :, :], -1)
-sigma2 = tf.constant( [0.01]*(n_nodes*d).numpy(), dtype=tf.float32)
+sigma2 = tf.constant( [0.001]*(n_nodes*d).numpy(), dtype=tf.float32)
 
 X_kalman[0,:].assign(x_0)
 V_kalman[0,:].assign(sigma2)
-
+ 
 # -------------------- Run model -------------------------
 
 model = Kalman_model(x_0, sigma2)
 #tf.config.run_functions_eagerly(False)
-for iter in range(2):
+for iter in range(100):
   train_kalman(model)
   train_smoother(model)
-  model_coefficients, log_likelihood = fit_glm(tf.reshape(Z, (-1,1)), tf.reshape(Y, [-1]), tf.reshape(offset, [-1]), censor_data)
+  # model_coefficients, log_likelihood = fit_glm(tf.reshape(Z, (-1,1)), tf.reshape(Y, [-1]), tf.reshape(offset, [-1]), censor_data)
+  model_coefficients = tf.math.log(tf.reduce_sum(Y)/tf.reduce_sum(tf.math.exp(offset)*censor_data))
   c.assign(tf.fill((n, s*r), model_coefficients))
-  tf.print("log likelihood = ", tf.reduce_sum(log_likelihood))
+  # tf.print("log likelihood = ", tf.reduce_sum(log_likelihood))
+  tf.print("alpha = ", model_coefficients)
+
 
 # --------------------- Run plots ---------------------
 Y = tf.reshape(Y, (n, s*r))
@@ -199,9 +204,9 @@ for i in range(n_plots):
     axs[ i, j].plot( Y[:, i + j*r ])
     axs[ i, j].plot( Y_est[:, i + j*r ])
 
-plt.savefig("model_result.png", dpi=75)
+path = f'../data/{s}_{r}/'
+plt.savefig(path+"model_result.png", dpi=75)
 
 # Save results
-name = 'result_' + str(s) + '_' + str(r)
-path = '../data/results' + name
+path = f'result'
 np.save(path, X_kalman)

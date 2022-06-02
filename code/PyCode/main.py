@@ -3,6 +3,7 @@ import config
 import make_plots
 import visuals
 import pickle
+import os
 
 # InvSpec = None
 reset_data = True
@@ -40,15 +41,14 @@ if __name__ == '__main__':
         InvSpec = load_data()
         with open('invspec_obj.pkl', 'wb+') as f:
             pickle.dump(InvSpec, f)
+        # InvSpec.print_info()
     else:
         with open('invspec_obj.pkl', 'rb') as f:
             InvSpec = pickle.load(f)
-
-    original_dataset = InvSpec
-    # Do some filtering and save depending on dataset size
     
-    filterS = [8]
-    filterR = [0]
+    # Do some filtering and save depending on dataset size
+    filterS = [5, 10, 15]
+    filterR = [5]
     
     for s in filterS:
         for r in filterR:
@@ -58,5 +58,8 @@ if __name__ == '__main__':
             tmp.build_matrix() # Need to rebuild matrix after filtering
             print(f'------ After filtering for (s,r) = ({s},{r}) ,:  ----------')
             # tmp.print_info()
-            name = 'matrix_' + str(tmp.Ns) + '_' + str(tmp.Nr)
-            tmp.export_matrix(name)
+            path = '../data/'+str(tmp.Ns) + '_' + str(tmp.Nr)
+            if not os.path.exists(path):
+                os.makedirs(path)
+            name = 'matrix'
+            tmp.export_matrix(path + '/' + name)
