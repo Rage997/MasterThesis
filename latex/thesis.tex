@@ -126,7 +126,8 @@ Using years of first records of \numberevents invasions of alien species from 17
 
 The rate at which alien species invade countries has increased over the last century and it is becoming an important issue. The economic impact of alien species in Europe is estimated to be close to 13 billion dollars annually (\cite{intro:rate}). The interest in the study of the dynamics of alien species has been increasing over the years for this reason. Unfortunately, due to the complexity of the problem, is hard to come up with real actions. Intuitively, the invasion rate of species differs belonging to different taxonomic groups, however, a comprehensive global invasion dynamics study of the last centuries subdivided by taxonomic groups is still lacking. The dynamics of invasive species are driven by a multitude of factors simultaneously. These factors can be complex involving exogenous, endogenous, sociological, ecological, and socio-economic factors. (\cite{intro:factors}). Given the complexity of the subject, it's important to develop a framework capable of studying and analyzing all the underlying effects simultaneously. 
 
-Relational event modeling was first developed in the field of social network analysis (\cite{rem:butts}). A relational event is an interaction between a sender and a receiver at a specific timestamp. A relational event model studies the temporal sequence of such relational events. This framework has many advantages in the fact that it is able to study underlying temporal patterns, can efficiently deal with time-varying variables and it's an extremely adaptable hypothesis testing tool. Due to its versatility, in the years it is been applied in a large number of different fields such as animal-animal interaction (\citet{intro:cattle}), TODO cite 2 more.
+Relational event modeling was first developed in the field of social network analysis (\cite{rem:butts}). A relational event is an interaction between a sender and a receiver at a specific timestamp. A relational event model studies the temporal sequence of such relational events. This framework has many advantages in the fact that it is able to study underlying temporal patterns, can efficiently deal with time-varying variables and it's an extremely adaptable hypothesis testing tool. Due to its versatility, in the years it is been applied in a large number of different fields such as animal-animal interaction (\citet{intro:cattle}), 
+%TODO cite 2 more.
 
 %%TODO what did other people do?
 %In the years, there have been a large number of different statistical approaches to relation event models to predict the appearance and spread of alien species.  
@@ -137,23 +138,22 @@ Relational event modeling was first developed in the field of social network ana
 %%models: the case of invasion events" paper
 
 
-In this thesis, we introduce a novel custom latent space relational event model to study the dynamics of co-invasion of species for a bipartite graph. The model takes into consideration multiple species simultaneously and studies the underlying relationship between different species co-invading regions by training on the most exhaustive source of first records of alien species in multiple regions in the world. Traditional statistical tools, such as multidimensional scaling, fail to capture the similarity of nodes on this dataset due to its bipartite nature (i.e. no interaction of the kind species-species and region-region). By studying the proximity of species and regions in the latent space, our model is capable of determining the group of species that tend to co-invade a region and, in an analogous way, the group of regions that are more likely to be invaded by the same group of species. 
+In this thesis, we introduce a novel custom latent space relational event model to study the dynamics of co-invasion of species for a bipartite graph. The model takes into consideration multiple species simultaneously and studies the underlying relationship between different species co-invading regions by training on the most exhaustive source of first records of alien species in multiple regions in the world. Traditional statistical tools, such as multidimensional scaling, fail to capture the similarity of nodes on this dataset due to its bipartite nature (i.e. no interaction of the kind species-species and region-region). We propose a different approach to the study of this dataset by disposing the species and regions into a latent space and fitting a custom relational event model. By studying the proximity of species and regions in the latent space, our model is capable of determining the group of species that tend to co-invade a region and, in an analogous way, the group of regions that are more likely to be invaded by the same group of species.
+
+%TODO briefly report the results
 
 % Structure of the thesis
-%TODO update thesis structure
-In chapter 2 we present an exhaustive statistical background of the methods used for the reader. In chapter 3 we make a preliminary study of the dataset of the alien species, provide a formulation of our latent space relational event model and propose an efficient algorithm to make inferences about the latent space. In chapter 4 we discuss implementation specifications and frameworks used. In chapter 5 we present our results by applying our model to the dataset. In chapter 5 we discuss our results.
+In chapter 2 we make a preliminary study of the dataset of the alien species and discuss previous research. In chapter 3 we present an exhaustive statistical background of the methods used for the reader. In chapter 4 we provide a formulation of our latent space relational event model and propose an efficient algorithm to make inferences about the latent space. In chapter 5 we report our results. In the conclusive chapter 6 we discuss our results.
 
-%TODO write some closing thoughts
 
 
 \chapter{Materials and methods}
 %TODO add some comments from the paper from the lady
 
-%TODO add citation
-The Alien Species First Records database \cite{intro:dataset} contains the years of the first establishment of alien species in regions worldwide. The original dataset has been later updated to include a more depth invasion dataset \cite{intro:datasetv2} and the latest version includes  . 
 
-%TODO update the stats with the updated trimmed dataset
-We processed the dataset by taking the time interval from 1850 to 2010. By trimming the dataset, we removed 2495 relational events that happened before 1800. Specifically, we removed TODO species and TODO regions interactions. The subset of the dataset we take into consideration includes 19 taxonomic (listed in Tab. \ref{table:families}) families and 276 regions \footnote{Regions generally correspond to countries but there are also many islands large enough to be relevant.}. Considering all taxonomic families there's a total of 23039 species. As Fig. \ref{fig:hist_tax_fam} shows, most of the species in the dataset lie in the 'Vascular Plants" taxonomic family.
+The Alien Species First Records database \cite{intro:dataset} is the most exhaustive source of first records of alien species currently available. It contains the years of the first establishment of alien species in regions worldwide. 
+The original dataset has been later updated to include a more depth invasion dataset \cite{intro:datasetv2} and is in continuously updated. The current version includes %TODO add numbers
+
 
 \begin{table}[H]
 \centering
@@ -168,22 +168,33 @@ Bacteria   & Crustaceans & Invertebrates & Spiders  &                 \\ \hline
 \label{table:families}
 \end{table}
 
+%TODO update the stats with the updated trimmed dataset
+% By trimming the dataset, we removed 2495 relational events that happened before 1850. 
+We focus our research on the time interval spanning from 1850 to 2010. The dataset we take into consideration includes 18 taxonomic (listed in Tab. \ref{table:families}) families and 276 regions \footnote{Regions generally correspond to countries but in the dataset available almost half regions are islands.}. Considering all taxonomic families there's a total of 19390 species. As Fig. \ref{fig:hist_tax_fam} shows, most of the species in the dataset lie in the "Vascular Plants" taxonomic family.
+%Info right after import t = (1850, 2010)
+%There are 18 families and 276 regions
+%There are 19390 species.
+
 \begin{figure}[H]
+\centering
+\begin{minipage}{.55\textwidth}
     \centering
-    \includegraphics[width=0.75\textwidth]{histogram_taxfam}
-    \caption{Histogram of Taxonomic Families and their respective number of species.}
+    \includegraphics[width=0.9\textwidth]{histogram_taxfam}
+    \caption{Histogram of Taxonomic Families \\ and their respective number of species.}
     \label{fig:hist_tax_fam}
-\end{figure}
-
-Intuitively due The amount invasion per year increases during time mainly due to worldwide effects such as the grow of intercontinental trading and an increased worldwide connectivity (\citet{intro:ecological}). This claim is indeed supported by the dataset of our study. Fig. \ref{fig:invasion_per_year} shows how the number of invasion per year from 1800 to 2020 is monotonically increasing. The high spike after 2000 should not be trusted because the dataset is being constantly updated and recent data may still be lacking. Due to these reasons, we decided to sample the dataset from 1850 to 2010 to ensure reliability and trustness of the data.
-
-\begin{figure}[H]
+\end{minipage}%
+\begin{minipage}{.55\textwidth}
     \centering
-    \includegraphics[width=0.75\textwidth]{invasion_per_year.png}
-    \caption{Histogram of Taxonomic Families and their respective number of species.}
+    \includegraphics[width=0.9\textwidth]{invasion_per_year.png}
+    \caption{Number of invasion per year from 1800 to 2020.}
     \label{fig:invasion_per_year}
+\end{minipage}
 \end{figure}
 
+Intuitively, the amount invasion per year increases during time mainly due to worldwide effects such as the grow of intercontinental trading and an increased worldwide connectivity (\cite{intro:ecological}). 
+%TODO this would be a really good moment to add some insights from the lady
+
+This claim is indeed supported by the dataset, in fact looking at Fig. \ref{fig:invasion_per_year} the number of invasion per year from 1800 to 2020 is monotonically increasing. The high spike after 2000 should not be trusted because the dataset is being constantly updated and recent data may still be lacking. We hence decided to sample the dataset from 1850 to 2010 to ensure reliability and trustiness of the data.
 
 \begin{figure}[H]
     \centering
@@ -192,35 +203,41 @@ Intuitively due The amount invasion per year increases during time mainly due to
     \label{fig:hist_tax_fam}
 \end{figure}
 
-Because of the low number of invasions (i.e. the peak is around 2500 invasions near 2020 and the number of species is more than 50'000) The dataset is extremely sparse. Fig. \ref{fig:pdf_invasion} shows the probability density function of the number of region each species invades during the entire time frame of the study (1800-2020).  The average number of invasion per species is 4 out of 276 possible regions. The distribution is in fact largely skewed with a standard deviation of 5. It's worth mentioning that the maximum number of invasions is 97 with one outsider that invaded 176 regions.
+The peak number of invasion per year is around 2500 invasions happened around 2000. Taking into the consideration the large size of the dataset (more than 50'000 species) the number of invasion per year is really low and the dataset is hence considered sparse. The two probability density functions (PFF) in Fig. \ref{fig:pdf_invasion} shows in a very convenient way the sparsity of the dataset. The average number of region invasion per species is 4, this means each species only invaded 4 regions out of the 276 in the entire timeframe of the dataset. The distribution is in fact largely skewed with a standard deviation of 5. It's worth mentioning that the maximum number of invasions is 97 with one outsider that invaded 176 regions. 
+%TODO who is this outsider?
 
-% Ugly plot. Do not include
-%\begin{figure}[H]
-%    \centering
-%    \includegraphics[width=0.75\textwidth]{species_region_invasion.png}
-%    \caption{Probability density function of of the number of invasions.}
-%    \label{fig:pdf_invasion}
-%\end{figure}
+Due to the high sparsity of the dataset and the large computational cost of our method, we made a couple of assumptions. The first assumptions is that islands are do not significantely contribuite to the diffusion of species. The second assumption is that any species and region with a low number of invasions is not relevant to our study. Under these two assumptions, we removed %TODO
 
+%%Info right after removing islands
+%There are 18 families and 153 regions
+%There are 15947 species.
+%TODO add a better claim for this assumption
 
-Due to the high sparsity of the dataset and the large computational cost, we removed all the species that did not invade a significant amount of regions and all the regions that were not invaded by a significant number of species with the goal of reducing the memory requirements to store the species-region interaction matrix. Fig. \ref{pdf_invasion} shows how the majority of species invaded only a few number of regions. We make the assumption that a any species not invading at least 15 regions out of 276 has no relevant contribution to the model. With these restrictions the dataset has been reduced from 20473 species and 276 regions (55451 invasions in total) to 446 species and 238 regions (10275 invasions in total) number of invasions which is computationally manageable. 
+%TODO I removed the region-species PDF
+ removed all the species that did not invade a significant amount of regions and all the regions that were not invaded by a significant number of species with the goal of reducing the memory requirements to store the species-region interaction matrix. Fig. \ref{fig:pdf_invasion} shows how the majority of species invaded only a few number of regions. We make the assumption that a any species not invading at least 15 regions out of 276 has no relevant contribution to the model. With these restrictions the dataset has been reduced from 20473 species and 276 regions (55451 invasions in total) to 446 species and 238 regions (10275 invasions in total) number of invasions which is computationally manageable. 
 
 \begin{figure}
 \centering
 \begin{minipage}{.5\textwidth}
   \centering
-    \includegraphics[width=0.75\textwidth]{species_region_invasion.png}
+    \includegraphics[width=0.85\textwidth]{species_region_invasion_no_filter.png}
 %    \caption{Probability density function of of the number of invasions.}
-    \label{fig:pdf_invasion_filtered}
+%    \label{fig:pdf_invasion_filtered}
 \end{minipage}%
 \begin{minipage}{.5\textwidth}
   \centering
-    \includegraphics[width=0.75\textwidth]{region_species_invasion.png}
+    \includegraphics[width=0.85\textwidth]{species_region_invasion.png}
 %    \caption{Probability density function of of the number of invasions.}
-    \label{fig:pdf_invasion_filtered}
 \end{minipage}
-\caption{Probability density function (pdf) of the number of invasions. The left graph shows the pdf of the number of regions invaded by each species, the right one the pdf of number of species that invaded a region.}
+
+\caption{Probability density function (PDF) of the number of invasions during the entire time frame of the study (1850-2010). The left graph shows that the PDF is strongly left skewed. The second PDF, on the right, is generated after removing all species that did not invade a significant amount of regions.}
+\label{fig:pdf_invasion}
 \end{figure}
+
+%TODO fix the citation of the lady's paper
+\citet{paper:lady} showed that 
+%TODO rephrase this
+%The effect of distance on the invasion rate (i.e. recording in anew regions) has grown over time, with the rate of invasion events (i.e. the instantaneous rate at which the invasion event occurs among other possible invasions) decreasing with distance to the closest invaded region (Figure 1a). This relationship became especially strong after 1980 for mammals and in- sects.
 
 \chapter{Literature background}
 
@@ -680,10 +697,6 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 %---------------------------------------------------------------------------------------------------
 
 
-
-
-
-
 %TODO review my notation in section KF. First two moments
 %also seee star at igor paper 3. Inference
 \[
@@ -700,7 +713,6 @@ x_{k-1 | k-1} \approx N(\bar{x_{k-1 | k-1}}, \bar{V_{k-1|k-1}})
 the predict step of the Kalman filter estimates the first two moments of $x_k$. 
 
 
-
 %For the initial state $k=0$ we set $x_{0|0} = x_0$ and $V_{0|0} = \Sigma_0$ arbitrarly.
 
 %TODO what is this lol?
@@ -715,14 +727,24 @@ the predict step of the Kalman filter estimates the first two moments of $x_k$.
 %%\label{eq:kalmann_update}
 %\end{eqfloat}
 
+\chapter{Discussion}
 
+%TODO our findings are in agreement with lady's paper
+
+%The number of alien species found in a particular region. Both plants and insects were significantly affected by the number of species that have already invaded a certain region. However, whereas plants were recorded more frequently in regions already invaded by other plants, insects were less frequently recorded in regions that had already been invaded by other in- sects. The effects were nonetheless very small in both cases, i.e., affecting the hazard by 0.3% per invasion in the opposite direction.
+
+
+
+%TODO move this to appendix or whatever
 %\subsection{Implementation specifications}
 %We implemented the method discussed in TODO section in Tensorflow (TODO add cite) 
 %
 %%%TODO what framework do we use - how we solved the computational cost problem
 %The size of the dataset is problematic under a computational point of view. In particular, the inversion of the matrix TODO and the memory requirements to allocate all the dataset are large. However, due to the filtering described in the previous section and using efficient data structure by saving in memory only the non-zero entries and the indexes in a sparse matrix and by using CUDA toolokits to accelerate the computation in GPU our implementation meets the computational requirements.
+% 
  
-
+ 
+%-------- useless stuff ? ----------
 %\section{The second, math section}
 %
 %\textbf{Theorem 1 (Residue Theorem).}
@@ -779,7 +801,8 @@ the predict step of the Kalman filter estimates the first two moments of $x_k$.
 %\lipsum 
 %
 %\backmatter
-%
+
+
 %\chapter{Glossary} %optional
 
 %\bibliographystyle{alpha}
