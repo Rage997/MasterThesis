@@ -80,8 +80,8 @@ morecomment=[l]{//s},
 \Year{2022} %compulsory, put only the year
 \place{Lugano} %compulsory
 
-\dedication{To my beloved} %optional
-\openepigraph{Hello there \dots}{General Kenobi} %optional
+%\dedication{To my beloved} %optional
+%\openepigraph{Hello there \dots}{General Kenobi} %optional
 
 %\makeindex %optional, also comment out \theindex at the end
 
@@ -126,7 +126,7 @@ Using years of first records of \numberevents invasions of alien species from 17
 
 The rate at which alien species invade countries has increased over the last century and it is becoming an important issue. The economic impact of alien species in Europe is estimated to be close to 13 billion dollars annually (\cite{intro:rate}). The interest in the study of the dynamics of alien species has been increasing over the years for this reason. Unfortunately, due to the complexity of the problem, is hard to come up with real actions. Intuitively, the invasion rate of species differs belonging to different taxonomic groups, however, a comprehensive global invasion dynamics study of the last centuries subdivided by taxonomic groups is still lacking. The dynamics of invasive species are driven by a multitude of factors simultaneously. These factors can be complex involving exogenous, endogenous, sociological, ecological, and socio-economic factors. (\cite{intro:factors}). Given the complexity of the subject, it's important to develop a framework capable of studying and analyzing all the underlying effects simultaneously. 
 
-Relational event modeling was first developed in the field of social network analysis (\cite{rem:butts}). A relational event is an interaction between a sender and a receiver at a specific timestamp. A relational event model studies the temporal sequence of such relational events. This framework has many advantages in the fact that it is able to study underlying temporal patterns, can efficiently deal with time-varying variables and it's an extremely adaptable hypothesis testing tool. Due to its versatility, in the years it is been applied in a large number of different fields such as animal-animal interaction (\citet{intro:cattle}), 
+Relational event modeling was first developed in the field of social network analysis (\cite{rem:butts}). A relational event is an interaction between a sender and a receiver at a specific timestamp. A relational event model studies the temporal sequence of such relational events. This framework has many advantages in the fact that it is able to study underlying temporal patterns, can efficiently deal with time-varying variables and it's an extremely adaptable hypothesis testing tool. Due to its versatility, in the years it is been applied in a large number of different fields such as animal-animal interaction (\citet{intro:cattle}).
 %TODO cite 2 more.
 
 %%TODO what did other people do?
@@ -148,11 +148,9 @@ In chapter 2 we make a preliminary study of the dataset of the alien species and
 
 
 \chapter{Materials and methods}
-%TODO add some comments from the paper from the lady
-
 
 The Alien Species First Records database \cite{intro:dataset} is the most exhaustive source of first records of alien species currently available. It contains the years of the first establishment of alien species in regions worldwide. 
-The original dataset has been later updated to include a more depth invasion dataset \cite{intro:datasetv2} and is in continuously updated. The current version includes %TODO add numbers
+The original dataset has been later updated to include a more depth invasion dataset \cite{intro:datasetv2} and is in continuously updated. The current version includes 61751 invasions of 23191 species divided in 18 taxonomic families in 276 regions.
 
 
 \begin{table}[H]
@@ -168,8 +166,6 @@ Bacteria   & Crustaceans & Invertebrates & Spiders  &                 \\ \hline
 \label{table:families}
 \end{table}
 
-%TODO update the stats with the updated trimmed dataset
-% By trimming the dataset, we removed 2495 relational events that happened before 1850. 
 We focus our research on the time interval spanning from 1850 to 2010. The dataset we take into consideration includes 18 taxonomic (listed in Tab. \ref{table:families}) families and 276 regions \footnote{Regions generally correspond to countries but in the dataset available almost half regions are islands.}. Considering all taxonomic families there's a total of 19390 species. As Fig. \ref{fig:hist_tax_fam} shows, most of the species in the dataset lie in the "Vascular Plants" taxonomic family.
 %Info right after import t = (1850, 2010)
 %There are 18 families and 276 regions
@@ -204,18 +200,21 @@ This claim is indeed supported by the dataset, in fact looking at Fig. \ref{fig:
 \end{figure}
 
 The peak number of invasion per year is around 2500 invasions happened around 2000. Taking into the consideration the large size of the dataset (more than 50'000 species) the number of invasion per year is really low and the dataset is hence considered sparse. The two probability density functions (PFF) in Fig. \ref{fig:pdf_invasion} shows in a very convenient way the sparsity of the dataset. The average number of region invasion per species is 4, this means each species only invaded 4 regions out of the 276 in the entire timeframe of the dataset. The distribution is in fact largely skewed with a standard deviation of 5. It's worth mentioning that the maximum number of invasions is 97 with one outsider that invaded 176 regions. 
-%TODO who is this outsider?
 
-Due to the high sparsity of the dataset and the large computational cost of our method, we made a couple of assumptions. The first assumptions is that islands are do not significantely contribuite to the diffusion of species. The second assumption is that any species and region with a low number of invasions is not relevant to our study. Under these two assumptions, we removed %TODO
+Due to the high sparsity of the dataset and the large computational cost of our method, we made a couple of assumptions with the goal of reducing the data complexity and intrinsic computational requirements. The first assumptions is that islands are do not significantely contribuite to the diffusion of species. We hence removed 123 regions from the dataset corresponding to islands. 
 
+The second assumption is that any species and region with a low number of invasions is not relevant to our study. We removed all the species that did not invade a significant amount of regions and all the regions that were not invaded by a significant number of species with the goal of reducing the memory requirements to store the species-region interaction matrix. Fig. \ref{fig:pdf_invasion} shows how the majority of species invaded only a few number of regions. We make the assumption that a any species not invading at least 15 regions out of 276 has no relevant contribution to the model. With these restrictions the dataset has been reduced from 20473 species and 276 regions (55451 invasions in total) to 446 species and 123 regions (10275 invasions in total) number of invasions which is computationally manageable. 
+
+
+%TODO not yet decided how much fltering. Under this second assumption, we removed ... species.
+
+%TODO add geospatial plot of removed regions
 %%Info right after removing islands
 %There are 18 families and 153 regions
 %There are 15947 species.
 %TODO add a better claim for this assumption
 
-%TODO I removed the region-species PDF
- removed all the species that did not invade a significant amount of regions and all the regions that were not invaded by a significant number of species with the goal of reducing the memory requirements to store the species-region interaction matrix. Fig. \ref{fig:pdf_invasion} shows how the majority of species invaded only a few number of regions. We make the assumption that a any species not invading at least 15 regions out of 276 has no relevant contribution to the model. With these restrictions the dataset has been reduced from 20473 species and 276 regions (55451 invasions in total) to 446 species and 238 regions (10275 invasions in total) number of invasions which is computationally manageable. 
-
+ 
 \begin{figure}
 \centering
 \begin{minipage}{.5\textwidth}
