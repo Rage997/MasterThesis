@@ -27,6 +27,7 @@ df = df[(df['FirstRecord'] >= 1850) & (df['FirstRecord'] <= 2010)]
 # df['Island'] = 'yes'
 
 region = df['Region'].unique()
+df['Region'] = df['Region'].str.lower()
 region = [reg.lower() for reg in region]
 
 # search cross database the region
@@ -37,7 +38,25 @@ world_data = gpd.read_file(path+r'world.shp')
 # world_data.plot()
 # plt.show()
 world_data['NAME'] = world_data['NAME'].str.lower()
-regions_geospatial = world_data['NAME']
+world_data = world_data.replace('syrian arab republic', 'syria')
+world_data = world_data.replace('libyan arab jamahiriya', 'lybia')
+world_data = world_data.replace('wallis and futuna islands ', 'wallis and futuna')
+world_data = world_data.replace('republic of moldova', 'moldova')
+world_data = world_data.replace('united states minor outlying islands', 'us minor outlying islands')
+world_data = world_data.replace('turks and caicos islands', 'turks and caicos')
+world_data = world_data.replace('falkland islands (malvinas)', 'falkland islands')
+world_data = world_data.replace('south georgia south sandwich islands', 'south georgia and the south sandwich islands')
+world_data = world_data.replace('iran (islamic republic of)', 'iran, islamic republic of')
+world_data = world_data.replace('the former yugoslav republic of macedonia', 'macedonia')
+world_data = world_data.replace('palestine', 'palestine, state of')
+world_data = world_data.replace("korea, democratic people's republic of", 'south korea')
+world_data = world_data.replace("korea, republic of", 'north korea')
+world_data = world_data.replace("viet nam", 'vietnam')
+world_data = world_data.replace("democratic republic of the congo", 'congo, democratic republic of the')
+world_data = world_data.replace("svalbard", 'svalbard and jan mayen')
+world_data = world_data.replace("timor-leste", 'timor leste')
+
+regions_geospatial = world_data['NAME'].unique()
 # regions_geospatial = [reg.lower() for reg in regions_geospatial]
 
 intersection = {}
@@ -88,7 +107,10 @@ world_data['intersection'] = 0
 island_names = df[df['Island'] == 'yes']
 island_names = island_names['Region'].unique()
 island_names = [isl.lower() for isl in island_names]
-print(island_names)
+# print(island_names)
+with open(path+"islands.txt", "w+") as txt_file:
+        for line in island_names:
+            txt_file.write(line + "\n") # works with any number of elements in a line
 world_data.loc[world_data.NAME.isin(island_names), 'intersection'] = 1
 
 from matplotlib.colors import ListedColormap
@@ -97,24 +119,44 @@ road_colors = ['red', 'blue' ]
 # Plot the regions that are intersected in blue and the ones mising in red
 # TODO so buggy....why are there 5 bins?
 fig, ax = plt.subplots(figsize  = (15, 10))
-leg_kwds_dict = {'numpoints': 2, 'labels': ['dio', 'cane']}
+# leg_kwds_dict = {'numpoints': 2, 'labels': ['dio', 'cane']}
 
 world_data.plot(column='intersection', 
     # cmap='tab10', 
     ax = ax,
     cmap = ListedColormap(road_colors),
     # figsize=(15, 10),
-    legend=True,
-    scheme="quantiles"
+    legend=False,
+    # scheme="quantiles"
     # legend_kwds=leg_kwds_dict
 )
 # ax.legend()
-plt.imsave(path+'dataset_intersection.png')
-# plt.show()
+# plt.savefig(path+'dataset_intersection.png')
+plt.show()
 
-#TODO print gradient based on region invasion
 # for island
-# sjer_roads['RTTYP'].replace(np.nan, 'Unknown', inplace=True)
+# df['Island'].replace(np.nan, 'Unknown', inplace=True)
+
+#TODO fix database : islands and check intersections
+world_data['invaded'] = -1
+for region in intersected:
+    invasion_count = len(df[df['Region'] == region])
+    print(f'{region} is invaded {invasion_count} times')
+    world_data.loc[world_data['NAME'] == region, 'invaded']  = invasion_count 
+# to_count = df_orig['Regions']
+fig, ax = plt.subplots(figsize  = (15, 10))
+# leg_kwds_dict = {'numpoints': 2, 'labels': ['dio', 'cane']}
+
+world_data.plot(column='invaded', 
+    cmap='tab10', 
+    ax = ax,
+    legend=True
+    # scheme="quantiles"
+    # legend_kwds=leg_kwds_dict
+)
+# ax.legend()
+# plt.savefig(path+'region_invasion.png')
+plt.show()
 
 #Later
 #TODO plot gradient region invasion varying in time (will be used for presentation)
