@@ -10,6 +10,9 @@ with revelant data, reporting information about it and converting it
 to a matrix to be lately processed with a REM model
 '''
 
+not_islands = ['united kingdom', 'ireland', 'new zealand', 'tasmania', 
+                'japan', 'indonesia', 'taiwan', 'philippines', 'dominican republic',
+                'greece', 'canada']
 class InvasiveSpecies():
     def __init__(self, filename: str) -> None:
     #  TODO when importing the dataset, only select the columns I'm interested
@@ -32,9 +35,9 @@ class InvasiveSpecies():
         df_orig = pd.read_excel(filename, sheet_name=None)
         # There are 3 sheets of the excel file. Get the correct one
         df = df_orig['GlobalAlienSpeciesFirstRecordDa']
-        # Filter columns of interest
-
-        # df = df.dropna()
+        # fix islands
+        for island in not_islands:
+            df_orig.loc[df_orig['Region'] == island, 'Island'] = 'no'
         return df
 
     def get_time_interval(self):
