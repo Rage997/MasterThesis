@@ -37,7 +37,7 @@ class InvasiveSpecies():
         df = df_orig['GlobalAlienSpeciesFirstRecordDa']
         # fix islands
         for island in not_islands:
-            df_orig.loc[df_orig['Region'] == island, 'Island'] = 'no'
+            df.loc[df['Region'] == island, 'Island'] = 'no'
         return df
 
     def get_time_interval(self):
