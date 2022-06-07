@@ -630,8 +630,8 @@ Distances between vectors are defined in many different ways. Two main popular c
 \begin{eqfloat}
 \begin{equation}
 \begin{array}{l}
-dist_{euc}(x, v) = |\sum_{i=0}^d x_i - v_i|^2 \\
-dist_{dot}(x, x) = x \cdot v
+dist_{euc}(u, v) = |\sum_{i=0}^d u_i - v_i|^2 \\
+dist_{dot}(u, v) = u \cdot v
 \end{array}
 \label{eq:distance_latentspace}
 \end{equation}
@@ -640,7 +640,6 @@ dist_{dot}(x, x) = x \cdot v
 
 We chose the distance in the vector space $X$ to be the dot product. Empirically, it captures better the similarity of actors.
 
-%TODO what about exogenoues/edogeneous effects ?
 %TODO probably k should be t? or t should be k
 \begin{eqfloat}
 \begin{equation}
@@ -650,8 +649,6 @@ We chose the distance in the vector space $X$ to be the dot product. Empirically
 \caption{Lambda rates are in function of the distance given by the dot products of vectors in the latent space $X$.}
 \end{eqfloat}
 
-%TODO define theta being the distance of vectors in the latent space
-
 \section{Inference}
 % Introduce EM for the problem
 To infer on the structure of the latent space $X$, and the parameters $\theta$  and $\Sigma$ we use the Expectation Maximization (EM) algorithm (\ref{sec:em}). Since the latent state $X$ is not observed, a direct optimization of the maximum likelihood is not possible. We aim to maximise the $\int_x L(\theta, \Sigma ; y, x) dx$. As explained in the background section \ref{sec:em}, the EM instead of directly maximise this integral, it iteratively computes and maximises an estimate $Q$ of the parameters $\theta, \Sigma$ conditionated on the previous estimate. 
@@ -660,74 +657,67 @@ To infer on the structure of the latent space $X$, and the parameters $\theta$  
 Q(\theta^{n}, \Sigma^{n}) = E_{x|y} \left( log(p(x, y | \theta^{n-1}, \Sigma^{n-1}) \right)
 \]
 
+With $\theta(x_k) = -dist(x_s, x_r))$
+
 % E-step hard to solve -> Kalman filter
 
-The expectation of the log-likelihood can be estimated using an extended Kalman filter \ref{sec:kalman}. Calculating the entire conditional distribution is computationally unfeasible, therefore, we only calculate the first two moments. We denote $\bar{x}_{k}$ and $\bar{V}_{k}$ as the expectation and variance of the state process $x$ conditioned up to the observed state $y_k$. 
+In section \ref{sec:kalman} we showed how to apply a Kalman filter to solve the E-step of an Expectaction Maximizaton problem of a Linear Gaussian model, but our process $y$ is not linear. We can rewrite the latent space formulation in Eq. \ref{eq:latentspace} slightly differently
 
+\begin{eqfloat}
+\begin{equation}
+    \begin{cases}
+      x_k = f(x_{k-1}) + \epsilon \; , \quad \epsilon ~ N(0, \Sigma) \\
+      y_k = h(x_k) 
+    \end{cases}\,
+\label{eq:latentspace2}
+\end{equation}
+%\caption{Latent space}
+\end{eqfloat}
 
-By exploiting the natural formulation of our latent space model (Eq. \ref{eq:latentspace}) we can express solve the computationally challenging E-step by means of a Kalman filter. We can express the quantity $Q$ in function of its first two conditioned moments $E$, $V$ TODO add them. By recalling the definitions of a-priori and a-posteriori estimate (Sec. \ref{sec:em}), we write:
-
+here $f = I$ and $h$ is a function dependent on the latent space $x$. The function $f$ is not linear because it's a Poison distribution, however, providing that $f, y \in C^1$, we can linearise the process around the mean and reconduct the problem to the basic linear case. By assuming that a step in time in the latent state can be approximated by the conditional distribution 
 
 \[
-\bar{x} = E[\bar{x}^-]
+x_{k} \sim N( \hat{x}_k, \hat{V}_k)
+\]
+
+the predict step of the Kalman filter estimates the first two moments of $x_k$. 
+
+\[
+\hat{x}_k = E[\hat{x}^-_k]
 \]
 \[
-\bar{V} = V[\bar{x}^-]
+\hat{V}_k = V[\hat{x}^-_k]
 \]
 
-%TODO linearise the process
+Where $\hat{x}^-_k$  is an a-priori estimates of the state $x$ at time $k$, given the knowledge of the previous state. Hence, by exploiting the natural formulation of our latent space model (Eq. \ref{eq:latentspace}) we can solve the computationally challenging E-step by means of a Kalman filter by approximating the quantity $Q$ in function of its first two conditioned moments $E$, $V$. 
 
-However, in contrast to what shown in the background section \ref{sec:kalman}, our process is not linear.
-The process .... is not linear. We can consider a linear Gaussian approximation of the latent space formulation 
+The initial state $x_0$ is a random vector with a known mean and variance.
 
-% I should mention that our process is not linear,however, we can linearise it and apply an Extended KF
-% also mention that only one step is required for convergence
+\begin{eqfloat}
+\begin{equation}
+\begin{array}{l}
+\hat{x}_0 = \mu_0 = E[x_0] \\
+\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T] 
+\end{array}
+\label{eq:kalman_init}
+\end{equation}
+\caption{Initialization}
+\end{eqfloat}
 
-Let's consider a non-linear system, $\epsilon$ captures uncertainty in the model, $v$ denotes the measurement noise. Both variables are white noises, random distributions with zero mean, and uncorrelated. 
+We now express the a-posteriori estimation $\hat{x}_k^-$ in terms of a linear combination of the a-priori state and the difference between an actual measurement $y$ and a measurement prediction $H(\hat{x}_k^-)$ state. 
 
-%TODO why is this more general?
 \[
-x_k \sim f(x_{k-1}) + \epsilon_k \; , \; \epsilon ~ N(0, \Sigma)
+\hat{x}_k = H_k\hat{x}_k^- + K (y_k - H_k \hat{x}_k^-)
 \]
 \[
-y_k \sim h(x_{k}) + v_{k} \; , \; v ~ N(0, \Delta)
+V_k = (I-K_k H_k)V_k^-
 \]
-%
-%The initial state $x_0$ is a random vector with a known mean and variance.
-%
-%\begin{eqfloat}
-%\begin{equation}
-%\begin{array}{l}
-%\hat{x}_0 = \mu_0 = E[x_0] \\
-%\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T] 
-%\end{array}
-%\label{eq:kalman_init}
-%\end{equation}
-%\caption{Initialization}
-%\end{eqfloat}
 
-Providing that $f, y \in C^1$, we can linearise the process around the mean. 
-%
-%We define $\hat{x}_k^-$ to be our a-priori estimate of the state $x$ at time $k$, given the knowledge of the previous state. Similarly, we define $\hat{x}_k$ to be our a-posteriori estimate at time $k$ given a measurement $y_k$. The goal of the Kalman filter is to express the a-posteriori state $\hat{x}_k^-$ in terms of a linear combination of the a-priori state and the difference between an actual measurement $y$ and a measurement prediction $H(\hat{x}_k^-)$ state. 
-%
-%%\[
-%%\hat{x}_t \in span(\hat{x}_t^-, y_t - H\hat{x}_t^-) 
-%%\]
-%\[
-%\hat{x}_k = H\hat{x}_k^- + K (y_k - H_k \hat{x}_k^-)
-%\]
-%\[
-%V_k = (I-K_k H_k)V_k^-
-%\]
-%
-%
-%For a statistical motivation, I redirect the reader to \citet{paper:Maybeck79}. The difference $y_t - h_t(\hat{x}_t^-)$ is a residual of the estimation against the measurement, reflecting the error between the predicted measurement and the real measurement. The matrix $K$ is called the Kalman gain matrix and is defined as 
-%
-%
+We define the Kalman gain matrix $K$ as 
+
 \[
 K_k = V_k^- H^T_k (H_k V_k^- H^T_k + R_k)^{-1}  \quad , \; H_k = \frac{d}{dx} h(x)
 \]
-%TODO mention that the Kalman matrix here is different
 
 We forecast an update of the estimation of $\hat{x} \approx x$
 
@@ -737,12 +727,12 @@ We forecast an update of the estimation of $\hat{x} \approx x$
 \hat{x}_t^- = f(\hat{x}_{t-1}) \\
 \hat{V}_t^- = J(x^f_{t-1}) V_{t-1} J(x^f_{t-1})^T + W_{t-1} Q_{t-1} W_{t-1}^T
 \end{array}
-\label{eq:kalman_predict}
 \end{equation}
 \caption{Prediction step}
-\label{eq:kalmann_prediction}
+\label{eq:ext_kalmann_prediction}
 \end{eqfloat}
 
+%TODO check Q
 Where $J(x)$ is the Jacobian of $f(x)$ and $Q_{t-1}$ the process noise covariance matrix.
 
 
@@ -753,13 +743,12 @@ K_t = V_t^- H^T_t (H_t V_t^- H^T_t + R_t)^{-1} \\
 \hat{x}_t = x_t^- + K (z_t - h(\hat{x}_t^-)) \\
 V_t = (I-K_t H_t)V_t^-
 \end{array}
-\label{eq:kalman_update}
 \end{equation}
 \caption{Update step}
-\label{eq:kalmann_update}
+\label{eq:ext_kalmann_update}
 \end{eqfloat}
 
-Where K is the Kalmann gain. By combining equations (\ref{eq:kalmann_prediction}), (\ref{eq:kalmann_update}) we get an algorithm for the Extended Kalman Filter process is shown in Algorithm \ref{algo:kalmann}. 
+By combining equations (\ref{eq:ext_kalmann_prediction}), (\ref{eq:ext_kalmann_update}) we get an algorithm for the Extended Kalman Filter process is shown in Algorithm \ref{algo:ext_kalmann}. Due to the convexity of the problem, only one step is required for the Kalman filter to converge.
 
 \begin{algorithm}[H]
 \textbf{Initialize: }
@@ -768,12 +757,12 @@ $\hat{x}_0 = \mu_0 = E[x_0]$ \;
 $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 \end{substeps}
 \For{k=1,...,n}{
-  Prediction step (Eq. \ref{eq:kalmann_prediction})
+  Prediction step (Eq. \ref{eq:ext_kalmann_prediction})
   \begin{substeps}
   $\hat{x}_t^- = f(\hat{x}_{t-1})$ \;
   $\hat{V}_t^- = J(x^f_{t-1}) V_{t-1} J(x^f_{t-1})^T + W_{t-1} Q_{t-1} W_{t-1}^T$\;
   \end{substeps}
-  Update step (Eq. \ref{eq:kalmann_update})
+  Update step (Eq. \ref{eq:ext_kalmann_update})
   \begin{substeps}
   $K_t = V_t^- H^T_t (H_t V_t^- H^T_t + R_t)^{-1}$ \;
   $\hat{x}_t = x_t^- + K (z_t - h(\hat{x}_t^-))$\;
@@ -781,41 +770,30 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
   \end{substeps}
 }
   \caption{Extended Kalmann Filter}
-  \label{algo:kalmann}
+  \label{algo:ext_kalmann}
 \end{algorithm}
 
-%---------------------------------------------------------------------------------------------------
+%TODO talk a little about the smoother
+%TODO talk a little about how to estimate the parameters
+
+We can finally write our latent space REM model in a closed form
+
+%TODO write this
+\begin{algorithm}[H]
+\For{k=1...s}{
+  E-Step: Kalman Filter \;
+  M-Step: Smoothing \;
+  Estimate paramters
+}
+\caption{Extended Kalmann Filter}
+\label{algo:ext_kalmann}
+\end{algorithm}
+
 
 
 %TODO review my notation in section KF. First two moments
 %also seee star at igor paper 3. Inference
-\[
-\bar{x}_{k} = .... \\
-\bar{V}_{k} = ....
-\]
 
-By assuming that a step in time in the latent state can be approximated by the conditional distribution 
-
-\[
-x_{k-1 | k-1} \approx N(\bar{x_{k-1 | k-1}}, \bar{V_{k-1|k-1}})
-\]
-
-the predict step of the Kalman filter estimates the first two moments of $x_k$. 
-
-
-%For the initial state $k=0$ we set $x_{0|0} = x_0$ and $V_{0|0} = \Sigma_0$ arbitrarly.
-
-%TODO what is this lol?
-%Similarly to as explained in Sec. \ref{background:rem}, 
-%
-%\begin{eqfloat}[H]
-%\begin{equation}
-%L(\lambda) =  \prod_{e \in E} \frac{\lambda_1(s_i, r_i, t_i | G, \theta)}{ \sum_{s \in R_{t_i}} \lambda_1(s, r, t_i | G, \theta)} + \lambda_0
-%\label{eq:lambda_likelihood}
-%\end{equation}
-%\caption{Full log-likelihood of hazard function.}
-%%\label{eq:kalmann_update}
-%\end{eqfloat}
 
 \chapter{Discussion}
 
@@ -824,6 +802,15 @@ the predict step of the Kalman filter estimates the first two moments of $x_k$.
 %The number of alien species found in a particular region. Both plants and insects were significantly affected by the number of species that have already invaded a certain region. However, whereas plants were recorded more frequently in regions already invaded by other plants, insects were less frequently recorded in regions that had already been invaded by other in- sects. The effects were nonetheless very small in both cases, i.e., affecting the hazard by 0.3% per invasion in the opposite direction.
 
 
+\chapter{Conclusion}
+
+%TODO answer to research question
+
+%TODO what we accomplished
+
+%TODO what is the latent space structure of species invasions?
+
+%TODO what about countries?
 
 %TODO move this to appendix or whatever
 %\subsection{Implementation specifications}
@@ -831,57 +818,8 @@ the predict step of the Kalman filter estimates the first two moments of $x_k$.
 %
 %%%TODO what framework do we use - how we solved the computational cost problem
 %The size of the dataset is problematic under a computational point of view. In particular, the inversion of the matrix TODO and the memory requirements to allocate all the dataset are large. However, due to the filtering described in the previous section and using efficient data structure by saving in memory only the non-zero entries and the indexes in a sparse matrix and by using CUDA toolokits to accelerate the computation in GPU our implementation meets the computational requirements.
-% 
+
  
- 
-%-------- useless stuff ? ----------
-%\section{The second, math section}
-%
-%\textbf{Theorem 1 (Residue Theorem).}
-%Let $f$ be analytic in the region $G$ except for the isolated singularities $a_1,a_2,\ldots,a_m$. If $\gamma$ is a closed rectifiable curve in $G$ which does not pass through any of the points $a_k$ and if $\gamma\approx 0$ in $G$ then
-%\[
-%\frac{1}{2\pi i}\int_\gamma f = \sum_{k=1}^m n(\gamma;a_k) \text{Res}(f;a_k).
-%\]
-%\textbf{Theorem 2 (Maximum Modulus).}
-%\emph{Let $G$ be a bounded open set in $\mathbb{C}$ and suppose that $f$ is a continuous function on $G^-$ which is analytic in $G$. Then}
-%\[
-%\max\{|f(z)|:z\in G^-\}=\max \{|f(z)|:z\in \partial G \}.
-%\]
-%
-%\section[third]{A very very long section, titled ``The third section'', with
-%  a rather  short text alternative (third)}
-%\lipsum \texttt{Some Test}
-%\lstset{language=algebra,linewidth=0.95\linewidth,breaklines=true,numbers=left,
-%basicstyle=\ttfamily,numberstyle=\tiny,escapeinside={//*}{\^^M},
-%mathescape=true}
-%\begin{lstlisting}
-%import IntSpec, ItemSpec;
-%
-%sort cart; //*\label{sort}
-%
-%constructors //*\label{begin-sig}
-%create() $\longrightarrow$ cart;
-%insert(cart, item) $\longrightarrow$ cart;
-%observers
-%amount(cart) $\longrightarrow$ int;
-%transformers
-%delete(cart, item) $\longrightarrow$ cart; //*\label{end-sig}
-%
-%axioms //*\label{begin-axioms}
-%forall c: cart, i, j: item 
-%
-%amount(create()) $=$ 0; //*\label{begin-amount}
-%amount(insert(c,i)) $=$ amount(c) $+$ price(i); //*\label{end-amount}
-%delete(create(),i) $=$ create(); //*\label{begin-delete}
-%delete(insert(c,i),j) $=$
-%if (i =$\:$= j) c
-%else insert(delete(c,j),i); //*\label{end-axioms}
-%end
-%\end{lstlisting}
-%
-%As you can easily see from the above listing \citet{bbggs:iet07}
-%define something weird based on the BPEL specification
-%\citep{bpelspec}.
 %\nocite{*}
 
 %\appendix %optional, use only if you have an appendix
