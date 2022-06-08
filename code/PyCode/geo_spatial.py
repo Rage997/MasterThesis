@@ -102,7 +102,7 @@ save_intersections()
 
 # Print geospatial data of the dataset
 world_data['intersection'] = 0
-# world_data.loc[world_data.NAME.isin(intersected), 'intersection'] = 1
+world_data.loc[world_data.NAME.isin(intersected), 'intersection'] = 1
 
 island_names = df[df['Island'] == 'yes']
 island_names = island_names['Region'].unique()
@@ -116,6 +116,7 @@ world_data.loc[world_data.NAME.isin(island_names), 'intersection'] = 1
 from matplotlib.colors import ListedColormap
 road_colors = ['red', 'blue' ]
 
+fig_path = '../../latex/figures/'
 # Plot the regions that are intersected in blue and the ones mising in red
 # TODO so buggy....why are there 5 bins?
 fig, ax = plt.subplots(figsize  = (15, 10))
@@ -138,24 +139,36 @@ plt.show()
 # df['Island'].replace(np.nan, 'Unknown', inplace=True)
 
 #TODO fix database : islands and check intersections
-world_data['invaded'] = -1
+world_data['invaded'] = 500
 for region in intersected:
     invasion_count = len(df[df['Region'] == region])
-    print(f'{region} is invaded {invasion_count} times')
+    # print(f'{region} is invaded {invasion_count} times')
     world_data.loc[world_data['NAME'] == region, 'invaded']  = invasion_count 
 # to_count = df_orig['Regions']
 fig, ax = plt.subplots(figsize  = (15, 10))
 # leg_kwds_dict = {'numpoints': 2, 'labels': ['dio', 'cane']}
 
+
+most_invaded = world_data.nsmallest(20, 'invaded')
+for index, row in most_invaded.iterrows():
+    # print(info)
+    print(row['NAME'])
+    print(row['invaded'])
+
+suisse_invasion = world_data[world_data['NAME'] == 'switzerland']
+print(suisse_invasion)
+# print(f'Switzerland has been invaded {suisse_invasion["invaded"]}')
+
 world_data.plot(column='invaded', 
-    cmap='tab10', 
+    cmap='OrRd', 
     ax = ax,
-    legend=True
+    legend=True,
     # scheme="quantiles"
-    # legend_kwds=leg_kwds_dict
+    legend_kwds={'label': "Alien species by country from 1850 to 2010",
+                        'orientation': "horizontal"}
 )
 # ax.legend()
-# plt.savefig(path+'region_invasion.png')
+plt.savefig(fig_path+'region_invasion.png')
 plt.show()
 
 #Later
