@@ -37,6 +37,7 @@ lebanon
 bahamas
 mexico
 croatia
+syria
 monaco
 georgia
 lithuania
@@ -107,6 +108,7 @@ sri lanka
 armenia
 guatemala
 jordan
+moldova
 united arab emirates
 hong kong
 tokelau
@@ -131,14 +133,17 @@ marshall islands
 mayotte
 mozambique
 norfolk island
+us minor outlying islands
 uzbekistan
 seychelles
 zambia
 equatorial guinea
 luxembourg
+turks and caicos
 eritrea
 pakistan
 yemen
+falkland islands
 madagascar
 mali
 namibia
@@ -149,6 +154,7 @@ saint pierre and miquelon
 san marino
 slovakia
 el salvador
+south georgia and the south sandwich islands
 mauritania
 cape verde
 uruguay
@@ -176,8 +182,10 @@ guinea
 guinea-bissau
 honduras
 hungary
+iran, islamic republic of
 liberia
 liechtenstein
+macedonia
 mongolia
 montenegro
 morocco
@@ -185,26 +193,33 @@ nepal
 nicaragua
 niger
 nigeria
+north korea
+palestine, state of
 paraguay
 senegal
 serbia
 sierra leone
 somalia
+south korea
 sudan
 tajikistan
 togo
 uganda
+vietnam
 western sahara
 sao tome and principe
 cocos (keeling) islands
 nauru
 pitcairn islands
+congo, democratic republic of the
 greenland
 malawi
+svalbard and jan mayen
 suriname
 central african republic
 burundi
 gabon
 rwanda
 niue
+timor leste
 saint martin
