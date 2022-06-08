@@ -64,6 +64,7 @@ def region_species_invasion(data: InvasiveSpecies, filename='region_species_inva
         df_r = data.df[data.df['Region'] == r]
         invasion = df_r['TaxonName'] # get all the invasion of species s
         invasion = len(invasion)
+        print(f'Region {r} invaded {invasion} times')
         spec_inv.append(invasion)
     
     # Display the probability density function (pdf)

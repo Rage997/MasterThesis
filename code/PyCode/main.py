@@ -23,8 +23,8 @@ def load_data():
 
 def run_plots(InvSpec):
     InvSpec.build_matrix() # required for some plots
-    make_plots.histogram(InvSpec)
-    make_plots.total_average_invasion_per_year(InvSpec)
+    # make_plots.histogram(InvSpec)
+    # make_plots.total_average_invasion_per_year(InvSpec)
     make_plots.species_region_invasion(InvSpec)
     make_plots.region_species_invasion(InvSpec)
 
@@ -46,9 +46,10 @@ if __name__ == '__main__':
         with open('invspec_obj.pkl', 'rb') as f:
             InvSpec = pickle.load(f)
     
+    # run_plots(InvSpec)
     # Do some filtering and save depending on dataset size
-    filterS = [5, 10, 15]
-    filterR = [5]
+    filterS = [5]
+    filterR = [0]
     
     for s in filterS:
         for r in filterR:
