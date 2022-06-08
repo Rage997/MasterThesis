@@ -211,6 +211,7 @@ Intuitively, the amount of invasion per year increases over time mainly due to f
 %%\end{table}
 % -----------------------------------------
 
+%TODO use log of colors
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{region_invasion.png}
@@ -262,7 +263,7 @@ The peak number of invasions per year is close to 5000 invasions around the year
 
 The first assumption is that any species that did not invade at least 5 regions during the entire timeframe is not relevant to our study. We hence removed more than 14'000 species resulting in a more computationally manageable dataset of around 1700 species. In Fig \ref{fig:pdf_invasion} I reported the resulting PDF resulted by removing all species that did not invade at least 5 regions. 
 
-The second assumption is that islands do not significantly contribute to the diffusion of species. We hence removed 123 regions from the dataset corresponding to islands. The reason to remove islands is two-fold. First, we are mostly interested in studying the interactions of alien species between larger regions and islands are typically not large enough to be significant. Furthermore, long-distance invasions \footnote{The distance between regions is considered as the distance between the closest borders.} are typically rare \cite{paper:lady} and islands are generally more remote. This assumption is supported by the dataset, the average number of invasions that happened in islands is 80 compared to the 200 average invasions of all regions combined. However, there are a couple of islands worth mentioning that contrast this assumption. The Hawaiian Islands and the Azores islands have more than 1000 invasions. Removing these two islands with a greater number of invasions does not affect our study.
+The second assumption is that islands do not significantly contribute to the diffusion of species. We hence removed 123 regions from the dataset corresponding to islands. The reason to remove islands is two-fold. First, we are mostly interested in studying the interactions of alien species between larger regions and islands are typically not large enough to be significant. Furthermore, long-distance invasions \footnote{The distance between regions is considered as the distance between the closest borders.} are typically rare \cite{paper:lady} and islands are generally more remote. This assumption is supported by the dataset, the average number of invasions that happened in islands is 80 compared to the 200 average invasions of all regions combined. However, there are a couple of islands worth mentioning that contrast this assumption. The Hawaiian Islands and the Azores islands have more than 1000 invasions. We are interested in studying large regions interactions and islands generally are "intermediary steps" in a long distance interactions between large regions such as continents. Removing these intermediary steps does not affect the interaction between larger regions, which we are interested in.
 
 %Species belonging to the same taxonomic family are not expected to have a tendency to co-invade regions.
 %TODO what does the lady say about co-invasion?
@@ -273,7 +274,9 @@ The second assumption is that islands do not significantly contribute to the dif
 
 %It's also worth mentioning that the effect of distance between regions on the invasion rate has largely grown over time, in fact, the rate of the discover of alien species has increasing with di
 
-%TODO update these numbers
+Under these two assumptions, we filtered all non-irrelevant species and regions out of the dataset to $1724$ species and $153$ regions and $15947$ invasions from $1850$ to $2010$.
+
+%TODO check these numbers
 %%Info right after removing islands
 %There are 18 families and 153 regions
 %There are 15947 species.
@@ -298,8 +301,6 @@ The second assumption is that islands do not significantly contribute to the dif
 \end{figure}
 
 %TODO some closing thoughts?
-
-
 \chapter{Literature background}
 
 In this section, we cover all the necessary background tools to develop our latent space relational event model. First, we introduce the concept of a latent space model by means of a state space model. Then we cover in-depth how to infer on this model. We introduce then the reader to the Expectation-Maximization and Kalman Filter algorithms. 
@@ -774,6 +775,7 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 \end{algorithm}
 
 %TODO talk a little about the smoother
+
 %TODO talk a little about how to estimate the parameters
 
 We can finally write our latent space REM model in a closed form
@@ -781,7 +783,7 @@ We can finally write our latent space REM model in a closed form
 %TODO write this
 \begin{algorithm}[H]
 \For{k=1...s}{
-  E-Step: Kalman Filter \;
+  E-Step: Kalman Filter  \ref{eq:ext_kalmann_prediction} + \ref{eq:ext_kalmann_update} \;
   M-Step: Smoothing \;
   Estimate paramters
 }
