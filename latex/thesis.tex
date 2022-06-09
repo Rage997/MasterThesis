@@ -441,7 +441,26 @@ We are interested in estimating the configuration of the state $x \in \mathcal{R
 \end{eqfloat}
 
 
-We define $\hat{x}_k^-$ to be our a-priori estimate of the state $x$ at time $k$, given the knowledge of the previous state. Similarly, we define $\hat{x}_k$ to be our a-posteriori estimate at time $k$ given a measurement $y_k$. The goal of the Kalman filter is to express the a-posteriori state $\hat{x}_k^-$ in terms of a linear combination of the a-priori state and the difference between an actual measurement $y$ and a measurement prediction $B \hat{x}_k^-$. 
+We define $\hat{x}_k^-$ to be our a-priori estimate of the state $x$ at time $k$, given the knowledge of the previous state. Similarly, we define $\hat{x}_k$ to be our a-posteriori estimate at time $k$ given a measurement $y_k$. 
+
+We forecast an update of the estimation of $\hat{x} \approx x$ in time
+
+\begin{eqfloat}[H]
+\begin{equation}
+\begin{array}{l}
+\hat{x}_k^- = A_k \hat{x}_k  \\
+\hat{V}_k^- = A_k \hat{V}_k^- A_k^T + \Sigma_k \\
+\end{array}
+\label{eq:kalman_predict}
+\end{equation}
+\caption{Prediction step}
+\label{eq:linear_kalmann_prediction}
+\end{eqfloat}
+
+Where $\Sigma_{t}$ the process noise covariance matrix. 
+
+
+The goal of the Kalman filter is to express the a-posteriori state $\hat{x}_k^-$ in terms of a linear combination of the a-priori state and the difference between an actual measurement $y$ and a measurement prediction $B \hat{x}_k^-$. 
 
 
 %\[
@@ -475,34 +494,20 @@ K_k = V_k^- B^T_k (B_k V_k^- B^T_k + R_k)^{-1}
 
 The Kalman gain matrix goal is to minimize the a-posteriori covariance error matrix $V_t$ at time $t$. With some ease, a way of thinking $K$ is that as the measurement error covariance $R$ is close to zero the measurement $y$ is trusted more and the update is made with high precision. On contrary, if the a-priori estimate error covariance $P^-$ is close to zero, the actual measurement $y$ is less trusted and the predicted measurement $H\hat{x}_t^-$ trust is increased. The "trust" is then reflected in the weights of the Kalman gain matrix $K$.
 
-We forecast an update of the estimation of $\hat{x} \approx x$ in time
+%Then, on the update step, we filter the noise out of the predicted step a priori estimate and obtain a new estimate $\hat{x}_k$
 
-\begin{eqfloat}[H]
-\begin{equation}
-\begin{array}{l}
-\hat{x}_k^- = A_k \hat{x}_k  \\
-\hat{V}_k^- = A_k \hat{V}_k^- A_k^T + \Sigma_k \\
-\end{array}
-\label{eq:kalman_predict}
-\end{equation}
-\caption{Prediction step}
-\label{eq:linear_kalmann_prediction}
-\end{eqfloat}
-
-Where $\Sigma_{t}$ the process noise covariance matrix. Then, on the update step, we filter the noise out of the predicted step a priori estimate and obtain a new estimate $\hat{x}_k$
-
-\begin{eqfloat}[H]
-\begin{equation}
-\begin{array}{l}
-K_k = V_k^- B^T_k (B_k V_k^- B^T_k + R_k)^{-1} \\
-\hat{x}_k = x_k^- + K (y_k - h(\hat{x}_k^-)) \\
-V_k = (I-K_k B_k)V_k^-
-\end{array}
-\label{eq:kalman_update}
-\end{equation}
-\caption{Update step}
-\label{eq:linear_kalmann_update}
-\end{eqfloat}
+%\begin{eqfloat}[H]
+%\begin{equation}
+%\begin{array}{l}
+%K_k = V_k^- B^T_k (B_k V_k^- B^T_k + R_k)^{-1} \\
+%\hat{x}_k = x_k^- + K (y_k - h(\hat{x}_k^-)) \\
+%V_k = (I-K_k B_k)V_k^-
+%\end{array}
+%\label{eq:kalman_update}
+%\end{equation}
+%\caption{Update step}
+%\label{eq:linear_kalmann_update}
+%\end{eqfloat}
 
 The choice of $\Sigma$ is not much deterministic. In a practical way, the noise source $\Sigma$ is often used to capture uncertainity in the process model. Hence, a poor model choice can suffice by simply chosing a large enough uncertainity, by selecting a large covariance $\Sigma$. 
 
@@ -573,6 +578,13 @@ In this equation, $\lambda_0$ represents a baseline hazard for all dyads in the 
 L(\beta) =  \prod_{i=1}^n \frac{exp (X_{s_i r_i}^{(t_i)} \beta) }{ \sum_{(s,r) \in \mathcal{R}_{t_i}} exp({X_{sr}^{(t_i)} \beta} )}
 \]
 
+if the time is considered to be continuous. In a discrete time scenario, the parameter $\beta$ can be estimated in a more straightforward way by maximise the Poisson likelihood by a linear regression:
+
+\[
+L(\beta) =  \prod_{i=1}^n P(Y_k | \lambda_k)
+\]
+
+
 Typically the research interest is to estimate the factors that increase, or decrease, the likelihood $L$, more specifically, the parameter $\beta$.
 
 
@@ -604,19 +616,19 @@ N_t(s, r) = 1 \; if \; t >= T(s, r)
 % Introduce the latent space
 
 We dispose our actors, species and regions, into a latent space $X \in \mathcal{R}^n$. Each actor is assigned a position inside $X$. It's worth mentioning, to avoid confusion, that these positions in $X$ are disconnected from real world. The closeness of two actors in the latent space $X$ does not imply their closeness in the world map. We then define $Y$, the observed state. In our study, the observed state is the observed count of invasions modeled as Poisson. Similarly to the state space model in Eq. \ref{eq:statespace}, we define
-
+%TODO question on matrix I
 \begin{eqfloat}
 \begin{equation}
     \begin{cases}
       x_k = x_{k-1} + \epsilon \; , \quad \epsilon ~ N(0, \Sigma) \\
-      y_k \sim Poi(\lambda_k) \; , \quad \lambda^{s, r, k} = exp\left(\alpha-dist(x_s(k), x_r(k)) \cdot \lambda_1(k) \right)
+      y_k \sim Poi(\lambda_k) \; , \quad \lambda^{s, r, k} = exp\left(\alpha-dist(x_s(k), x_r(k)) \cdot \lambda_1(k) \right) \cdot I(y == 0)
     \end{cases}\,.
 \label{eq:latentspace}
 \end{equation}
 \caption{Latent space}
 \end{eqfloat}
 
-for $k = [0, ..., n]$. Without loss of generality, we assume that relational events happen at discrete time intervals. The dynamics on the latent space can be modelled as a random walk where the lenght of the jumps are dependent on the variance $\Sigma$.
+for $k = [0, ..., n]$. The rates $\lambda$ are censoring with the matrix $I$ after an invasion occurs. Without loss of generality, we assume that relational events happen at discrete time intervals. The dynamics on the latent space can be modelled as a random walk where the lenght of the jumps are dependent on the variance $\Sigma$.
 
 The position $x$ of each vector in the latent space $X$ is constrained by the distance to all the other vectors inside $X$. The distance in this space represents an affinity of each species $s$ to create a connection (i.e. to invade) a region $r$ in the REM. The structure of the latent space $X$ is therefore driven by the similarity between the nodes $s, r$. We expect species that tend to co-invade the same regions to be close in the latent space. Analogous, regions invaded by the same group of species should be near. We are interested in studying the structure of the latent space $X$ to infer on which group of species has the tendency to co-invade regions.
 
@@ -625,12 +637,12 @@ The position $x$ of each vector in the latent space $X$ is constrained by the di
 The observed counts $y$ are a result of the dynamics of the actors positions and interactions in the REM and latent space $X$. The stochastic intensity of the counting process $N$ is modelled by the function $\lambda$. Heuristically, we assume that the rates $\lambda$ are functions of the distance between species $x_s(t)$ and regions $x_r(t)$ in the latent space (Eq. \ref{eq:latentspace}). 
 
 % Discussion on the distance
-Distances between vectors are defined in many different ways. Two main popular choices are euclidean distance and dot product. These two distances give a different interpretation to the model. Using the Euclidean distance will impose a symmetric interpretation, in contrast, using a dot product distance will impose an asymmetric interpretation.
+Distances between vectors are defined in many different ways. Two main popular choices are euclidean distance and dot product. These two distances give a different interpretation to the model. 
 
 \begin{eqfloat}
 \begin{equation}
 \begin{array}{l}
-dist_{euc}(u, v) = |\sum_{i=0}^d u_i - v_i|^2 \\
+dist_{euc}(u, v) = \sum_{i=0}^d |u_i - v_i|^2 \\
 dist_{dot}(u, v) = u \cdot v
 \end{array}
 \label{eq:distance_latentspace}
@@ -638,9 +650,8 @@ dist_{dot}(u, v) = u \cdot v
 \caption{Euclidean distance and dot product}
 \end{eqfloat}
 
-We chose the distance in the vector space $X$ to be the dot product. Empirically, it captures better the similarity of actors.
+We chose the distance in the vector space $X$ to be the dot product. The Euclidean distance imposes a geometric interpretation. In contrast, the dot product yields a spherical structure to the data. We expect the species-region similarities to be better described by the latter.
 
-%TODO probably k should be t? or t should be k
 \begin{eqfloat}
 \begin{equation}
 \lambda^{s, r, k} = exp\left(\alpha-(x_s(k) \cdot x_r(k)) \cdot \lambda_1(k) \right) \\
@@ -656,14 +667,13 @@ To infer on the structure of the latent space $X$, and the parameters $\theta$  
 %TODO a little unclear
 \begin{eqfloat}
 \begin{equation}
-Q(\beta^{n}, \Sigma^{n}) = E_{x|y} \left( log(p(x, y | \theta^{n-1}, \Sigma^{n-1}) \right)
+Q(\beta^{n}, \Sigma^{n}) = E_{x|y} \left( log(p(x, y | \beta^{n-1}, \Sigma^{n-1}) \right)
 \end{equation}
 \caption{Expectation Maximization.}
 \label{eq:expectation_maximization}
 \end{eqfloat}
 
-
-With $\theta(x_k) = -dist(x_s, x_r))$
+where $\beta$ are the remainder parameters related to the covariates and $\theta$ estimates the volatility of the latent process.
 
 % E-step hard to solve -> Kalman filter
 
@@ -682,7 +692,7 @@ In section \ref{sec:kalman} we showed how to apply a Kalman filter to solve the 
 %\caption{Latent space}
 \end{eqfloat}
 
-here $f = I$ and $h$ is a function dependent on the latent space $x$. The function $f$ is not linear because it's a Poison distribution, however, providing that $f, y \in C^1$, we can linearise the process around the mean and reconduct the problem to the basic linear case. By assuming that a step in time in the latent state can be approximated by the conditional distribution 
+here $f = I$ and $h$ is a function dependent on the latent space $x$. The function $h$ is not linear because it's a Poison distribution, however, providing that $h, y \in C^1$, we can linearise the process around the mean and reconduct the problem to the basic linear case. By assuming that a step in time in the latent state can be approximated by the conditional distribution 
 
 \[
 x_{k} \sim N( \hat{x}_k, \hat{V}_k)
@@ -697,7 +707,7 @@ the predict step of the Kalman filter estimates the first two moments of $x_k$.
 \hat{V}_k = V[\hat{x}^-_k]
 \]
 
-Where $\hat{x}^-_k$  is an a-priori estimates of the state $x$ at time $k$, given the knowledge of the previous state. Hence, by exploiting the natural formulation of our latent space model (Eq. \ref{eq:latentspace}) we can solve the computationally challenging E-step by means of a Kalman filter by approximating the quantity $Q$ in function of its first two conditioned moments $E$, $V$. 
+Where $\hat{x}^-_k$  is an a-priori distribution of the state $x$ at time $k$, given the knowledge of the previous state. Hence, by exploiting the natural formulation of our latent space model (Eq. \ref{eq:latentspace}) we can solve the computationally challenging E-step by means of a Kalman filter by approximating the quantity $Q$ in function of its first two conditioned moments $E$, $V$. 
 
 The initial state $x_0$ is a random vector with a known mean and variance.
 
@@ -712,21 +722,6 @@ The initial state $x_0$ is a random vector with a known mean and variance.
 \caption{Initialization}
 \end{eqfloat}
 
-We now express the a-posteriori estimation $\hat{x}_k^-$ in terms of a linear combination of the a-priori state and the difference between an actual measurement $y$ and a measurement prediction $H(\hat{x}_k^-)$ state. 
-
-\[
-\hat{x}_k = H_k\hat{x}_k^- + K (y_k - H_k \hat{x}_k^-)
-\]
-\[
-V_k = (I-K_k H_k)V_k^-
-\]
-
-We define the Kalman gain matrix $K$ as 
-
-\[
-K_k = V_k^- H^T_k (H_k V_k^- H^T_k + R_k)^{-1}  \quad , \; H_k = \frac{d}{dx} h(x)
-\]
-
 We forecast an update of the estimation of $\hat{x} \approx x$
 
 \begin{eqfloat}[H]
@@ -740,19 +735,35 @@ We forecast an update of the estimation of $\hat{x} \approx x$
 \label{eq:ext_kalmann_prediction}
 \end{eqfloat}
 
+We now express the a-posteriori estimation $\hat{x}_k^-$ in terms of a linear combination of the a-priori state and the difference between an actual measurement $y$ and a measurement prediction $h(\hat{x}_k^-)$ state. 
+
+\[
+\hat{x}_k = \hat{x}_k^- + K (y_k - h(\hat{x}_k^-))
+\]
+\[
+V_k = (I-K_k H_k)V_k^-
+\]
+
+We define the Kalman gain matrix $K$ as 
+
+\[
+K_k = V_k^- H^T_k (H_k V_k^- H^T_k + R_k)^{-1}  \quad , \; H_k = \frac{d}{dx} h(x)
+\]
+
+
 We know updated the a-priori estimates of the mean and variance in Eq. \ref{eq:ext_kalmann_prediction} with the observation of state $y$
 
-\begin{eqfloat}[H]
-\begin{equation}
-\begin{array}{l}
-K_k = V_k^- H^T_k (H_k V_t^- H^T_k + R_k)^{-1} \\
-\hat{x}_k = x_k^- + K_k (y_k - h(\hat{x}_k^-)) \\
-V_k = (I-K_k H_k)V_k^-
-\end{array}
-\end{equation}
-\caption{Update step}
-\label{eq:ext_kalmann_update}
-\end{eqfloat}
+%\begin{eqfloat}[H]
+%\begin{equation}
+%\begin{array}{l}
+%K_k = V_k^- H^T_k (H_k V_t^- H^T_k + R_k)^{-1} \\
+%\hat{x}_k = x_k^- + K_k (y_k - h(\hat{x}_k^-)) \\
+%V_k = (I-K_k H_k)V_k^-
+%\end{array}
+%\end{equation}
+%\caption{Update step}
+%\label{eq:ext_kalmann_update}
+%\end{eqfloat}
 
 By combining equations (\ref{eq:ext_kalmann_prediction}), (\ref{eq:ext_kalmann_update}) we get an algorithm for the Extended Kalman. \\
 
@@ -780,7 +791,7 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 \end{algorithm}
 
 % --------- Smoother --------------------
-Afner $n$ iterations of the Extended Kalman Filter are performed, we move backwards from the last prediction to the starting prediction with the goal to update and correct the predictions given by the Extended Kalman Filter. A popular choice for an Extended Kalman filter smoother is the Rauch-Tung-Striebel smoother. 
+Afner $n$ iterations of the Extended Kalman Filter are performed, we move backwards from the last prediction to the starting point $x_0$ with the goal to update and correct the predictions given by the Extended Kalman Filter. A popular smoother choice  is the Rauch-Tung-Striebel smoother. 
 
 \begin{algorithm}[H]
 \For{k=n...1}{
