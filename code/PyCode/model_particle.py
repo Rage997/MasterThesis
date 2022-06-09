@@ -26,7 +26,7 @@ if gpus:
 
 # -------------------- Load real data -------------------------
 # Load data from memory
-Y = np.load('../data/451_133/matrix.npy')
+Y = np.load('../data/142_49/matrix.npy')
 d = tf.constant(2, dtype =tf.int32)
 n = tf.constant(Y.shape[0], dtype =tf.int32)
 s = tf.constant(Y.shape[1], dtype =tf.int32) 

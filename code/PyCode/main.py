@@ -48,8 +48,8 @@ if __name__ == '__main__':
     
     # run_plots(InvSpec)
     # Do some filtering and save depending on dataset size
-    filterS = [5]
-    filterR = [0]
+    filterS = [10, 15]
+    filterR = [15, 20]
     
     for s in filterS:
         for r in filterR:
@@ -62,5 +62,5 @@ if __name__ == '__main__':
             path = '../data/'+str(tmp.Ns) + '_' + str(tmp.Nr)
             if not os.path.exists(path):
                 os.makedirs(path)
-            name = 'matrix'
-            tmp.export_matrix(path + '/' + name)
+            # name = 'matrix'
+            tmp.export_matrix(path)

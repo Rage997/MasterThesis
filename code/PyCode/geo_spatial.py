@@ -4,6 +4,7 @@ import pandas as pd
 # from sqlalchemy import column
 import numpy as np
 import geopandas as gpd
+import matplotlib
 import matplotlib.pyplot as plt
 
 path = '../data/'
@@ -159,8 +160,10 @@ suisse_invasion = world_data[world_data['NAME'] == 'switzerland']
 print(suisse_invasion)
 # print(f'Switzerland has been invaded {suisse_invasion["invaded"]}')
 
-world_data.plot(column='invaded', 
+world_data.plot(
+    column='invaded', 
     cmap='OrRd', 
+    norm=matplotlib.colors.LogNorm(vmin=world_data.invaded.min(), vmax=world_data.invaded.max()),
     ax = ax,
     legend=True,
     # scheme="quantiles"

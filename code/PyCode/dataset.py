@@ -12,7 +12,7 @@ to a matrix to be lately processed with a REM model
 
 not_islands = ['united kingdom', 'ireland', 'new zealand', 'tasmania', 
                 'japan', 'indonesia', 'taiwan', 'philippines', 'dominican republic',
-                'greece', 'canada']
+                'greece', 'canada', 'hong kong']
 class InvasiveSpecies():
     def __init__(self, filename: str) -> None:
     #  TODO when importing the dataset, only select the columns I'm interested
@@ -152,4 +152,6 @@ class InvasiveSpecies():
         # Do not reshape
         print(f's = {self.Ns}, r = {self.Nr}')
         print(self.M.shape)
-        np.save(path, self.M)
+        np.save(path+ '/matrix', self.M)
+        np.save(path + '/species', self.species)
+        np.save(path + '/region', self.region)
