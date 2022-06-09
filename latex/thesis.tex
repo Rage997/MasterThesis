@@ -211,7 +211,6 @@ Intuitively, the amount of invasion per year increases over time mainly due to f
 %%\end{table}
 % -----------------------------------------
 
-%TODO use log of colors
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{region_invasion.png}
@@ -564,17 +563,17 @@ The hazard function can be interpreted as the expected number of relational even
 %%Theta is what thet called beta in Igor's paper (change it?)
 
 \[
-\lambda(s, r, t) = \lambda_0(t) \cdot exp({X_{sr}^{(t)} \theta} )
+\lambda(s, r, t) = \lambda_0(t) \cdot exp({X_{sr}^{(t)} \beta} )
 \]
 
-In this equation, $\lambda_0$ represents a baseline hazard for all dyads in the risk set $\mathcal{R}$. Instead, the variable $X_{sr}^{(t)}$ is some dyadic covariate at time $t$. To estimate the parameters $\theta$ we maximize the partial likelihood of the Cox proportional hazard model 
+In this equation, $\lambda_0$ represents a baseline hazard for all dyads in the risk set $\mathcal{R}$. Instead, the variable $X_{sr}^{(t)}$ is some dyadic covariate at time $t$. To estimate the parameters $\beta$ we maximize the partial likelihood of the Cox proportional hazard model 
 
 
 \[
-L(\beta) =  \prod_{i=1}^n \frac{exp (X_{s_i r_i}^{(t_i)} \theta) }{ \sum_{(s,r) \in \mathcal{R}_{t_i}} exp({X_{sr}^{(t_i)} \theta} )}
+L(\beta) =  \prod_{i=1}^n \frac{exp (X_{s_i r_i}^{(t_i)} \beta) }{ \sum_{(s,r) \in \mathcal{R}_{t_i}} exp({X_{sr}^{(t_i)} \beta} )}
 \]
 
-Typically the research interest is to estimate the factors that increase, or decrease, the likelihood $L$, more specifically, the parameter $\theta$.
+Typically the research interest is to estimate the factors that increase, or decrease, the likelihood $L$, more specifically, the parameter $\beta$.
 
 
 
@@ -654,13 +653,21 @@ We chose the distance in the vector space $X$ to be the dot product. Empirically
 % Introduce EM for the problem
 To infer on the structure of the latent space $X$, and the parameters $\theta$  and $\Sigma$ we use the Expectation Maximization (EM) algorithm (\ref{sec:em}). Since the latent state $X$ is not observed, a direct optimization of the maximum likelihood is not possible. We aim to maximise the $\int_x L(\theta, \Sigma ; y, x) dx$. As explained in the background section \ref{sec:em}, the EM instead of directly maximise this integral, it iteratively computes and maximises an estimate $Q$ of the parameters $\theta, \Sigma$ conditionated on the previous estimate. 
 
-\[
-Q(\theta^{n}, \Sigma^{n}) = E_{x|y} \left( log(p(x, y | \theta^{n-1}, \Sigma^{n-1}) \right)
-\]
+%TODO a little unclear
+\begin{eqfloat}
+\begin{equation}
+Q(\beta^{n}, \Sigma^{n}) = E_{x|y} \left( log(p(x, y | \theta^{n-1}, \Sigma^{n-1}) \right)
+\end{equation}
+\caption{Expectation Maximization.}
+\label{eq:expectation_maximization}
+\end{eqfloat}
+
 
 With $\theta(x_k) = -dist(x_s, x_r))$
 
 % E-step hard to solve -> Kalman filter
+
+\subsection{Extended Kalman Filter}
 
 In section \ref{sec:kalman} we showed how to apply a Kalman filter to solve the E-step of an Expectaction Maximizaton problem of a Linear Gaussian model, but our process $y$ is not linear. We can rewrite the latent space formulation in Eq. \ref{eq:latentspace} slightly differently
 
@@ -725,31 +732,29 @@ We forecast an update of the estimation of $\hat{x} \approx x$
 \begin{eqfloat}[H]
 \begin{equation}
 \begin{array}{l}
-\hat{x}_t^- = f(\hat{x}_{t-1}) \\
-\hat{V}_t^- = J(x^f_{t-1}) V_{t-1} J(x^f_{t-1})^T + W_{t-1} Q_{t-1} W_{t-1}^T
+\hat{x}_k^- = \hat{x}_{k-1} \\
+\hat{V}_k^- =  V_{k-1} + \Sigma
 \end{array}
 \end{equation}
 \caption{Prediction step}
 \label{eq:ext_kalmann_prediction}
 \end{eqfloat}
 
-%TODO check Q
-Where $J(x)$ is the Jacobian of $f(x)$ and $Q_{t-1}$ the process noise covariance matrix.
-
+We know updated the a-priori estimates of the mean and variance in Eq. \ref{eq:ext_kalmann_prediction} with the observation of state $y$
 
 \begin{eqfloat}[H]
 \begin{equation}
 \begin{array}{l}
-K_t = V_t^- H^T_t (H_t V_t^- H^T_t + R_t)^{-1} \\
-\hat{x}_t = x_t^- + K (z_t - h(\hat{x}_t^-)) \\
-V_t = (I-K_t H_t)V_t^-
+K_k = V_k^- H^T_k (H_k V_t^- H^T_k + R_k)^{-1} \\
+\hat{x}_k = x_k^- + K_k (y_k - h(\hat{x}_k^-)) \\
+V_k = (I-K_k H_k)V_k^-
 \end{array}
 \end{equation}
 \caption{Update step}
 \label{eq:ext_kalmann_update}
 \end{eqfloat}
 
-By combining equations (\ref{eq:ext_kalmann_prediction}), (\ref{eq:ext_kalmann_update}) we get an algorithm for the Extended Kalman Filter process is shown in Algorithm \ref{algo:ext_kalmann}. Due to the convexity of the problem, only one step is required for the Kalman filter to converge.
+By combining equations (\ref{eq:ext_kalmann_prediction}), (\ref{eq:ext_kalmann_update}) we get an algorithm for the Extended Kalman. \\
 
 \begin{algorithm}[H]
 \textbf{Initialize: }
@@ -760,51 +765,73 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 \For{k=1,...,n}{
   Prediction step (Eq. \ref{eq:ext_kalmann_prediction})
   \begin{substeps}
-  $\hat{x}_t^- = f(\hat{x}_{t-1})$ \;
-  $\hat{V}_t^- = J(x^f_{t-1}) V_{t-1} J(x^f_{t-1})^T + W_{t-1} Q_{t-1} W_{t-1}^T$\;
+	$\hat{x}_k^- = \hat{x}_{k-1} $ \;
+	$\hat{V}_k^- =  V_{k-1} + \Sigma $\;
   \end{substeps}
   Update step (Eq. \ref{eq:ext_kalmann_update})
   \begin{substeps}
-  $K_t = V_t^- H^T_t (H_t V_t^- H^T_t + R_t)^{-1}$ \;
-  $\hat{x}_t = x_t^- + K (z_t - h(\hat{x}_t^-))$\;
-  $V_t = (I-K_t H_t)V_t^-$\;
+	$K_k = V_k^- H^T_k (H_k V_t^- H^T_k + R_k)^{-1}$ \;
+	$\hat{x}_k = x_k^- + K_k (y_k - h(\hat{x}_k^-))$ \;
+	$V_k = (I-K_k H_k)V_k^-$ \;
   \end{substeps}
 }
   \caption{Extended Kalmann Filter}
   \label{algo:ext_kalmann}
 \end{algorithm}
 
-%TODO talk a little about the smoother
+% --------- Smoother --------------------
+Afner $n$ iterations of the Extended Kalman Filter are performed, we move backwards from the last prediction to the starting prediction with the goal to update and correct the predictions given by the Extended Kalman Filter. A popular choice for an Extended Kalman filter smoother is the Rauch-Tung-Striebel smoother. 
 
-%TODO talk a little about how to estimate the parameters
-
-We can finally write our latent space REM model in a closed form
-
-%TODO write this
 \begin{algorithm}[H]
-\For{k=1...s}{
-  E-Step: Kalman Filter  \ref{eq:ext_kalmann_prediction} + \ref{eq:ext_kalmann_update} \;
-  M-Step: Smoothing \;
-  Estimate paramters
+\For{k=n...1}{
+  $B_k = V_{k-1} V_{k-1}^{-1}$ \;
+  $\hat{x}_{k-1} = x_{k-1}^- + B_k (\hat{x}_k - x_{k}^-)$ \;
+  $V_{k-1} = \hat{V}_{k-1}^- + B_K (V_k - \hat{V}_k^-)B^T_k $ \;
 }
-\caption{Extended Kalmann Filter}
-\label{algo:ext_kalmann}
+  \caption{Smoother}
+  \label{algo:smoother}
+\end{algorithm}
+
+\section{Closed form Algorithm}
+% --------- M-step --------------------
+We now propose a close form for an algorithm based on the Expectation Maximization framework (Eq. \ref{eq:expectation_maximization}) to make inference on our latent space REM. We approximate the E-step by means of an Extended Kalman Filter proposed in the previous section, then we maximise $Q$. For a number $s$ of steps, we report our model in a closed form
+
+
+\begin{algorithm}[H]
+
+\textbf{Initialize: }
+\begin{substeps}
+$\hat{x}_0 = \mu_0 = E[x_0]$ \;
+$\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
+\end{substeps}
+\While{not converged}{
+  \textbf{E-Step}: 
+	\begin{substeps}
+	Kalman Filter  (Alg. \ref{algo:ext_kalmann}) \; 
+	Smoother (Alg. \ref{algo:smoother}) \;
+	\end{substeps}  	
+  \textbf{M-Step:}
+	\begin{substeps}
+	$\beta = \textrm{argmax}_{\beta} Q$ \; 
+	\end{substeps}  	
+}
+\caption{Lantet space REM inference.}
+\label{algo:rem_latent}
 \end{algorithm}
 
 
+%\subsection{Model computational complexity discussion}
 
-%TODO review my notation in section KF. First two moments
-%also seee star at igor paper 3. Inference
+%TODO
 
-
-\chapter{Discussion}
+%\chapter{Discussion}
 
 %TODO our findings are in agreement with lady's paper
 
 %The number of alien species found in a particular region. Both plants and insects were significantly affected by the number of species that have already invaded a certain region. However, whereas plants were recorded more frequently in regions already invaded by other plants, insects were less frequently recorded in regions that had already been invaded by other in- sects. The effects were nonetheless very small in both cases, i.e., affecting the hazard by 0.3% per invasion in the opposite direction.
 
 
-\chapter{Conclusion}
+%\chapter{Conclusion}
 
 %TODO answer to research question
 
