@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 
 # Hide GPU from visible devices
-# tf.config.set_visible_devices([], 'GPU')
+tf.config.set_visible_devices([], 'GPU')
 
 gpus = tf.config.list_physical_devices('GPU')
 if gpus:
@@ -26,7 +26,7 @@ if gpus:
 
 # -------------------- Load real data -------------------------
 # Load data from memory
-Y = np.load('../data/451_133/matrix.npy')
+Y = np.load('../data/1724_153/matrix.npy')
 d = tf.constant(2, dtype =tf.int32)
 n = tf.constant(Y.shape[0], dtype =tf.int32)
 s = tf.constant(Y.shape[1], dtype =tf.int32) 
@@ -208,5 +208,6 @@ path = f'../data/{s}_{r}/'
 plt.savefig(path+"model_result.png", dpi=75)
 
 # Save results
-path = f'result'
-np.save(path, X_kalman)
+tf.print("alpha = ", model_coefficients)
+np.save(path+'resultX', X_kalman)
+np.save(path+'resultY', Y_est)
