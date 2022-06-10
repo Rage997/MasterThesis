@@ -185,7 +185,7 @@ for iter in range(50):
   model_coefficients = tf.math.log(tf.reduce_sum(Y)/tf.reduce_sum(tf.math.exp(offset)*censor_data))
   c.assign(tf.fill((n, s*r), model_coefficients))
   # tf.print("log likelihood = ", tf.reduce_sum(log_likelihood))
-  tf.print(f"Interation number {i}")
+  tf.print(f"Interation number {iter}")
   tf.print("alpha = ", model_coefficients)
 
 
