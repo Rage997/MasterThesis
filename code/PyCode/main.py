@@ -48,8 +48,8 @@ if __name__ == '__main__':
     
     # run_plots(InvSpec)
     # Do some filtering and save depending on dataset size
-    filterS = [10, 15]
-    filterR = [15, 20]
+    filterS = [5]
+    filterR = [20, 25]
     
     for s in filterS:
         for r in filterR:
