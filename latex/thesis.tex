@@ -129,17 +129,17 @@ The goal of this thesis is twofold: to show a novel approach to REM by using an 
 % 5. TODO briefly report the results
 
 %Introduce problem
-The rate at which alien species invade countries have increased over the last century and it is becoming an important issue. The economic impact of alien species in Europe is estimated to be close to 13 billion dollars annually \cite{intro:rate}. The interest in the study of the dynamics of alien species has been increasing over the years for this reason. Unfortunately, due to the complexity of the problem, is hard to come up with real actions. Intuitively, the invasion rate of species differs belonging to different taxonomic groups, however, a comprehensive global invasion dynamics study of the last centuries subdivided by taxonomic groups is still lacking. The dynamics of invasive species are driven by a multitude of factors simultaneously. These factors can be complex involving exogenous, endogenous, sociological, ecological, and socio-economic factors \cite{intro:factors}. It's important to develop a framework capable of studying and analyzing all these underlying effects simultaneously. 
+The rate at which alien species invade countries have increased over the last century and it is becoming an important issue. The economic impact of alien species in Europe is estimated to be close to 13 billion dollars annually \cite{intro:rate}. The interest in the study of the dynamics of alien species has been increasing over the years for this reason. Unfortunately, due to the complexity of the problem, is hard to come up with real actions. Intuitively, the invasion rate of species differs belonging to different taxonomic groups, however, a comprehensive global invasion dynamics study of the last centuries subdivided by taxonomic groups is still lacking. The dynamics of invasive species are driven by a multitude of factors simultaneously. These factors can be complex involving exogenous, endogenous, sociological, ecological, and socio-economic factors \cite{intro:factors}. It is important to develop a framework capable of studying and analyzing all these underlying effects simultaneously. 
 
 %Describe approach
-A relational event is an interaction between a sender and a receiver at a specific timestamp. An invasion of a species into a region can be described as a relational event. A relational event model (REM) studies the temporal sequence of such relational events. REM was first developed in the field of social network analysis \cite{rem:butts}. This framework has many advantages in the fact that it is able to study underlying temporal patterns, can efficiently deal with time-varying variables and it's an extremely adaptable hypothesis testing tool. Due to its versatility, in the years it is been applied in a large number of different fields such as animal-animal interaction \cite{intro:cattle}, the evolution of team networks \cite{intro:teams} and national hospitals collaborations in transfering critical patients \cite{intro:hospital}. 
+A relational event is an interaction between a sender and a receiver at a specific timestamp. An invasion of a species into a region can be described as a relational event. A relational event model (REM) studies the temporal sequence of such relational events. REM was first developed in the field of social network analysis \cite{rem:butts}. This framework has many advantages in the fact that it is able to study underlying temporal patterns, can efficiently deal with time-varying variables and it is an extremely adaptable hypothesis testing tool. Due to its versatility, in the years it is been applied in a large number of different fields such as animal-animal interaction \cite{intro:cattle}, the evolution of team networks \cite{intro:teams} and national hospitals collaborations in transfering critical patients \cite{intro:hospital}. 
 
 %What has been already done and what is the problem
-In the years, there have been a large number of different statistical approaches with the goal of predicting and describing the spread of alien species. However, traditional statistical tools, such as multidimensional scaling, fail to capture the similarity of nodes on this kind of dataset due to their bipartite nature (i.e. no interaction of the kind species-species and region-region). A REM approach is a good approach to this problem, however, due to the high number of possible local network configurations, it's really hard to keep track of the past configurations to study dynamic networks.
+In the years, there have been a large number of different statistical approaches with the goal of predicting and describing the spread of alien species. However, traditional statistical tools, such as multidimensional scaling, fail to capture the similarity of nodes on this kind of dataset due to their bipartite nature (i.e. no interaction of the kind species-species and region-region). A REM approach is a good approach to this problem, however, due to the high number of possible local network configurations, it is really hard to keep track of the past configurations to study dynamic networks.
 
 %TODO add a citation on this REM
 
-%Our approach and how it's better
+%Our approach and how it is better
 
 In this thesis, we contribute to the practical applicability of a REM with a latent space underlying framework modeled on a bipartite social network graph with a real-world case study of the dynamics of co-invasion of species. Our model is capable of taking multiple species simultaneously into consideration and to study the underlying relationship between different species co-invading regions by training on the most exhaustive source of first records of alien species in multiple regions in the world. We propose a different approach from the traditional literature by disposing the species and regions (which sometimes I simply refer to as nodes) into a latent space and by fitting a custom REM on it. By studying the proximity of the nodes in the latent space, our model is capable of determining the group of nodes that tend to co-invade a region and, in an analogous way, the group of regions that are more likely to be invaded by the same group of species.  By disposing of the species-region interactions in a latent space we "summarise" their configuration history hence we can effectively approximate the past information and train a REM more efficiently. In this space, nodes are allowed to move by attracting or repulsing other nodes. The closeness between nodes describes they tend to interact (which is to co-invade a region). Within the limits of this latent space configuration, a node location at a certain time describes his history evolution and by studying this evolution we can infer the group of nodes that have similar tendencies and behaviors.
 
@@ -258,20 +258,20 @@ Contrary to what was expected, some regions have a significantly larger number o
     \label{fig:hist_tax_fam}
 \end{figure}
 
-The peak number of invasions per year is close to 5000 invasions around the year 2000, with an average number of invasions per year during the study of about 2800. Considering this number of average invasions per year and the fact that there are more than 20'000 species the dataset is considered to be sparse. To effectively show the high sparsity of the dataset in a convenient way, I reported two probability density functions (PDF). The PDF shown in Fig. \ref{fig:pdf_invasion} is left-skewed with a mean of 4 and a standard deviation of 5, this means that most species only invaded 4 regions out of the 276 in the entire timeframe of our study. It's worth mentioning that the maximum number of invasions is 97 with one outsider that invaded 176 regions. Due to the high sparsity of the dataset and the large computational cost of our method, we made a couple of assumptions with the goal of reducing the data complexity and intrinsic computational requirements. 
+The peak number of invasions per year is close to 5000 invasions around the year 2000, with an average number of invasions per year during the study of about 2800. Considering this number of average invasions per year and the fact that there are more than 20'000 species the dataset is considered to be sparse. To effectively show the high sparsity of the dataset conveniently, I reported two probability density functions (PDF). The PDF shown in Fig. \ref{fig:pdf_invasion} is left-skewed with a mean of 4 and a standard deviation of 5, this means that most species only invaded 4 regions out of the 276 in the entire timeframe of our study. It is worth mentioning that the maximum number of invasions is 97 with one outsider that invaded 176 regions. Due to the high sparsity of the dataset and the large computational cost of our method, we made a couple of assumptions to reduce the data complexity and intrinsic computational requirements. 
 
 The first assumption is that any species that did not invade at least 5 regions during the entire timeframe is not relevant to our study. We hence removed more than 14'000 species resulting in a more computationally manageable dataset of around 1700 species. In Fig \ref{fig:pdf_invasion} I reported the resulting PDF resulted by removing all species that did not invade at least 5 regions. 
 
-The second assumption is that islands do not significantly contribute to the diffusion of species. We hence removed 123 regions from the dataset corresponding to islands. The reason to remove islands is two-fold. First, we are mostly interested in studying the interactions of alien species between larger regions and islands are typically not large enough to be significant. Furthermore, long-distance invasions \footnote{The distance between regions is considered as the distance between the closest borders.} are typically rare \cite{paper:lady} and islands are generally more remote. This assumption is supported by the dataset, the average number of invasions that happened in islands is 80 compared to the 200 average invasions of all regions combined. However, there are a couple of islands worth mentioning that contrast this assumption. The Hawaiian Islands and the Azores islands have more than 1000 invasions. We are interested in studying large regions interactions and islands generally are "intermediary steps" in a long distance interactions between large regions such as continents. Removing these intermediary steps does not affect the interaction between larger regions, which we are interested in.
+The second assumption is that islands do not significantly contribute to the diffusion of species. We hence removed 123 regions from the dataset corresponding to islands. The reason to remove islands is two-fold. First, we are mostly interested in studying the interactions of alien species between larger regions and islands are typically not large enough to be significant. Furthermore, long-distance invasions \footnote{The distance between regions is considered as the distance between the closest borders.} are typically rare \cite{paper:lady} and islands are generally more remote. This assumption is supported by the dataset, the average number of invasions that happened in islands is 80 compared to the 200 average invasions of all regions combined. However, there are a couple of islands worth mentioning that contrast this assumption. The Hawaiian Islands and the Azores islands have more than 1000 invasions. We are interested in studying large region interactions and islands generally are "intermediary steps" in long-distance interactions between large regions such as continents. Removing these intermediary steps does not affect the interaction between larger regions, which we are interested in.
 
 %Species belonging to the same taxonomic family are not expected to have a tendency to co-invade regions.
 %TODO what does the lady say about co-invasion?
 %We are interested in studying the co-invasion of species. Typically, co-invasion is expected to happen between species belonging to different taxonomic families. 
 
-%TODO not yet decided how much fltering. Also update the number of islands we removed
-%TODO maybe extend the discussion on Hawaiian islands ? https://en.wikipedia.org/wiki/Invasive_species_in_Hawaii
+%TODO not yet decided how much filtering. Also, update the number of islands we removed
+%TODO maybe extend the discussion on Hawaiian islands? https://en.wikipedia.org/wiki/Invasive_species_in_Hawaii
 
-%It's also worth mentioning that the effect of distance between regions on the invasion rate has largely grown over time, in fact, the rate of the discover of alien species has increasing with di
+%it is also worth mentioning that the effect of distance between regions on the invasion rate has largely grown over time, in fact, the rate of the discovery of alien species has increased with di
 
 Under these two assumptions, we filtered all non-irrelevant species and regions out of the dataset to $1724$ species and $153$ regions and $15947$ invasions from $1850$ to $2010$.
 
@@ -302,7 +302,7 @@ Under these two assumptions, we filtered all non-irrelevant species and regions 
 %TODO some closing thoughts?
 \chapter{Literature background}
 
-In this section, we cover all the necessary background tools to develop our latent space relational event model. First, we introduce the concept of a latent space model by means of a state space model. Then we cover in-depth how to infer on this model. We introduce then the reader to the Expectation-Maximization and Kalman Filter algorithms. 
+In this section, we cover all the necessary background tools to develop our latent space relational event model. First, we introduce the concept of a latent space model employing a state space model. Then we cover in-depth how to infer this model. We introduce then the reader to the Expectation-Maximization and Kalman Filter algorithms. 
 
 \section{State space model}
 \label{sec:latent_space}
@@ -330,14 +330,15 @@ A state-space model is a class of temporal probabilistic models that describe th
 
 where the matrix $A \in R^{dxd}$ is the state-transition matrix where $d$ is the dimensionality of the state space $X$. Similarly, $B \in R^{mxm}$ is the observation-transition matrix where $m$ is the dimensionality of the observation space $Y$. The linear Gaussian model can be extended in various ways but in this section, to keep things simple, we focus on the linear Gaussian model. 
 
-The state and observation equations are generally or partially unknown and the parameter $\theta=(A, B, \Sigma, \Delta)$ and $x(k)$ need to be jointly estimated. Maximum likelihood is a well enstablished method in the statistics field to make such parameter estimation. One popular method to estimate state space parameters is the Expectation Maximization algorithm.
+The state and observation equations are generally or partially unknown and the parameter $\theta=(A, B, \Sigma, \Delta)$ and $x(k)$ need to be jointly estimated. Maximum likelihood is a well established method in the statistics field to make such parameter estimation. One popular method to estimate state space parameters is the Expectation Maximization algorithm.
+
 
 \section{Expectation Maximization}
 \label{sec:em}
 
-The expectation-Maximization (EM) , introduced in 1977 by \citet{paper:dempster}, is a family of algorithms that iteratively cycles between two states until convergence is satisfied. In doing so, it first computes the conditional expectation of the complete likelihood and then maximizes it. This approach is really powerful when applied to problems in which a direct calculation of the likelihood $p(y|\theta)$ is computationally unfeasible. Furthermore, we are in particular interested in the application of this family of algorithms to problems where the full data is not available or some variables are latent (see Sec. \ref{sec:latent_space}). \\
+The expectation Maximization (EM), introduced in 1977 by \citet{paper:dempster}, is a family of algorithms that iteratively cycles between two states until convergence is satisfied. In doing so, it first computes the conditional expectation of the complete likelihood and then maximizes it. This approach is really powerful when applied to problems in which a direct calculation of the likelihood $p(y|\theta)$ is computationally unfeasible. Furthermore, we are in particular interested in the application of this family of algorithms to problems where the full data is not available or some variables are latent (see Sec. \ref{sec:latent_space}). \\
 
-The first step called, expectation procedure (E-step), computes the expectation of the logarithm of the complete data likelihood $Q$
+The first step called, the expectation procedure (E-step), computes the expectation of the logarithm of the complete data likelihood $Q$
 
 \[
 Q(\theta^{(k)}) = E_{x} \left[ log(p(x, y | \theta^{(k)}) \right]
@@ -354,7 +355,7 @@ then, with the updated parameter $\theta^{(k)}$ we maximizise $Q$ on the second 
   \caption{A general Expectation Maximization framework.}
 \end{algorithm}
 
-The computation of the expectation $E[Q(\theta^n)]$ is typically computationally untractable. To make things computatioanlly worse, its complexity increases with the amount of data fed to the model. However, there are many approaches available to estimate this quantity \cite{book:EMBook}. In this thesis, we are interested in an approach to calculate $Q$ called the Kalman Filter.
+The computation of the expectation $E[Q(\theta^n)]$ is typically computationally untractable. To make things computationally worse, its complexity increases with the amount of data fed to the model. However, there are many approaches available to estimate this quantity \cite{book:EMBook}. In this thesis, we are interested in an approach to estimate $Q$ called the Kalman Filter.
 
 % ----------------------------------------------------
 %TODO more in detail??
@@ -509,7 +510,7 @@ The Kalman gain matrix goal is to minimize the a-posteriori covariance error mat
 %\label{eq:linear_kalmann_update}
 %\end{eqfloat}
 
-The choice of $\Sigma$ is not much deterministic. In a practical way, the noise source $\Sigma$ is often used to capture uncertainity in the process model. Hence, a poor model choice can suffice by simply chosing a large enough uncertainity, by selecting a large covariance $\Sigma$. 
+The choice of $\Sigma$ is not much deterministic. In a practical way, the noise source $\Sigma$ is often used to capture uncertainty in the process model. Hence, a poor model choice can suffice by simply choosing a large enough uncertainty, by selecting a large covariance $\Sigma$. 
 
 
 %\begin{eqfloat}
@@ -524,13 +525,15 @@ The choice of $\Sigma$ is not much deterministic. In a practical way, the noise 
 %\end{eqfloat}
 
 
+
 \chapter{Model}
-In the previous section we introduced the reader how to infer on a linear gaussian state space model. In this section we introduce the REM based on the underlying Alien Species First Records database \cite{intro:dataset}. We first define what the relational events are in our study, how the species and regions are disposed in the latent space and how to infer on it using the expectation maximization algorithm and the Kalman filter similarly to as done in the previous section.
+In the previous section, we introduced to the reader how to make inference on a linear gaussian state space model. In this section, we introduce the REM based on the underlying Alien Species First Records database \cite{intro:dataset}. We first define what the relational events are in our study, how the species and regions are disposed in the latent space, and how to infer it using the Expectation Maximization algorithm and the Kalman filter similarly to as done in the previous section.
 
 \section{Relational event models (REM)}
 \label{model:rem}
 
-\citet{rem:butts} proposed a statistical modeling framework capable of analyzing temporal information and the evolution of a sequence of relational events. Given a set of receiver nodes, a set of sender nodes, and a timeframe, a relational event $e$ is a triplet of a sender, a receiver, and a timestamp. Depending on the underlying data, the sender set and receiver set may be the same set or disjoint sets, depending on the kind of relationship between senders and receivers. In our study of the co-invasion of alien species, the species are the sender and the regions the receivers. Senders and receivers are disjoint sets. This relational evenet is unidirectional and bipartite. In fact, only a species can invade a region, a region can't invade any other region (or species), and no species-species (or region-region) relational event is allowed. In general, a REM specifies varying distributions for all dyads as a function of past events $E=(e_1, ..., e_N)$ where each event $e_i$ is defined as
+\citet{rem:butts} proposed a statistical modeling framework capable of analyzing temporal information and the evolution of a sequence of relational events. Given a set of receiver nodes, a set of sender nodes, and a timeframe, a relational event $e$ is a triplet of a sender, a receiver, and a timestamp. Depending on the underlying data, the sender set and receiver set may be the same set or be disjoint sets, depending on the kind of relationship between senders and receivers. In our study of the co-invasion of alien species, the species are the sender and the regions the receivers. Senders and receivers are disjoint sets. This relational event is unidirectional and bipartite. In fact, only a species can invade a region, a region can't invade any other region (or species), and no species-species (or region-region) relational event is allowed. In general, a REM specifies varying distributions for all dyads as a function of past events $E=(e_1, ..., e_N)$ where each event $e_i$ is defined as
+
 
 \[
 e_i = (s_i, r_i, t_i)
@@ -578,7 +581,7 @@ In this equation, $\lambda_0$ represents a baseline hazard for all dyads in the 
 L(\beta) =  \prod_{i=1}^n \frac{exp (X_{s_i r_i}^{(t_i)} \beta) }{ \sum_{(s,r) \in \mathcal{R}_{t_i}} exp({X_{sr}^{(t_i)} \beta} )}
 \]
 
-if the time is considered to be continuous. In a discrete time scenario, the parameter $\beta$ can be estimated in a more straightforward way by maximise the Poisson likelihood by a linear regression:
+if the time is considered to be continuous. In a discrete time scenario, the parameter $\beta$ can be estimated in a more straightforward way by maximising the Poisson likelihood by a linear regression:
 
 \[
 L(\beta) =  \prod_{i=1}^n P(Y_k | \lambda_k)
@@ -588,18 +591,17 @@ L(\beta) =  \prod_{i=1}^n P(Y_k | \lambda_k)
 Typically the research interest is to estimate the factors that increase, or decrease, the likelihood $L$, more specifically, the parameter $\beta$.
 
 
-
 \section{Latent space REM}
  
 %Maybe better to introduce the counting process before, y is the count 
 
-Every invasion of a species $s \in S$ and region $r \in R$, where $S, R$ are respectively the sets of species and regions in the dataset, can be modelled as a multivariate Poisson counting measure  $N$.
+Every invasion of a species $s \in S$ and region $r \in R$, where $S, R$ are respectively the sets of species and regions in the dataset, can be modeled as a multivariate Poisson counting measure  $N$.
 
 \[
 N_t(s, r) = \textrm{number of invasions} \; e \; in \; interval \; [0, t]
 \]
 
-An alien species is not allowed to leave a region after an invasion has happened and, eventually, invade it a second time. Therefore, a invasion can happen only once. The count process $N$ is therefore bounded by 1. We define $T(s, r)$ to be a function that returns the time of invasion for specie $s$ an region $r$. The function $N$ can either take value 1 or zero depending whether an invasion happened previously to t for a determinated region and species.
+An alien species is not allowed to leave a region after an invasion has happened and, eventually, invade it a second time. Therefore, an invasion can happen only once. The counting process $N$ is therefore bounded by 1. We define $T(s, r)$ to be a function that returns the time of invasion for specie $s$ an region $r$. The function $N$ can either take a value of one or zero depending on whether an invasion happened previously to $t$ for a determined region and species.
 
 
 \begin{eqfloat}
@@ -615,26 +617,32 @@ N_t(s, r) = 1 \; if \; t >= T(s, r)
 
 % Introduce the latent space
 
-We dispose our actors, species and regions, into a latent space $X \in \mathcal{R}^n$. Each actor is assigned a position inside $X$. It's worth mentioning, to avoid confusion, that these positions in $X$ are disconnected from real world. The closeness of two actors in the latent space $X$ does not imply their closeness in the world map. We then define $Y$, the observed state. In our study, the observed state is the observed count of invasions modeled as Poisson. Similarly to the state space model in Eq. \ref{eq:statespace}, we define
-%TODO question on matrix I
+We dispose our actors, which are species and regions, into a latent space $X \in \mathcal{R}^n$. Each actor is assigned a position inside $X$. It is worth mentioning, to avoid confusion, that these positions in $X$ are disconnected from the real world. The closeness of two actors in the latent space $X$ does not imply their closeness on the world map. We then define $Y$, the observed state. In our study, the observed state is the observed count of invasions modeled as Poisson. Similarly to the state space model in Eq. \ref{eq:statespace}, we define
+
 \begin{eqfloat}
 \begin{equation}
     \begin{cases}
       x_k = x_{k-1} + \epsilon \; , \quad \epsilon ~ N(0, \Sigma) \\
-      y_k \sim Poi(\lambda_k) \; , \quad \lambda^{s, r, k} = exp\left(\alpha-dist(x_s(k), x_r(k)) \cdot \lambda_1(k) \right) \cdot I(y == 0)
+      y_k \sim Poi(\lambda_k) \; , \quad \lambda^{s, r, k} = exp\left(\alpha-dist(x_s(k), x_r(k)) \cdot \lambda_1(k) \right) \cdot I
     \end{cases}\,.
 \label{eq:latentspace}
 \end{equation}
 \caption{Latent space}
 \end{eqfloat}
 
-for $k = [0, ..., n]$. The rates $\lambda$ are censoring with the matrix $I$ after an invasion occurs. Without loss of generality, we assume that relational events happen at discrete time intervals. The dynamics on the latent space can be modelled as a random walk where the lenght of the jumps are dependent on the variance $\Sigma$.
+for $k = [0, ..., n]$. The rates $\lambda$ are censored by multiplying them by the matrix $I$ after an invasion occurs. The matrix $I$ entries are either one or zero depending on if an invasion has occurred.
+\[
+I_{s,r} = T(s,r)
+\]
 
-The position $x$ of each vector in the latent space $X$ is constrained by the distance to all the other vectors inside $X$. The distance in this space represents an affinity of each species $s$ to create a connection (i.e. to invade) a region $r$ in the REM. The structure of the latent space $X$ is therefore driven by the similarity between the nodes $s, r$. We expect species that tend to co-invade the same regions to be close in the latent space. Analogous, regions invaded by the same group of species should be near. We are interested in studying the structure of the latent space $X$ to infer on which group of species has the tendency to co-invade regions.
+Without loss of generality, we assume that relational events happen at discrete time intervals. The dynamics of the latent space can be modeled as a random walk where the length of the jumps is dependent on the variance $\Sigma$.
+
+
+The position $x$ of each vector in the latent space $X$ is constrained by the distance to all the other vectors inside $X$. The distance in this space represents an affinity of each species $s$ to create a connection (i.e. to invade) a region $r$ in the REM. The structure of the latent space $X$ is therefore driven by the similarity between the nodes $s, r$. We expect species that tend to co-invade the same regions to be close in the latent space. Analogous, regions invaded by the same group of species should be near. We are interested in studying the structure of the latent space $X$ to infer which group of species has the tendency to co-invade regions.
 
 % How are the dynamics of N modeled
 
-The observed counts $y$ are a result of the dynamics of the actors positions and interactions in the REM and latent space $X$. The stochastic intensity of the counting process $N$ is modelled by the function $\lambda$. Heuristically, we assume that the rates $\lambda$ are functions of the distance between species $x_s(t)$ and regions $x_r(t)$ in the latent space (Eq. \ref{eq:latentspace}). 
+The observed counts $y$ are a result of the dynamics of the actor's positions and interactions in the REM and latent space $X$. The stochastic intensity of the counting process $N$ is modeled by the function $\lambda$. Heuristically, we assume that the rates $\lambda$ are functions of the distance between species $x_s(t)$ and regions $x_r(t)$ in the latent space (Eq. \ref{eq:latentspace}). 
 
 % Discussion on the distance
 Distances between vectors are defined in many different ways. Two main popular choices are euclidean distance and dot product. These two distances give a different interpretation to the model. 
@@ -662,7 +670,7 @@ We chose the distance in the vector space $X$ to be the dot product. The Euclide
 
 \section{Inference}
 % Introduce EM for the problem
-To infer on the structure of the latent space $X$, and the parameters $\theta$  and $\Sigma$ we use the Expectation Maximization (EM) algorithm (\ref{sec:em}). Since the latent state $X$ is not observed, a direct optimization of the maximum likelihood is not possible. We aim to maximise the $\int_x L(\theta, \Sigma ; y, x) dx$. As explained in the background section \ref{sec:em}, the EM instead of directly maximise this integral, it iteratively computes and maximises an estimate $Q$ of the parameters $\theta, \Sigma$ conditionated on the previous estimate. 
+To infer on the structure of the latent space $X$, and the parameters $\theta$  and $\Sigma$ we use the Expectation Maximization (EM) algorithm (\ref{sec:em}). Since the latent state $X$ is not observed, direct optimization of the maximum likelihood is not possible. We aim to maximise the $\int_x L(\theta, \Sigma ; y, x) dx$. As explained in the background section \ref{sec:em}, the EM instead of directly maximizing this integral, it iteratively computes and maximizes an estimate $Q$ of the parameters $\theta, \Sigma$ conditioned on the previous estimate. 
 
 %TODO a little unclear
 \begin{eqfloat}
@@ -692,7 +700,7 @@ In section \ref{sec:kalman} we showed how to apply a Kalman filter to solve the 
 %\caption{Latent space}
 \end{eqfloat}
 
-here $f = I$ and $h$ is a function dependent on the latent space $x$. The function $h$ is not linear because it's a Poison distribution, however, providing that $h, y \in C^1$, we can linearise the process around the mean and reconduct the problem to the basic linear case. By assuming that a step in time in the latent state can be approximated by the conditional distribution 
+here $f = I$ and $h$ is a function dependent on the latent space $x$. The function $h$ is not linear because it is a Poison distribution, however, providing that $h, y \in C^1$, we can linearise the process around the mean and reconduct the problem to the basic linear case. By assuming that a step in time in the latent state can be approximated by the conditional distribution 
 
 \[
 x_{k} \sim N( \hat{x}_k, \hat{V}_k)
@@ -791,7 +799,7 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 \end{algorithm}
 
 % --------- Smoother --------------------
-Afner $n$ iterations of the Extended Kalman Filter are performed, we move backwards from the last prediction to the starting point $x_0$ with the goal to update and correct the predictions given by the Extended Kalman Filter. A popular smoother choice  is the Rauch-Tung-Striebel smoother. 
+After $n$ iterations of the Extended Kalman Filter are performed, we move backward from the last prediction to the starting point $x_0$ with the goal to update and correct the predictions given by the Extended Kalman Filter. A popular smoother choice is the Rauch-Tung-Striebel smother. 
 
 \begin{algorithm}[H]
 \For{k=n...1}{
@@ -805,7 +813,7 @@ Afner $n$ iterations of the Extended Kalman Filter are performed, we move backwa
 
 \section{Closed form Algorithm}
 % --------- M-step --------------------
-We now propose a close form for an algorithm based on the Expectation Maximization framework (Eq. \ref{eq:expectation_maximization}) to make inference on our latent space REM. We approximate the E-step by means of an Extended Kalman Filter proposed in the previous section, then we maximise $Q$. For a number $s$ of steps, we report our model in a closed form
+We now propose a close form for an algorithm based on the Expectation Maximization framework (Eq. \ref{eq:expectation_maximization}) to make inference on our latent space REM. We approximate the E-step through an Extended Kalman Filter proposed in the previous section, then we maximize $Q$. For a number $s$ of steps, we report our model in a closed form
 
 
 \begin{algorithm}[H]
@@ -842,7 +850,7 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 
 \chapter{Discussion}
 
-We fitted our model on $15947$ alien species invasions from $1850$ to $2010$. In the dataset there are $1724$ species and $153$ regions. In Fig. \ref{fig:latentspace_config} the initial and final configuration of the latent space are reported. Unfortunately, due to the high number of nodes, it's hard to see the evolution of the latent space. In Fig. \ref{fig:trajectories} I report the trajectories taken by 100 randomly selected species. From this image we can clearly see how there are some clusters in the trajectories. We are interested in studying these clusters which species have the tendecy to co-invade regions. 
+We fitted our model on $15947$ alien species invasions from $1850$ to $2010$. In the dataset there are $1724$ species and $153$ regions. In Fig. \ref{fig:latentspace_config} the initial and final configuration of the latent space are reported. Unfortunately, due to the high number of nodes, it is hard to see the evolution of the latent space. In Fig. \ref{fig:trajectories} I report the trajectories taken by 100 randomly selected species. From this image we can clearly see how there are some clusters in the trajectories. We are interested in studying these clusters which species have the tendecy to co-invade regions. 
 
 %TODO add arrows to point out that they moved
 \begin{figure}[ht] 
@@ -920,7 +928,8 @@ The clusters size are ...
 
 \chapter{Conclusion}
 
-In this thesis we showed how to dispose the actors of a relational event model in a 2 dimensional latent space and how to make inference on it. Our inference approach combined many different tools such as the Expectation Maximization algorithm, Kalman filters and smoothers. Our method formulation can be applied to many different use cases and has many advantages over traditional statistical tools such as dimensionality reduction, a compact local configuration history of nodes and a large flexibilty. Our study on the alien species co-invasion shows that the method is feasible for a real world study. However, with the correct amount of modifications, our model can be applied to different problems and not only limited to the study of a bipartite unidirectional graph as presented in this thesis. 
+In this thesis, we showed how to dispose of the actors of a relational event model in a 2-dimensional latent space and how to make inferences about it. Our inference approach combined many different tools such as the Expectation Maximization algorithm, Kalman filters, and smoothers. Our method formulation can be applied to many different use cases and has many advantages over traditional statistical tools such as dimensionality reduction, a compact local configuration history of nodes, and a large flexibility. Our study on the alien species co-invasion shows that the method is feasible for a real world study. However, with the correct amount of modifications, our model can be applied to different problems and is not only limited to the study of a bipartite unidirectional graph as presented in this thesis. 
+
 
 
  
@@ -928,8 +937,8 @@ In this thesis we showed how to dispose the actors of a relational event model i
 
 %\appendix %optional, use only if you have an appendix
 
-%\chapter{Some retarded material}
-%\section{It's over\dots}
+%\chapter{e retarded material}
+%\section{it is over\dots}
 %\lipsum 
 %
 %\backmatter
