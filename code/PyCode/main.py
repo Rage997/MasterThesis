@@ -49,7 +49,7 @@ if __name__ == '__main__':
     # run_plots(InvSpec)
     # Do some filtering and save depending on dataset size
     filterS = [5]
-    filterR = [20, 25]
+    filterR = [0]
     
     for s in filterS:
         for r in filterR:
@@ -59,7 +59,7 @@ if __name__ == '__main__':
             tmp.build_matrix() # Need to rebuild matrix after filtering
             print(f'------ After filtering for (s,r) = ({s},{r}) ,:  ----------')
             # tmp.print_info()
-            path = '../data/'+str(tmp.Ns) + '_' + str(tmp.Nr)
+            path = '../data/result/'+str(tmp.Ns) + '_' + str(tmp.Nr)
             if not os.path.exists(path):
                 os.makedirs(path)
             # name = 'matrix'
