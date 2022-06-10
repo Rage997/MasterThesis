@@ -824,14 +824,75 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 
 %TODO
 
-%\chapter{Discussion}
+\chapter{Discussion}
 
 %TODO our findings are in agreement with lady's paper
+
+%TODO add arrows to point out that they moved
+\begin{figure}[ht] 
+  \label{ fig7} 
+  \begin{minipage}[b]{0.5\linewidth}
+    \centering
+    \includegraphics[width=.85\linewidth]{latentspace_tf0.png} 
+    \caption{Initial configuration.} 
+    \vspace{4ex}
+  \end{minipage}%%
+  \begin{minipage}[b]{0.85\linewidth}
+    \centering
+    \includegraphics[width=.5\linewidth]{latentspace_tf15.png} 
+    \caption{Final configuration.} 
+    \vspace{4ex}
+  \end{minipage} 
+  
+%  \begin{minipage}[b]{0.5\linewidth}
+%    \centering
+%    \includegraphics[width=.5\linewidth]{latentspace_tf10.png} 
+%    \caption{DFT, Initial condition} 
+%    \vspace{4ex}
+%  \end{minipage}%% 
+%  \begin{minipage}[b]{0.5\linewidth}
+%    \centering
+%    \includegraphics[width=.5\linewidth]{latentspace_tf15.png} 
+%    \caption{DFT, rupture} 
+%    \vspace{4ex}
+%  \end{minipage} 
+\end{figure}
 
 %The number of alien species found in a particular region. Both plants and insects were significantly affected by the number of species that have already invaded a certain region. However, whereas plants were recorded more frequently in regions already invaded by other plants, insects were less frequently recorded in regions that had already been invaded by other in- sects. The effects were nonetheless very small in both cases, i.e., affecting the hazard by 0.3% per invasion in the opposite direction.
 
 
-%\chapter{Conclusion}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{trajectories.png}
+    \caption{Plot of the evolution of trajectories in time for 100 randomly selected species.}
+    \label{fig:trajectories}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{cluster_distribution.png}
+    \caption{Size distribution of the cluster of species..}
+    \label{fig:cluster_distribution}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{cluster_2d.png}
+    \caption{Cluster in the latent space.}     
+    \label{fig:cluster_2d}
+\end{figure}
+
+
+
+\chapter{Conclusion}
+
+In this thesis we showed how to dispose the actors of a relational event model in a 2 dimensional latent space and how to make inference on it. Our inference approach combined many different tools such as the Expectation Maximization algorithm, Kalman filters and smoothers. Our method formulation can be applied to many different use cases and has many advantages over traditional statistical tools such as dimensionality reduction, a compact local configuration history of nodes and a large flexibilty. Our study on the alien species co-invasion shows that the method is feasible for a real world study. However, with the correct amount of modifications, our model can be applied to different problems and not only limited to the study of a bipartite unidirectional graph as presented in this thesis. 
+
 
 %TODO answer to research question
 
