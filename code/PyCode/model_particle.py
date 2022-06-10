@@ -178,7 +178,7 @@ V_kalman[0,:].assign(sigma2)
 
 model = Kalman_model(x_0, sigma2)
 #tf.config.run_functions_eagerly(False)
-for iter in range(25):
+for iter in range(50):
   train_kalman(model)
   train_smoother(model)
   # model_coefficients, log_likelihood = fit_glm(tf.reshape(Z, (-1,1)), tf.reshape(Y, [-1]), tf.reshape(offset, [-1]), censor_data)
