@@ -832,17 +832,82 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 
 
 %\subsection{Model computational complexity discussion}
+%TODO brief talk on model complexity
 
-%TODO
+%\subsection{Implementation specifications}
+%We implemented the method discussed in TODO section in Tensorflow (TODO add cite) 
+%
+%%%TODO what framework do we use - how we solved the computational cost problem
+%The size of the dataset is problematic under a computational point of view. In particular, the inversion of the matrix TODO and the memory requirements to allocate all the dataset are large. However, due to the filtering described in the previous section and using efficient data structure by saving in memory only the non-zero entries and the indexes in a sparse matrix and by using CUDA toolokits to accelerate the computation in GPU our implementation meets the computational requirements.
 
-%\chapter{Discussion}
+\chapter{Discussion}
+
+We fitted our model on $15947$ alien species invasions from $1850$ to $2010$. In the dataset there are $1724$ species and $153$ regions. In Fig. \ref{fig:latentspace_config} the initial and final configuration of the latent space are reported. Unfortunately, due to the high number of nodes, it's hard to see the evolution of the latent space. In Fig. \ref{fig:trajectories} I report the trajectories taken by 100 randomly selected species. From this image we can clearly see how there are some clusters in the trajectories. We are interested in studying these clusters which species have the tendecy to co-invade regions. 
+
+%TODO add arrows to point out that they moved
+\begin{figure}[ht] 
+  \label{ fig7} 
+  \begin{minipage}[b]{0.5\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{latentspace_tf0.png} 
+%    \caption{Initial configuration.} 
+    \vspace{4ex}
+  \end{minipage}%%
+  \begin{minipage}[b]{0.5\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{latentspace_tf15.png} 
+%    \caption{Final configuration.} 
+    \vspace{4ex}
+  \end{minipage} 
+  
+%  \begin{minipage}[b]{0.5\linewidth}
+%    \centering
+%    \includegraphics[width=.5\linewidth]{latentspace_tf10.png} 
+%    \caption{DFT, Initial condition} 
+%    \vspace{4ex}
+%  \end{minipage}%% 
+%  \begin{minipage}[b]{0.5\linewidth}
+%    \centering
+%    \includegraphics[width=.5\linewidth]{latentspace_tf15.png} 
+%    \caption{DFT, rupture} 
+%    \vspace{4ex}
+%  \end{minipage} 
+\caption{Latent space initial (left) and final (right) configurations.}
+\label{fig:latentspace_config}
+\end{figure}
+
 
 %TODO our findings are in agreement with lady's paper
-
 %The number of alien species found in a particular region. Both plants and insects were significantly affected by the number of species that have already invaded a certain region. However, whereas plants were recorded more frequently in regions already invaded by other plants, insects were less frequently recorded in regions that had already been invaded by other in- sects. The effects were nonetheless very small in both cases, i.e., affecting the hazard by 0.3% per invasion in the opposite direction.
 
 
-%\chapter{Conclusion}
+The clusters size are ...
+
+%TODO remove the non-assigned cluster
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{trajectories.png}
+    \caption{Plot of the evolution of trajectories in time for 100 randomly selected species. The left image is for the X coordinate, the right image for the Y coordinate.}
+    \label{fig:trajectories}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{cluster_distribution.png}
+    \caption{Size distribution of the cluster of species..}
+    \label{fig:cluster_distribution}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{cluster_2d.png}
+    \caption{Cluster in the latent space initial configuration.}     
+    \label{fig:cluster_2d}
+\end{figure}
+
 
 %TODO answer to research question
 
@@ -852,12 +917,11 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 
 %TODO what about countries?
 
-%TODO move this to appendix or whatever
-%\subsection{Implementation specifications}
-%We implemented the method discussed in TODO section in Tensorflow (TODO add cite) 
-%
-%%%TODO what framework do we use - how we solved the computational cost problem
-%The size of the dataset is problematic under a computational point of view. In particular, the inversion of the matrix TODO and the memory requirements to allocate all the dataset are large. However, due to the filtering described in the previous section and using efficient data structure by saving in memory only the non-zero entries and the indexes in a sparse matrix and by using CUDA toolokits to accelerate the computation in GPU our implementation meets the computational requirements.
+
+\chapter{Conclusion}
+
+In this thesis we showed how to dispose the actors of a relational event model in a 2 dimensional latent space and how to make inference on it. Our inference approach combined many different tools such as the Expectation Maximization algorithm, Kalman filters and smoothers. Our method formulation can be applied to many different use cases and has many advantages over traditional statistical tools such as dimensionality reduction, a compact local configuration history of nodes and a large flexibilty. Our study on the alien species co-invasion shows that the method is feasible for a real world study. However, with the correct amount of modifications, our model can be applied to different problems and not only limited to the study of a bipartite unidirectional graph as presented in this thesis. 
+
 
  
 %\nocite{*}

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 
 # Hide GPU from visible devices
-tf.config.set_visible_devices([], 'GPU')
+# tf.config.set_visible_devices([], 'GPU')
 
 gpus = tf.config.list_physical_devices('GPU')
 if gpus:
@@ -26,11 +26,7 @@ if gpus:
 
 # -------------------- Load real data -------------------------
 # Load data from memory
-<<<<<<< HEAD
-Y = np.load('../data/142_49/matrix.npy')
-=======
-Y = np.load('../data/1724_153/matrix.npy')
->>>>>>> 4b8ac645f22044e6250a42cb55e4897bc0d73ad4
+Y = np.load('../data/result/452_75/matrix.npy')
 d = tf.constant(2, dtype =tf.int32)
 n = tf.constant(Y.shape[0], dtype =tf.int32)
 s = tf.constant(Y.shape[1], dtype =tf.int32) 
@@ -122,17 +118,17 @@ class Kalman_model(tf.Module):
 
 @tf.function
 def train_kalman(model):
-  tf.print("forward filtering")
+  # tf.print("forward filtering")
   for t, (y_batch, censor_batch) in enumerate(train_dataset):
     model(y_batch, c[t, :], censor_batch)
     X_kalman[t+1, :].assign(model.x)
     V_kalman[t+1, :].assign(model.V)
-    tf.print(t)
+    # tf.print(t)
 
 
 @tf.function
 def train_smoother(model):
-  tf.print("backward smoothing")
+  # tf.print("backward smoothing")
   for t, (y_batch, censor_batch) in enumerate(train_dataset):
     t = n-tf.cast(t, dtype=tf.int32)
     if(t!=0):
@@ -140,7 +136,7 @@ def train_smoother(model):
     model.smoother(X_kalman[t-1, :], V_kalman[t-1, :])
     X_kalman[t-1, :].assign(model.x)
     V_kalman[t-1, :].assign(model.V)
-    tf.print(t)
+    # tf.print(t)
 
 @tf.function(autograph=False)
 def fit_glm(z, y, offset, censor_data):
@@ -182,13 +178,14 @@ V_kalman[0,:].assign(sigma2)
 
 model = Kalman_model(x_0, sigma2)
 #tf.config.run_functions_eagerly(False)
-for iter in range(100):
+for iter in range(50):
   train_kalman(model)
   train_smoother(model)
   # model_coefficients, log_likelihood = fit_glm(tf.reshape(Z, (-1,1)), tf.reshape(Y, [-1]), tf.reshape(offset, [-1]), censor_data)
   model_coefficients = tf.math.log(tf.reduce_sum(Y)/tf.reduce_sum(tf.math.exp(offset)*censor_data))
   c.assign(tf.fill((n, s*r), model_coefficients))
   # tf.print("log likelihood = ", tf.reduce_sum(log_likelihood))
+  tf.print(f"Interation number {iter}")
   tf.print("alpha = ", model_coefficients)
 
 
@@ -208,7 +205,7 @@ for i in range(n_plots):
     axs[ i, j].plot( Y[:, i + j*r ])
     axs[ i, j].plot( Y_est[:, i + j*r ])
 
-path = f'../data/{s}_{r}/'
+path = f'../data/result/{s}_{r}/'
 plt.savefig(path+"model_result.png", dpi=75)
 
 # Save results
