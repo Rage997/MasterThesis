@@ -886,7 +886,7 @@ Unfortunately, due to the high number of nodes, it is hard to see the evolution 
 \label{fig:latentspace_afew}
 \end{figure}
 
-In Fig. \ref{fig:trajectories_species} and \ref{fig:trajectories_region} the trajectories in the latent space by 100 randomly selected species and regions are reported. A in-depth look at these trajectories suggest that there are patterns in the movements of region and species in the latent space. We now focus our interest into analysing these clusters. 
+In Fig. \ref{fig:trajectories_species} and \ref{fig:trajectories_region} the trajectories in the latent space by 100 randomly selected species and regions are reported. A in-depth look at these trajectories suggest that there are patterns in the movements of region and species in the latent space. The trajectories of nodes in the latent space correspond to the co-invasion of species into regions. We now focus our interest into analysing these patterns in the trajectories. 
 
 \begin{figure}[H]
     \centering
@@ -902,9 +902,24 @@ In Fig. \ref{fig:trajectories_species} and \ref{fig:trajectories_region} the tra
     \label{fig:trajectories_region}
 \end{figure}
 
-The co-invasion is given by the trajectories of nodes in the latent space: nodes that move in a similar way have the tendency to co-invade. The same procedure can be applied when analysing either species or regions inside the latent space. To detect nodes that move in a homogeneous way we decided to use a clustering algorithm. We settled on using a \textit{Ordering points to identify the clustering structure} (\textbf{OPTICS}) algorithm to perform the clustering. OPTICS is a variation of the DBScan clustering algorithm. This algorithm is really similar to DBSCan but addresses one of the major flaws of the algorithm. DBSCan does not perform very well on data with a non-uniform density. 
+Species that move in a similar way inside the latent space have the tendency to co-invade. Similarly, regions that move in a analogous way will have the tendecy to be co-invaded by the same group of species. To detect nodes that move in a homogeneous way we decided to use a clustering algorithm. We settled on using a \textit{Ordering points to identify the clustering structure} (\textbf{OPTICS}) algorithm to perform the clustering. OPTICS is a variation of the DBScan clustering algorithm, which covering in depth is how of scope of this thesis. This algorithm is really similar to DBSCan but addresses one of the major flaws of the algorithm. DBSCan does not perform very well on data with a non-uniform density. 
 
-Applying OPTICS to the species and regions in the latent space detected 67 clusters for species and 5 clusters for regions \ref{fig:cluster_density}. The dynamics of the clusters are reported in Fig. \ref{fig:latentspace_cluster} with all the nodes not belonging in any cluster greyed out.
+Applying OPTICS to the species and regions in the latent space detected 67 clusters for species and 5 clusters for regions \ref{fig:cluster_density}. The dynamics of the clusters are reported in Fig. \ref{fig:latentspace_cluster} with all the nodes not belonging in any cluster greyed out. 
+
+\begin{figure}[ht] 
+  \begin{minipage}[b]{0.5\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{latentspace_cluster_species.png}
+    \vspace{4ex}
+  \end{minipage}%%
+  \begin{minipage}[b]{0.5\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{latentspace_cluster_region.png}
+    \vspace{4ex}
+  \end{minipage}  
+\caption{Latent space initial and final configurations. The black arrows shows the movement in space from the initial state to the final state.}
+\label{fig:latentspace_cluster}
+\end{figure}
 
 \begin{figure}[ht] 
   \label{ fig7} 
@@ -925,26 +940,56 @@ Applying OPTICS to the species and regions in the latent space detected 67 clust
 \label{fig:cluster_density}
 \end{figure}
 
-%TODO add the clusters composition
+We now focus on analysing the Taxonomic Families of the species belonging to the five largest clusters. Out of the 17 Taxonomic Families, only 9 are present in the five largest clusters. This shows that some Taxonomic Families are more keen into co-invasion than others. In Table \ref{table:clusters_species} we reported the percentage of the cluster's species in a taxonomic family if it's present in the cluster. Vascular Plants have a significant relevance. Birds and Insects trajectories in the latent space seems to be in agreement, meaning that they are likely to co-invade a region.
 
-%TODO our findings are in agreement with lady's paper
+The dimension of the Taxonomic Families is non-homogeneous. As shown in Fig. \ref{fig:hist_tax_fam}, Vascular Plants and the Insects are the largest Taxonomic Families. This should be taken into account when analysing the composition of clusters: a species belonging to one of the most abdundat families will have an higher probability of (indirectly) interacting with other species in the latent space.
+
+\begin{table}[]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+                & Cluster 4 & Cluster 21 & Cluster 39 & Cluster 42 & Cluster 43 \\ \hline
+Algae           &           &            & 11 \%      &            &            \\ \hline
+Birds           & 7 \%      & 6 \%       &            &            & 7 \%       \\ \hline
+Crustaceans     & 7 \%      &            & 16 \%      & 6 \%       &            \\ \hline
+Fishes          &           &            & 5 \%       & 6 \%       &            \\ \hline
+Fungi           &           &            &            & 6 \%       &            \\ \hline
+Insects         & 14 \%     & 12 \%      & 16 \%      &            & 36 \%      \\ \hline
+Mammals         & 7 \%      &            &            &            &            \\ \hline
+Reptiles        &           & 6 \%       &            &            &            \\ \hline
+Vascular plants & 64 \%     & 75 \%      & 53 \%      & 81 \%      & 57 \%      \\ \hline
+\end{tabular}
+\caption{Species clusters composition.}
+\label{table:clusters_species}
+\end{table}
+
+The clusters for the regions in the latent space are also interesting. For the regions we were able to detect 5 clusters using the OPTICS algorithm and they are reported in Table \ref{table:clusters_region}. 
+
+%TODO plot these cluster in world map
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+Cluster 0 & Cluster 1                 & Cluster 2  & Cluster 3           & Cluster 4                \\ \hline
+Russia    & Armenia                   & Lesotho    & Peru                & Iraq                     \\ \hline
+Italy     & Chad                      & Mauritania & Andorra             & Nicaragua                \\ \hline
+Canada    & Iran, Islamic Republic of & Gibraltar  & Belize              & Niger                    \\ \hline
+Estonia   & Mongolia                  & Nepal      & Burkina Faso        & Vietnam                  \\ \hline
+Slovakia  & Somalia                   & Suriname   & Libya               & Zambia                   \\ \hline
+          &                           &            & Palestine, State of & Central African Republic \\ \hline
+          &                           &            & Senegal             &                          \\ \hline
+          &                           &            & Tajikistan          &                          \\ \hline
+          &                           &            & Gabon               &                          \\ \hline
+          &                           &            & Congo               &                          \\ \hline
+\end{tabular}
+\caption{Region clusters composition.}
+\label{table:clusters_region}
+\end{table}
+
+
+
+%TODO our findings are in agreement with lady's paper -> comment these findings
 %The number of alien species found in a particular region. Both plants and insects were significantly affected by the number of species that have already invaded a certain region. However, whereas plants were recorded more frequently in regions already invaded by other plants, insects were less frequently recorded in regions that had already been invaded by other in- sects. The effects were nonetheless very small in both cases, i.e., affecting the hazard by 0.3% per invasion in the opposite direction.
-
-\begin{figure}[ht] 
-  \label{ fig7} 
-  \begin{minipage}[b]{0.5\linewidth}
-    \centering
-    \includegraphics[width=\textwidth]{latentspace_cluster_species.png}
-    \vspace{4ex}
-  \end{minipage}%%
-  \begin{minipage}[b]{0.5\linewidth}
-    \centering
-    \includegraphics[width=\textwidth]{latentspace_cluster_region.png}
-    \vspace{4ex}
-  \end{minipage}  
-\caption{Latent space initial and final configurations. The black arrows shows the movement in space from the initial state to the final state.}
-\label{fig:latentspace_cluster}
-\end{figure}
 
 
 %TODO answer to research question
@@ -958,18 +1003,21 @@ Applying OPTICS to the species and regions in the latent space detected 67 clust
 \chapter{Discussion}
 
 %1. Methodological contribution
-The problem of alien species requires real action but withouth first understanding the in-depth drivers of invasion it's hard to come up with any action at all. In the last decades, REMs have been succesfully used to study the underneath drivers of dynamic social networks. However, a traditional approach is not always feasible due to the large size and complexity of a dataset.
+The problem of alien species requires real action but withouth first understanding the in-depth drivers of invasion it's hard to come up with any action at all. In the last decades, relational event models have been succesfully used to study the underneath drivers of dynamic social networks. Originally, relational event models were designed for small scale social networks. However, a traditional REM approach might not be always feasible due to the large size and complexity of a dataset and their high computationally cost.
 
 In this thesis, we showed how to dispose the actors of a relational event model in a 2-dimensional latent space and how to make inferences about it. Our inference approach combined many different tools such as the Expectation Maximization algorithm, Kalman filters, and smoothers. Our method formulation can be applied to many different use cases and has many advantages over traditional statistical tools such as dimensionality reduction, a compact local configuration history of nodes, and a large flexibility. Our study on the alien species co-invasion shows that the method is feasible for a real world study. However, with the correct amount of modifications, our model can be applied to different problems and is not only limited to the study of a bipartite unidirectional graph as presented in this thesis. 
 
-%2. Limitation
-The results given by fitting our custom latent space REM on the alien species world dataset shows how this approach can obtain ... results. We analysed TODO number and came to the conclusion that....
-
-Our approach has however some flaws and limitations. The first limitation ...
-
-%3. Results
-
+%2. Analysis done
+We showed the applicability of our model it by analysing 15947 alien species invasion given by First Records Dataset. The analysis on the results of our model is based on studying clusters of trajectories in the latent space for both species and regions. However, this approach is limited, in particular for the species. We were able to detect 67 clusters for the species in the latent space, however, we only analysed the largest 5. This approach is acceptable for a first analysis and to show the capabilities of our custom latent space REM, but, for an in-depth analysis this is not sufficient. A more exaustive approach would have been to study the probability of, given a species, or a taxonomic family, find another species inside all the clusters found in the analysis. 
  
+%3. limitation: sigma choice is somehow arbitrary
+Our approach requires the user to select the amount of noise $\Sigma$ that our model will use in the latent space process. A large $\Sigma$ will grant the model more dynamicity. In contrast, a small $\Sigma$ will make the model more conservative. The choice of this parameter is somehow arbitrary. An user might want to try different values of $\Sigma$ and analyse the dynamics of the latent space. Then, based on this feedback, update the value $\Sigma$ by either increasing or decreasing it. 
+
+The First Records Dataset is currently the most comprehensive and largest dataset available for first time records of alien species. However, it is a biased dataset towards regions such as Europe as a whole and taxonomic groups such as plants and insects. Furthermore, the information about the year of introduction of an alien species in a region is not precise and most of the times does not correspond to the year of actual introduction, which might have happened decades later. These bias and unreliability of the dataset affects our results.
+
+% Recap + conclusion
+Concluding, we showed how a relational event model can be applied to a bipartite dynamic network and extended by included a latent space configuration of the nodes. We then presented to the reader a framework to analyse the results based on a clustering algorithm. The improvements and extension of already existing tools such as relational event models into more advanced and efficient methods capable of performing tipe-dependant analysis such as the study of alien species first records will help ecologist to investigate more in depth this ecological phenomena and, with hope, fully understand its dynamics. 
+
 %\nocite{*}
 
 %\appendix %optional, use only if you have an appendix
