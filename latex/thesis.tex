@@ -855,46 +855,26 @@ In this section we analyse the results from fittomg our model on $15947$ alien s
 %TODO plot of just a couple of nodes to show trajectories  
 Unfortunately, due to the high number of nodes, it is hard to see the evolution of the latent space. In Fig. we focus on a set of ...
 
-%TODO change color of the plot
 \begin{figure}[ht] 
   \label{ fig7} 
   \begin{minipage}[b]{0.5\linewidth}
     \centering
     \includegraphics[width=\linewidth]{latentspace_species.png} 
-%    \caption{Initial configuration.} 
     \vspace{4ex}
   \end{minipage}%%
   \begin{minipage}[b]{0.5\linewidth}
     \centering
     \includegraphics[width=\linewidth]{latentspace_region.png} 
-%    \caption{Final configuration.} 
     \vspace{4ex}
-  \end{minipage} 
-
-%  \begin{minipage}[b]{0.5\linewidth}
-%    \centering
-%    \includegraphics[width=.5\linewidth]{latentspace_tf10.png} 
-%    \caption{DFT, Initial condition} 
-%    \vspace{4ex}
-%  \end{minipage}%% 
-%  \begin{minipage}[b]{0.5\linewidth}
-%    \centering
-%    \includegraphics[width=.5\linewidth]{latentspace_tf15.png} 
-%    \caption{DFT, rupture} 
-%    \vspace{4ex}
-%  \end{minipage} 
+  \end{minipage}  
 \caption{Latent space initial and final configurations. The black arrows shows the movement in space from the initial state to the final state.}
 \label{fig:latentspace_config}
 \end{figure}
 
-In Fig. \ref{fig:trajectories_species} I report the trajectories taken by 100 randomly selected species and in Fig. \ref{fig:trajectories_region} the analogous plot for regions. A in-depth look at these trajectories suggest that there are patterns in the movements of region and species in the latent space. We now focus on analysing these clusters. 
-
+In Fig. \ref{fig:trajectories_species} and \ref{fig:trajectories_region} the trajectories in the latent space by 100 randomly selected species and regions are reported. A in-depth look at these trajectories suggest that there are patterns in the movements of region and species in the latent space. We now focus our interest into analysing these clusters. 
 
 %TODO our findings are in agreement with lady's paper
 %The number of alien species found in a particular region. Both plants and insects were significantly affected by the number of species that have already invaded a certain region. However, whereas plants were recorded more frequently in regions already invaded by other plants, insects were less frequently recorded in regions that had already been invaded by other in- sects. The effects were nonetheless very small in both cases, i.e., affecting the hazard by 0.3% per invasion in the opposite direction.
-
-
-The clusters size are ...
 
 \begin{figure}[H]
     \centering
@@ -910,29 +890,56 @@ The clusters size are ...
     \label{fig:trajectories_region}
 \end{figure}
 
+The co-invasion is given by the trajectories of nodes in the latent space: nodes that move in a similar way have the tendency to co-invade. The same procedure can be applied when analysing either species or regions inside the latent space. To detect nodes that move in a homogeneous way we decided to use a clustering algorithm. We settled on using a \textit{Ordering points to identify the clustering structure} (\textbf{OPTICS}) algorithm to perform the clustering. OPTICS is a variation of the DBScan clustering algorithm. This algorithm is really similar to DBSCan but addresses one of the major flaws of the algorithm. DBSCan does not perform very well on data with a non-uniform density. 
 
-\begin{figure}[H]
+Applying OPTICS to the species and regions in the latent space detected 67 clusters for species and 4 clusters for regions \ref{fig:cluster_density}. The dynamics of the clusters are reported in Fig. \ref{fig:latentspace_cluster} with all the nodes not belonging in any cluster greyed out.
+
+%TODO check numbers. 
+%TODO add the clusters composition
+\begin{figure}[ht] 
+  \label{ fig7} 
+  \begin{minipage}[b]{0.5\linewidth}
     \centering
-    \includegraphics[width=0.75\textwidth]{cluster_distribution_species.png}
-    \caption{Size distribution of the cluster of species..}
-    \label{fig:cluster_distribution}
+        \includegraphics[width=0.75\textwidth]{cluster_distribution_species.png}
+%    \caption{Size distribution of the \\ cluster of species.}
+    \vspace{4ex}
+  \end{minipage}%%
+  \begin{minipage}[b]{0.5\linewidth}
+    \centering
+     \includegraphics[width=0.75\textwidth]{cluster_distribution_region.png}
+%    \caption{Size distribution of the \\ cluster of region.}
+    \vspace{4ex}
+  \end{minipage} 
+%\caption{Cluster dimension.}
+\caption{Size distribution of the cluster of species (left) and region (right).}
+\label{fig:cluster_density}
+\end{figure}
+
+%TODO
+%\begin{figure}[H]
+%    \centering
+%    \includegraphics[width=0.75\textwidth]{latentspace_cluster_region.png}
+%    \caption{Cluster in the latent space initial configuration.}     
+%    \label{fig:cluster_2d}
+%\end{figure}
+
+\begin{figure}[ht] 
+  \label{ fig7} 
+  \begin{minipage}[b]{0.5\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{latentspace_cluster_region.png}
+    \vspace{4ex}
+  \end{minipage}%%
+  \begin{minipage}[b]{0.5\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{latentspace_cluster_region.png}
+    \vspace{4ex}
+  \end{minipage}  
+\caption{Latent space initial and final configurations. The black arrows shows the movement in space from the initial state to the final state.}
+\label{fig:latentspace_cluster}
 \end{figure}
 
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\textwidth]{cluster_distribution_region.png}
-    \caption{Size distribution of the cluster of species..}
-    \label{fig:cluster_distribution}
-\end{figure}
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\textwidth]{cluster_2d.png}
-    \caption{Cluster in the latent space initial configuration.}     
-    \label{fig:cluster_2d}
-\end{figure}
 
 
 %TODO answer to research question
