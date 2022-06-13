@@ -904,10 +904,8 @@ In Fig. \ref{fig:trajectories_species} and \ref{fig:trajectories_region} the tra
 
 The co-invasion is given by the trajectories of nodes in the latent space: nodes that move in a similar way have the tendency to co-invade. The same procedure can be applied when analysing either species or regions inside the latent space. To detect nodes that move in a homogeneous way we decided to use a clustering algorithm. We settled on using a \textit{Ordering points to identify the clustering structure} (\textbf{OPTICS}) algorithm to perform the clustering. OPTICS is a variation of the DBScan clustering algorithm. This algorithm is really similar to DBSCan but addresses one of the major flaws of the algorithm. DBSCan does not perform very well on data with a non-uniform density. 
 
-Applying OPTICS to the species and regions in the latent space detected 67 clusters for species and 4 clusters for regions \ref{fig:cluster_density}. The dynamics of the clusters are reported in Fig. \ref{fig:latentspace_cluster} with all the nodes not belonging in any cluster greyed out.
+Applying OPTICS to the species and regions in the latent space detected 67 clusters for species and 5 clusters for regions \ref{fig:cluster_density}. The dynamics of the clusters are reported in Fig. \ref{fig:latentspace_cluster} with all the nodes not belonging in any cluster greyed out.
 
-%TODO check numbers. 
-%TODO add the clusters composition
 \begin{figure}[ht] 
   \label{ fig7} 
   \begin{minipage}[b]{0.5\linewidth}
@@ -927,17 +925,10 @@ Applying OPTICS to the species and regions in the latent space detected 67 clust
 \label{fig:cluster_density}
 \end{figure}
 
+%TODO add the clusters composition
 
 %TODO our findings are in agreement with lady's paper
 %The number of alien species found in a particular region. Both plants and insects were significantly affected by the number of species that have already invaded a certain region. However, whereas plants were recorded more frequently in regions already invaded by other plants, insects were less frequently recorded in regions that had already been invaded by other in- sects. The effects were nonetheless very small in both cases, i.e., affecting the hazard by 0.3% per invasion in the opposite direction.
-
-%TODO
-%\begin{figure}[H]
-%    \centering
-%    \includegraphics[width=0.75\textwidth]{latentspace_cluster_region.png}
-%    \caption{Cluster in the latent space initial configuration.}     
-%    \label{fig:cluster_2d}
-%\end{figure}
 
 \begin{figure}[ht] 
   \label{ fig7} 
@@ -956,8 +947,6 @@ Applying OPTICS to the species and regions in the latent space detected 67 clust
 \end{figure}
 
 
-
-
 %TODO answer to research question
 
 %TODO what we accomplished
@@ -969,11 +958,14 @@ Applying OPTICS to the species and regions in the latent space detected 67 clust
 \chapter{Discussion}
 
 %1. Methodological contribution
+The problem of alien species requires real action but withouth first understanding the in-depth drivers of invasion it's hard to come up with any action at all. In the last decades, REMs have been succesfully used to study the underneath drivers of dynamic social networks. However, a traditional approach is not always feasible due to the large size and complexity of a dataset.
 
-In this thesis, we showed how to dispose of the actors of a relational event model in a 2-dimensional latent space and how to make inferences about it. Our inference approach combined many different tools such as the Expectation Maximization algorithm, Kalman filters, and smoothers. Our method formulation can be applied to many different use cases and has many advantages over traditional statistical tools such as dimensionality reduction, a compact local configuration history of nodes, and a large flexibility. Our study on the alien species co-invasion shows that the method is feasible for a real world study. However, with the correct amount of modifications, our model can be applied to different problems and is not only limited to the study of a bipartite unidirectional graph as presented in this thesis. 
+In this thesis, we showed how to dispose the actors of a relational event model in a 2-dimensional latent space and how to make inferences about it. Our inference approach combined many different tools such as the Expectation Maximization algorithm, Kalman filters, and smoothers. Our method formulation can be applied to many different use cases and has many advantages over traditional statistical tools such as dimensionality reduction, a compact local configuration history of nodes, and a large flexibility. Our study on the alien species co-invasion shows that the method is feasible for a real world study. However, with the correct amount of modifications, our model can be applied to different problems and is not only limited to the study of a bipartite unidirectional graph as presented in this thesis. 
 
 %2. Limitation
+The results given by fitting our custom latent space REM on the alien species world dataset shows how this approach can obtain ... results. We analysed TODO number and came to the conclusion that....
 
+Our approach has however some flaws and limitations. The first limitation ...
 
 %3. Results
 
