@@ -169,7 +169,7 @@ Z = tf.ones((n, s*r), dtype=tf.float32)
 
 #x_0 = tf.random.uniform(shape = [n_nodes * d] , minval= -1, maxval= 1, dtype=tf.float32)
 x_0 = tf.reshape(X_true[0, :, :], -1)
-sigma2 = tf.constant( [0.001]*(n_nodes*d).numpy(), dtype=tf.float32)
+sigma2 = tf.constant( [0.01]*(n_nodes*d).numpy(), dtype=tf.float32)
 
 X_kalman[0,:].assign(x_0)
 V_kalman[0,:].assign(sigma2)
