@@ -151,7 +151,7 @@ We structure the rest of this thesis as follows. In chapter 2 we make a prelimin
 %TODO briefly report the results(?)
 
 \chapter{Materials and methods}
-
+\label{sec:dataset}
 Our study of the co-invasion of species is based on the Alien Species First Records database \cite{intro:dataset} which to date is the most exhaustive source of first records of alien species currently available. The dataset contains the years of the first establishment of alien species in regions worldwide. This dataset has been updated many times to include a more in-depth amount of data on the alien species \cite{intro:datasetv2} and nowadays still in continuously update. The current version includes 61751 invasions of 23191 species divided into 18 taxonomic families (listed in Tab. \ref{table:families}) in 276 regions\footnote{Regions generally correspond to countries but in the dataset available almost half regions are islands.} ranging from 7000 AD to 2020.
 
 
@@ -848,26 +848,29 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 %%%TODO what framework do we use - how we solved the computational cost problem
 %The size of the dataset is problematic under a computational point of view. In particular, the inversion of the matrix TODO and the memory requirements to allocate all the dataset are large. However, due to the filtering described in the previous section and using efficient data structure by saving in memory only the non-zero entries and the indexes in a sparse matrix and by using CUDA toolokits to accelerate the computation in GPU our implementation meets the computational requirements.
 
-\chapter{Discussion}
+\chapter{Results}
 
-We fitted our model on $15947$ alien species invasions from $1850$ to $2010$. In the dataset there are $1724$ species and $153$ regions. In Fig. \ref{fig:latentspace_config} the initial and final configuration of the latent space are reported. Unfortunately, due to the high number of nodes, it is hard to see the evolution of the latent space. In Fig. \ref{fig:trajectories} I report the trajectories taken by 100 randomly selected species. From this image we can clearly see how there are some clusters in the trajectories. We are interested in studying these clusters which species have the tendecy to co-invade regions. 
+In this section we analyse the results from fittomg our model on $15947$ alien species invasions from $1850$ to $2010$, as described in Section \ref{sec:dataset}. In the dataset there are $1724$ species and $153$ regions. To report the results in the most clear way, we decided to distinguish the region and spaces nodes in the latent space. In Fig. \ref{fig:latentspace_config} the initial and final configuration of the latent space are reported for species and regions. 
 
-%TODO add arrows to point out that they moved
+%TODO plot of just a couple of nodes to show trajectories  
+Unfortunately, due to the high number of nodes, it is hard to see the evolution of the latent space. In Fig. we focus on a set of ...
+
+%TODO change color of the plot
 \begin{figure}[ht] 
   \label{ fig7} 
   \begin{minipage}[b]{0.5\linewidth}
     \centering
-    \includegraphics[width=\linewidth]{latentspace_tf0.png} 
+    \includegraphics[width=\linewidth]{latentspace_species.png} 
 %    \caption{Initial configuration.} 
     \vspace{4ex}
   \end{minipage}%%
   \begin{minipage}[b]{0.5\linewidth}
     \centering
-    \includegraphics[width=\linewidth]{latentspace_tf15.png} 
+    \includegraphics[width=\linewidth]{latentspace_region.png} 
 %    \caption{Final configuration.} 
     \vspace{4ex}
   \end{minipage} 
-  
+
 %  \begin{minipage}[b]{0.5\linewidth}
 %    \centering
 %    \includegraphics[width=.5\linewidth]{latentspace_tf10.png} 
@@ -880,9 +883,11 @@ We fitted our model on $15947$ alien species invasions from $1850$ to $2010$. In
 %    \caption{DFT, rupture} 
 %    \vspace{4ex}
 %  \end{minipage} 
-\caption{Latent space initial (left) and final (right) configurations.}
+\caption{Latent space initial and final configurations. The black arrows shows the movement in space from the initial state to the final state.}
 \label{fig:latentspace_config}
 \end{figure}
+
+In Fig. \ref{fig:trajectories_species} I report the trajectories taken by 100 randomly selected species and in Fig. \ref{fig:trajectories_region} the analogous plot for regions. A in-depth look at these trajectories suggest that there are patterns in the movements of region and species in the latent space. We now focus on analysing these clusters. 
 
 
 %TODO our findings are in agreement with lady's paper
@@ -891,19 +896,32 @@ We fitted our model on $15947$ alien species invasions from $1850$ to $2010$. In
 
 The clusters size are ...
 
-%TODO remove the non-assigned cluster
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{trajectories.png}
+    \includegraphics[width=0.75\textwidth]{trajectories_species.png}
     \caption{Plot of the evolution of trajectories in time for 100 randomly selected species. The left image is for the X coordinate, the right image for the Y coordinate.}
-    \label{fig:trajectories}
+    \label{fig:trajectories_species}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{trajectories_region.png}
+    \caption{Plot of the evolution of trajectories in time for 100 randomly selected regions. The left image is for the X coordinate, the right image for the Y coordinate.}
+    \label{fig:trajectories_region}
 \end{figure}
 
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{cluster_distribution_species.png}
+    \caption{Size distribution of the cluster of species..}
+    \label{fig:cluster_distribution}
+\end{figure}
+
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{cluster_distribution.png}
+    \includegraphics[width=0.75\textwidth]{cluster_distribution_region.png}
     \caption{Size distribution of the cluster of species..}
     \label{fig:cluster_distribution}
 \end{figure}
@@ -923,14 +941,18 @@ The clusters size are ...
 
 %TODO what is the latent space structure of species invasions?
 
-%TODO what about countries?
 
 
-\chapter{Conclusion}
+\chapter{Discussion}
+
+%1. Methodological contribution
 
 In this thesis, we showed how to dispose of the actors of a relational event model in a 2-dimensional latent space and how to make inferences about it. Our inference approach combined many different tools such as the Expectation Maximization algorithm, Kalman filters, and smoothers. Our method formulation can be applied to many different use cases and has many advantages over traditional statistical tools such as dimensionality reduction, a compact local configuration history of nodes, and a large flexibility. Our study on the alien species co-invasion shows that the method is feasible for a real world study. However, with the correct amount of modifications, our model can be applied to different problems and is not only limited to the study of a bipartite unidirectional graph as presented in this thesis. 
 
+%2. Limitation
 
+
+%3. Results
 
  
 %\nocite{*}
