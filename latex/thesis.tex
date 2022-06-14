@@ -850,9 +850,10 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 
 \chapter{Results}
 
-In this section we analyse the results from fittomg our model on $15947$ alien species invasions from $1850$ to $2010$, as described in Section \ref{sec:dataset}. In the dataset there are $1724$ species and $153$ regions. To report the results in the most clear way, we decided to distinguish the region and spaces nodes in the latent space. In Fig. \ref{fig:latentspace_config} the initial and final configuration of the latent space are reported for species and regions. 
+In this section, we analyze the results from fitting our model on $15947$ alien species invasions from $1850$ to $2010$, as described in Section \ref{sec:dataset}. In the dataset, there are $1724$ species and $153$ regions. To report the results in the clearest way, we decided to distinguish the region and spaces nodes in the latent space. In Fig. \ref{fig:latentspace_config} the initial and final configuration of the latent space is reported for species and regions. 
 
-Unfortunately, due to the high number of nodes, it is hard to see the evolution of the latent space. In Fig. \ref{fig:latentspace_afew} we focus on a set of 25 randomly chosen nodes to highlight the dynamics of nodes in the latent space. The nodes that tend to have a similar behaviour (i.e. have the tendency to co-invade) will move towards each other. In contrast, nodes that express a contrary behaviour will push each other further. The black arrows show the trajectory in time. There are 17 timesteps in total (the years from 1850 to 2010). Some trajectories are linear and others are elliptic. Species that move with the same trajectory in the latent space will have a tendency to co-invade regions, similarly, regions that move with the same trajectory are more likely to be invaded by the same group of species.
+Unfortunately, due to the high number of nodes, it is hard to see the evolution of the latent space. In Fig. \ref{fig:latentspace_afew} we focus on a set of 25 randomly chosen nodes to highlight the dynamics of nodes in the latent space. The nodes that tend to have similar behavior (i.e. have the tendency to co-invade) will move towards each other. In contrast, nodes that express a contrary behavior will push each other further. The black arrows show the trajectory in time. There are 17 timesteps in total (the years from 1850 to 2010). Some trajectories are linear and others are elliptic. Species that move with the same trajectory in the latent space will have a tendency to co-invade regions, similarly, regions that move with the same trajectory are more likely to be invaded by the same group of species.
+
 
 \begin{figure}[H] 
   \begin{minipage}[b]{0.5\linewidth}
@@ -869,7 +870,7 @@ Unfortunately, due to the high number of nodes, it is hard to see the evolution 
 \label{fig:latentspace_config}
 \end{figure}
 
-
+%TODO select switzerland alongside the random regions
 \begin{figure}[H] 
   \label{ fig7} 
   \begin{minipage}[b]{0.5\linewidth}
@@ -893,7 +894,7 @@ Unfortunately, due to the high number of nodes, it is hard to see the evolution 
     \label{fig:trajectories_species}
 \end{figure}
 
-In Fig. \ref{fig:trajectories_species} and \ref{fig:trajectories_region} the trajectories in the latent space by 100 randomly selected species and regions are reported. A in-depth look at these trajectories suggest that there are patterns in the movements of region and species in the latent space. The trajectories of nodes in the latent space correspond to the co-invasion of species into regions. We now focus our interest into analysing these patterns in the trajectories. 
+In Fig. \ref{fig:trajectories_species} and \ref{fig:trajectories_region} the trajectories in the latent space by 100 randomly selected species and regions are reported. An in-depth look at these trajectories suggests that there are patterns in the movements of regions and species in the latent space. The trajectories of nodes in the latent space correspond to the co-invasion of species into regions. We now focus our interest on analyzing these patterns in the trajectories. 
 
 
 \begin{figure}[ht]
@@ -903,7 +904,7 @@ In Fig. \ref{fig:trajectories_species} and \ref{fig:trajectories_region} the tra
     \label{fig:trajectories_region}
 \end{figure}
 
-Species that move in a similar way inside the latent space have the tendency to co-invade. Similarly, regions that move in a analogous way will have the tendecy to be co-invaded by the same group of species. To detect nodes that move in a homogeneous way we decided to use a clustering algorithm. We settled on using a \textit{Ordering points to identify the clustering structure} (\textbf{OPTICS}) algorithm to perform the clustering. OPTICS is a variation of the DBScan clustering algorithm, which covering in depth is how of scope of this thesis. This algorithm is really similar to DBSCan but addresses one of the major flaws of the algorithm. DBSCan does not perform very well on data with a non-uniform density. 
+Species that move in a similar way inside the latent space tend to co-invade. Similarly, regions that move analogously will have the tendency to be co-invaded by the same group of species. To detect nodes that move in a homogeneous way we decided to use a clustering algorithm. We settled on using a \textit{Ordering points to identify the clustering structure} (\textbf{OPTICS}) algorithm to perform the clustering. OPTICS is a variation of the DBScan clustering algorithm, which an in-depth cover is out of the scope of this thesis. This algorithm is really similar to DBSCan but addresses one of the major flaws of the algorithm. DBSCan does not perform very well on data with a non-uniform density. 
 
 Applying OPTICS to the species and regions in the latent space detected 67 clusters for species and 5 clusters for regions \ref{fig:cluster_density}. The dynamics of the clusters are reported in Fig. \ref{fig:latentspace_cluster} with all the nodes not belonging in any cluster greyed out. 
 
@@ -921,6 +922,8 @@ Applying OPTICS to the species and regions in the latent space detected 67 clust
 \caption{Latent space initial and final configurations. The black arrows shows the movement in space from the initial state to the final state.}
 \label{fig:latentspace_cluster}
 \end{figure}
+
+\section{Insights from the species clusters}
 
 \begin{figure}[H] 
   \label{ fig7} 
@@ -940,8 +943,6 @@ Applying OPTICS to the species and regions in the latent space detected 67 clust
 \caption{Size distribution of the cluster of species (left) and region (right).}
 \label{fig:cluster_density}
 \end{figure}
-
-%TODO subsection for species analysis ?
 
 We now focus on analysing the taxonomic families of the species belonging to the five largest clusters. Out of the 18 Taxonomic Families, only 9 are present in the five largest clusters. This shows that some taxonomic families are more prominent to co-invade than others. In Table \ref{table:clusters_species} we reported the composition of the five largest clusters. If a taxonomic family is not found in a cluster, the entry is left empty. The plants family seems to have a significant relevance, it is present in all the clusters.  Birds and Insects seem to have the tendency to belong in the same clusters, meaning that they are likely to co-invade a region.
 
@@ -966,7 +967,10 @@ Vascular plants & 64 \%     & 75 \%      & 53 \%      & 81 \%      & 57 \%      
 \label{table:clusters_species}
 \end{table}
 
-The clusters for the regions in the latent space are also interesting. Applying OPTICS clustering algorithm to the trajectories of the regions in the latent space detected $5$ clusters. They are reported in Table \ref{table:clusters_region}. For a better visualization, the regions are reported respectively with different colours for the cluster they belong to in Fig. \ref{fig:worldmap_cluster}.  It's interesting to note how some clusters in the latent space are close in terms of distance such as the regions belonging to the clusters number 3 and 4. Regions that are geographically close are expected to be invaded by the same group of species. However, this effect does not apply to all regions. Cluster $1$ in particular contains regions that are geographically not adjacent. This relation might be due to tight trade between states or ...
+
+\section{Insights from the regions clusters}
+
+The clusters for the regions in the latent space are also interesting. Applying the OPTICS clustering algorithm to the trajectories of the regions in the latent space detected $5$ clusters. They are reported in Table \ref{table:clusters_region}. For better visualization, the regions are reported respectively with different colors for the cluster they belong to in Fig. \ref{fig:worldmap_cluster}.  It's interesting to note how some clusters in the latent space are close in terms of distance such as the regions belonging to the clusters number 3 and 4. Regions that are geographically close are expected to be invaded by the same group of species. However, this effect does not apply to all regions. Cluster $1$, in particular, contains regions that are geographically not adjacent. This relation might be due to tight trade routes between these states.
 
 
 \begin{table}[H]
@@ -998,11 +1002,11 @@ Slovakia  & Somalia                   & Suriname   & Libya               & Zambi
 \end{figure}
 
 
+%\section{Discussion}
+%TODO write the conclusion of this chapter. Not sure what to say?
 
-%TODO write the conclusion of this chapter
 
-
-\chapter{Discussion}
+\chapter{Conclusion}
 
 %1. Methodological contribution
 The problem of alien species requires real action but without first understanding the in-depth drivers of invasion it's hard to come up with any action at all. In the last decades, relational event models have been successfully used to study the underneath drivers of dynamic social networks. Originally, relational event models were designed for small scale social networks. However, a traditional REM approach might not be always feasible due to the large size and complexity of a dataset and its high computationally cost.
