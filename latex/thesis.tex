@@ -854,7 +854,7 @@ In this section we analyse the results from fittomg our model on $15947$ alien s
 
 Unfortunately, due to the high number of nodes, it is hard to see the evolution of the latent space. In Fig. \ref{fig:latentspace_afew} we focus on a set of 25 randomly chosen nodes to highlight the dynamics of nodes in the latent space. The nodes that tend to have a similar behaviour (i.e. have the tendency to co-invade) will move towards each other. In contrast, nodes that express a contrary behaviour will push each other further. The black arrows show the trajectory in time. There are 17 timesteps in total (the years from 1850 to 2010). Some trajectories are linear and others are elliptic. Species that move with the same trajectory in the latent space will have a tendency to co-invade regions, similarly, regions that move with the same trajectory are more likely to be invaded by the same group of species.
 
-\begin{figure}[ht] 
+\begin{figure}[H] 
   \begin{minipage}[b]{0.5\linewidth}
     \centering
     \includegraphics[width=\linewidth]{latentspace_species.png} 
@@ -870,7 +870,7 @@ Unfortunately, due to the high number of nodes, it is hard to see the evolution 
 \end{figure}
 
 
-\begin{figure}[ht] 
+\begin{figure}[H] 
   \label{ fig7} 
   \begin{minipage}[b]{0.5\linewidth}
     \centering
@@ -886,8 +886,6 @@ Unfortunately, due to the high number of nodes, it is hard to see the evolution 
 \label{fig:latentspace_afew}
 \end{figure}
 
-In Fig. \ref{fig:trajectories_species} and \ref{fig:trajectories_region} the trajectories in the latent space by 100 randomly selected species and regions are reported. A in-depth look at these trajectories suggest that there are patterns in the movements of region and species in the latent space. The trajectories of nodes in the latent space correspond to the co-invasion of species into regions. We now focus our interest into analysing these patterns in the trajectories. 
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{trajectories_species.png}
@@ -895,7 +893,10 @@ In Fig. \ref{fig:trajectories_species} and \ref{fig:trajectories_region} the tra
     \label{fig:trajectories_species}
 \end{figure}
 
-\begin{figure}[H]
+In Fig. \ref{fig:trajectories_species} and \ref{fig:trajectories_region} the trajectories in the latent space by 100 randomly selected species and regions are reported. A in-depth look at these trajectories suggest that there are patterns in the movements of region and species in the latent space. The trajectories of nodes in the latent space correspond to the co-invasion of species into regions. We now focus our interest into analysing these patterns in the trajectories. 
+
+
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.75\textwidth]{trajectories_region.png}
     \caption{Plot of the evolution of trajectories in time for 100 randomly selected regions. The left image is for the X coordinate, the right image for the Y coordinate.}
@@ -906,7 +907,7 @@ Species that move in a similar way inside the latent space have the tendency to 
 
 Applying OPTICS to the species and regions in the latent space detected 67 clusters for species and 5 clusters for regions \ref{fig:cluster_density}. The dynamics of the clusters are reported in Fig. \ref{fig:latentspace_cluster} with all the nodes not belonging in any cluster greyed out. 
 
-\begin{figure}[ht] 
+\begin{figure}[H] 
   \begin{minipage}[b]{0.5\linewidth}
     \centering
     \includegraphics[width=\textwidth]{latentspace_cluster_species.png}
@@ -921,7 +922,7 @@ Applying OPTICS to the species and regions in the latent space detected 67 clust
 \label{fig:latentspace_cluster}
 \end{figure}
 
-\begin{figure}[ht] 
+\begin{figure}[H] 
   \label{ fig7} 
   \begin{minipage}[b]{0.5\linewidth}
     \centering
@@ -944,7 +945,7 @@ We now focus on analysing the Taxonomic Families of the species belonging to the
 
 The dimension of the Taxonomic Families is non-homogeneous. As shown in Fig. \ref{fig:hist_tax_fam}, Vascular Plants and the Insects are the largest Taxonomic Families. This should be taken into account when analysing the composition of clusters: a species belonging to one of the most abdundat families will have an higher probability of (indirectly) interacting with other species in the latent space.
 
-\begin{table}[]
+\begin{table}[H]
 \centering
 \begin{tabular}{|l|l|l|l|l|l|}
 \hline
@@ -965,8 +966,7 @@ Vascular plants & 64 \%     & 75 \%      & 53 \%      & 81 \%      & 57 \%      
 
 The clusters for the regions in the latent space are also interesting. For the regions we were able to detect 5 clusters using the OPTICS algorithm and they are reported in Table \ref{table:clusters_region}. 
 
-%TODO plot these cluster in world map
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \begin{tabular}{|l|l|l|l|l|}
 \hline
@@ -985,6 +985,14 @@ Slovakia  & Somalia                   & Suriname   & Libya               & Zambi
 \caption{Region clusters composition.}
 \label{table:clusters_region}
 \end{table}
+
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.85\textwidth]{region_geospatial_cluster.png}
+    \caption{The five clusters of regions on a geo-spatial map.}
+    \label{fig:trajectories_region}
+\end{figure}
 
 
 

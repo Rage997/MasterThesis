@@ -159,6 +159,7 @@ for index, row in most_invaded.iterrows():
 suisse_invasion = world_data[world_data['NAME'] == 'switzerland']
 print(suisse_invasion)
 # print(f'Switzerland has been invaded {suisse_invasion["invaded"]}')
+fig, ax = plt.subplots(figsize  = (15, 10))
 
 world_data.plot(
     column='invaded', 
@@ -176,3 +177,46 @@ plt.show()
 
 #Later
 #TODO plot gradient region invasion varying in time (will be used for presentation)
+
+
+
+# Plot the clusters into geospatial
+cluster0 = list(map(str.lower,['Russia', 'Italy', 'Canada', 'Estonia', 'Slovakia']))
+cluster1 = list(map(str.lower,['Armenia', 'Chad', 'Iran, Islamic Republic of', 'Mongolia', 'Somalia']))
+cluster2 = list(map(str.lower,['Lesotho', 'Mauritania', 'Gibraltar', 'Nepal', 'Suriname']))
+cluster3 = list(map(str.lower,['Peru', 'Andorra', 'Belize', 'Burkina Faso', 'Libya', 'Palestine, State of', 'Senegal', 'Tajikistan', 'Gabon', 'Congo']))
+cluster4 = list(map(str.lower,['Iraq', 'Nicaragua', 'Niger', 'Vietnam', 'Zambia', 'Central African Republic']))
+
+
+world_data['cluster'] = 'Unassigned'
+world_data.loc[world_data.NAME.isin(cluster0), 'cluster'] = 'Cluster 0'
+world_data.loc[world_data.NAME.isin(cluster1), 'cluster'] = 'Cluster 1'
+world_data.loc[world_data.NAME.isin(cluster2), 'cluster'] = 'Cluster 2'
+world_data.loc[world_data.NAME.isin(cluster3), 'cluster'] = 'Cluster 3'
+world_data.loc[world_data.NAME.isin(cluster4), 'cluster'] = 'Cluster 4'
+
+print(world_data.head())
+
+fig, ax = plt.subplots(figsize  = (15, 10))
+
+roadPalette = {'0': 'grey',
+               '1': 'green',
+               '2': 'purple',
+               '3': 'blue',
+               '4': 'red',
+               '5': 'yellow'}
+clusters_colors = ['sienna', 'darkcyan', 'darkred', 'darkseagreen', 'palegoldenrod', 'gainsboro']
+
+# Paired was a good Cmap too
+world_data.plot(
+    column='cluster', 
+    cmap = ListedColormap(clusters_colors),
+    # norm=matplotlib.colors.LogNorm(vmin=world_data.invaded.min(), vmax=world_data.invaded.max()),
+    ax = ax,
+    categorical=True,
+    legend=True
+    # scheme="quantiles"
+    # legend_kwds={'title': "Clusters: "}
+)
+plt.savefig(fig_path+'region_geospatial_cluster.png')
+plt.show()
