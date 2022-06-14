@@ -134,7 +134,7 @@ world_data.plot(column='intersection',
 )
 # ax.legend()
 # plt.savefig(path+'dataset_intersection.png')
-plt.show()
+# plt.show()
 
 # for island
 # df['Island'].replace(np.nan, 'Unknown', inplace=True)
@@ -172,8 +172,8 @@ world_data.plot(
                         'orientation': "horizontal"}
 )
 # ax.legend()
-plt.savefig(fig_path+'region_invasion.png')
-plt.show()
+# plt.savefig(fig_path+'region_invasion.png')
+# plt.show()
 
 #Later
 #TODO plot gradient region invasion varying in time (will be used for presentation)
@@ -184,7 +184,7 @@ plt.show()
 cluster0 = list(map(str.lower,['Russia', 'Italy', 'Canada', 'Estonia', 'Slovakia']))
 cluster1 = list(map(str.lower,['Armenia', 'Chad', 'Iran, Islamic Republic of', 'Mongolia', 'Somalia']))
 cluster2 = list(map(str.lower,['Lesotho', 'Mauritania', 'Gibraltar', 'Nepal', 'Suriname']))
-cluster3 = list(map(str.lower,['Peru', 'Andorra', 'Belize', 'Burkina Faso', 'Libya', 'Palestine, State of', 'Senegal', 'Tajikistan', 'Gabon', 'Congo']))
+cluster3 = list(map(str.lower,['Peru', 'Andorra', 'Belize', 'Burkina Faso', 'lybia', 'Palestine, State of', 'Senegal', 'Tajikistan', 'Gabon', 'Congo']))
 cluster4 = list(map(str.lower,['Iraq', 'Nicaragua', 'Niger', 'Vietnam', 'Zambia', 'Central African Republic']))
 
 
@@ -195,7 +195,10 @@ world_data.loc[world_data.NAME.isin(cluster2), 'cluster'] = 'Cluster 2'
 world_data.loc[world_data.NAME.isin(cluster3), 'cluster'] = 'Cluster 3'
 world_data.loc[world_data.NAME.isin(cluster4), 'cluster'] = 'Cluster 4'
 
-print(world_data.head())
+# print(world_data[world_data['cluster'] == 'Cluster 1'])
+print(world_data[world_data['cluster'] == 'Cluster 3'])
+
+# print(world_data.head())
 
 fig, ax = plt.subplots(figsize  = (15, 10))
 
@@ -219,4 +222,4 @@ world_data.plot(
     # legend_kwds={'title': "Clusters: "}
 )
 plt.savefig(fig_path+'region_geospatial_cluster.png')
-plt.show()
+# plt.show()
