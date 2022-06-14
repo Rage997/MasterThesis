@@ -941,9 +941,11 @@ Applying OPTICS to the species and regions in the latent space detected 67 clust
 \label{fig:cluster_density}
 \end{figure}
 
-We now focus on analysing the Taxonomic Families of the species belonging to the five largest clusters. Out of the 17 Taxonomic Families, only 9 are present in the five largest clusters. This shows that some Taxonomic Families are more keen into co-invasion than others. In Table \ref{table:clusters_species} we reported the percentage of the cluster's species in a taxonomic family if it's present in the cluster. Vascular Plants have a significant relevance. Birds and Insects trajectories in the latent space seems to be in agreement, meaning that they are likely to co-invade a region.
+%TODO subsection for species analysis ?
 
-The dimension of the Taxonomic Families is non-homogeneous. As shown in Fig. \ref{fig:hist_tax_fam}, Vascular Plants and the Insects are the largest Taxonomic Families. This should be taken into account when analysing the composition of clusters: a species belonging to one of the most abdundat families will have an higher probability of (indirectly) interacting with other species in the latent space.
+We now focus on analysing the taxonomic families of the species belonging to the five largest clusters. Out of the 18 Taxonomic Families, only 9 are present in the five largest clusters. This shows that some taxonomic families are more prominent to co-invade than others. In Table \ref{table:clusters_species} we reported the composition of the five largest clusters. If a taxonomic family is not found in a cluster, the entry is left empty. The plants family seems to have a significant relevance, it is present in all the clusters.  Birds and Insects seem to have the tendency to belong in the same clusters, meaning that they are likely to co-invade a region.
+
+The dimension of the Taxonomic Families is non-homogeneous. As shown in Fig. \ref{fig:hist_tax_fam}, Vascular Plants and the Insects are the largest Taxonomic Families. This should be taken into account when analysing the composition of clusters: a species belonging to one of the most abundant families will have an higher probability of (indirectly) interacting with other species in the latent space. In fact, plants and insects are generally the largest components of the clusters we detected.
 
 \begin{table}[H]
 \centering
@@ -964,7 +966,8 @@ Vascular plants & 64 \%     & 75 \%      & 53 \%      & 81 \%      & 57 \%      
 \label{table:clusters_species}
 \end{table}
 
-The clusters for the regions in the latent space are also interesting. For the regions we were able to detect 5 clusters using the OPTICS algorithm and they are reported in Table \ref{table:clusters_region}. 
+The clusters for the regions in the latent space are also interesting. Applying OPTICS clustering algorithm to the trajectories of the regions in the latent space detected $5$ clusters. They are reported in Table \ref{table:clusters_region}. For a better visualization, the regions are reported respectively with different colours for the cluster they belong to in Fig. \ref{fig:worldmap_cluster}.  It's interesting to note how some clusters in the latent space are close in terms of distance such as the regions belonging to the clusters number 3 and 4. Regions that are geographically close are expected to be invaded by the same group of species. However, this effect does not apply to all regions. Cluster $1$ in particular contains regions that are geographically not adjacent. This relation might be due to tight trade between states or ...
+
 
 \begin{table}[H]
 \centering
@@ -973,10 +976,10 @@ The clusters for the regions in the latent space are also interesting. For the r
 Cluster 0 & Cluster 1                 & Cluster 2  & Cluster 3           & Cluster 4                \\ \hline
 Russia    & Armenia                   & Lesotho    & Peru                & Iraq                     \\ \hline
 Italy     & Chad                      & Mauritania & Andorra             & Nicaragua                \\ \hline
-Canada    & Iran, Islamic Republic of & Gibraltar  & Belize              & Niger                    \\ \hline
+Canada    & Iran  & Gibraltar  & Belize              & Niger                    \\ \hline
 Estonia   & Mongolia                  & Nepal      & Burkina Faso        & Vietnam                  \\ \hline
 Slovakia  & Somalia                   & Suriname   & Libya               & Zambia                   \\ \hline
-          &                           &            & Palestine, State of & Central African Republic \\ \hline
+          &                           &            & Palestine & Central African Republic \\ \hline
           &                           &            & Senegal             &                          \\ \hline
           &                           &            & Tajikistan          &                          \\ \hline
           &                           &            & Gabon               &                          \\ \hline
@@ -986,45 +989,37 @@ Slovakia  & Somalia                   & Suriname   & Libya               & Zambi
 \label{table:clusters_region}
 \end{table}
 
-
+%TODO some regions are missing! fix it
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.85\textwidth]{region_geospatial_cluster.png}
-    \caption{The five clusters of regions on a geo-spatial map.}
-    \label{fig:trajectories_region}
+    \caption{The five clusters of regions on the world map.}
+    \label{fig:worldmap_cluster}
 \end{figure}
 
 
 
-%TODO our findings are in agreement with lady's paper -> comment these findings
-%The number of alien species found in a particular region. Both plants and insects were significantly affected by the number of species that have already invaded a certain region. However, whereas plants were recorded more frequently in regions already invaded by other plants, insects were less frequently recorded in regions that had already been invaded by other in- sects. The effects were nonetheless very small in both cases, i.e., affecting the hazard by 0.3% per invasion in the opposite direction.
-
-
-%TODO answer to research question
-
-%TODO what we accomplished
-
-%TODO what is the latent space structure of species invasions?
-
+%TODO write the conclusion of this chapter
 
 
 \chapter{Discussion}
 
 %1. Methodological contribution
-The problem of alien species requires real action but withouth first understanding the in-depth drivers of invasion it's hard to come up with any action at all. In the last decades, relational event models have been succesfully used to study the underneath drivers of dynamic social networks. Originally, relational event models were designed for small scale social networks. However, a traditional REM approach might not be always feasible due to the large size and complexity of a dataset and their high computationally cost.
+The problem of alien species requires real action but without first understanding the in-depth drivers of invasion it's hard to come up with any action at all. In the last decades, relational event models have been successfully used to study the underneath drivers of dynamic social networks. Originally, relational event models were designed for small scale social networks. However, a traditional REM approach might not be always feasible due to the large size and complexity of a dataset and its high computationally cost.
 
-In this thesis, we showed how to dispose the actors of a relational event model in a 2-dimensional latent space and how to make inferences about it. Our inference approach combined many different tools such as the Expectation Maximization algorithm, Kalman filters, and smoothers. Our method formulation can be applied to many different use cases and has many advantages over traditional statistical tools such as dimensionality reduction, a compact local configuration history of nodes, and a large flexibility. Our study on the alien species co-invasion shows that the method is feasible for a real world study. However, with the correct amount of modifications, our model can be applied to different problems and is not only limited to the study of a bipartite unidirectional graph as presented in this thesis. 
+In this thesis, we showed how to dispose of the actors of a relational event model in a 2-dimensional latent space and how to make inferences about it. Our inference approach combined many different tools such as the Expectation-Maximization algorithm, Kalman filters, and smoothers. Our method formulation can be applied to many different use cases and has many advantages over traditional statistical tools such as dimensionality reduction, a compact local configuration history of nodes, and large flexibility. Our study on the alien species co-invasion shows that the method is feasible for a real-world study. However, with the correct amount of modifications, our model can be applied to different problems and is not only limited to the study of a bipartite unidirectional graph as presented in this thesis. 
 
 %2. Analysis done
-We showed the applicability of our model it by analysing 15947 alien species invasion given by First Records Dataset. The analysis on the results of our model is based on studying clusters of trajectories in the latent space for both species and regions. However, this approach is limited, in particular for the species. We were able to detect 67 clusters for the species in the latent space, however, we only analysed the largest 5. This approach is acceptable for a first analysis and to show the capabilities of our custom latent space REM, but, for an in-depth analysis this is not sufficient. A more exaustive approach would have been to study the probability of, given a species, or a taxonomic family, find another species inside all the clusters found in the analysis. 
+We showed the applicability of our model by analyzing 15947 alien species invasions given by First Records Dataset. The analysis of the results of our model is based on studying clusters of trajectories in the latent space for both species and regions. We detected 67 clusters for the species and 5 for the regions in the latent space. Due to the high number of clusters found in the species, we focused on the 5 largest ones resulting in a non-exhaustive analysis. This approach is acceptable for a first analysis and to show the capabilities of our custom latent space REM, but, for an in-depth study of the co-invasion of species, this is not sufficient. A more exhaustive approach would have been to study the probability of, given a species, or a taxonomic family, finding another species inside all the clusters found in the analysis. 
  
 %3. limitation: sigma choice is somehow arbitrary
-Our approach requires the user to select the amount of noise $\Sigma$ that our model will use in the latent space process. A large $\Sigma$ will grant the model more dynamicity. In contrast, a small $\Sigma$ will make the model more conservative. The choice of this parameter is somehow arbitrary. An user might want to try different values of $\Sigma$ and analyse the dynamics of the latent space. Then, based on this feedback, update the value $\Sigma$ by either increasing or decreasing it. 
+Our approach requires the user to select the amount of noise $\Sigma$ that our model will use in the latent space process. A large $\Sigma$ will grant the model more dynamicity. In contrast, a small $\Sigma$ will make the model more conservative. The choice of this parameter is somehow arbitrary. A user might want to try different values of $\Sigma$ and analyze the dynamics of the latent space. Then, based on this feedback, update the value $\Sigma$ by either increasing or decreasing it. 
 
-The First Records Dataset is currently the most comprehensive and largest dataset available for first time records of alien species. However, it is a biased dataset towards regions such as Europe as a whole and taxonomic groups such as plants and insects. Furthermore, the information about the year of introduction of an alien species in a region is not precise and most of the times does not correspond to the year of actual introduction, which might have happened decades later. These bias and unreliability of the dataset affects our results.
+The First Records Dataset is currently the most comprehensive and largest dataset available for first-time records of alien species. However, it is a biased dataset towards regions such as Europe as a whole and taxonomic groups such as plants and insects. Furthermore, the information about the year of introduction of an alien species in a region is not precise and most of the time does not correspond to the year of actual introduction, which might have happened decades later. These biases and the unreliability of the dataset affected our results.
 
 % Recap + conclusion
-Concluding, we showed how a relational event model can be applied to a bipartite dynamic network and extended by included a latent space configuration of the nodes. We then presented to the reader a framework to analyse the results based on a clustering algorithm. The improvements and extension of already existing tools such as relational event models into more advanced and efficient methods capable of performing tipe-dependant analysis such as the study of alien species first records will help ecologist to investigate more in depth this ecological phenomena and, with hope, fully understand its dynamics. 
+Concluding, we showed how a relational event model can be applied to a bipartite dynamic network and extended by including a latent space configuration of the nodes. We then presented to the reader a framework to analyze the results based on a clustering algorithm. The improvements and extension of already existing tools such as relational event models into more advanced and efficient methods capable of performing time-dependent analysis such as the study of alien species' first records will help ecologists to investigate this ecological phenomenon in-depth and to come up with real-world actions. 
+
 
 %\nocite{*}
 
