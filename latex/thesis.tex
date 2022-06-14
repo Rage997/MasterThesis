@@ -168,7 +168,7 @@ Bacteria   & Crustaceans & Invertebrates & Spiders  &                 \\ \hline
 \label{table:families}
 \end{table}
 
-We focus our research on the time interval spanning from 1850 to 2010. Taking into consideration all taxonomic families, this timeframes covers a total of 19390 alien species. As Fig. \ref{fig:hist_tax_fam} shows, the distribution of alien species is not uniform between taxonomic families, with the largest two taxonomic families in the dataset being the "Vascular Plants" and "Insects". This is important to take into consideration when analysing the results because a non-uniform distribution of species into taxonomic families will result in a higher probability of a species interacting, in some way, with a species belonging to one of the most abundant taxonomic families.
+\noindent We focus our research on the time interval spanning from 1850 to 2010. Taking into consideration all taxonomic families, this timeframes covers a total of 19390 alien species. As Fig. \ref{fig:hist_tax_fam} shows, the distribution of alien species is not uniform between taxonomic families, with the largest two taxonomic families in the dataset being the "Vascular Plants" and "Insects". This is important to take into consideration when analysing the results because a non-uniform distribution of species into taxonomic families will result in a higher probability of a species interacting, in some way, with a species belonging to one of the most abundant taxonomic families.
 %Info right after import t = (1850, 2010)
 %There are 18 families and 276 regions
 %There are 19390 species.
@@ -189,7 +189,7 @@ We focus our research on the time interval spanning from 1850 to 2010. Taking in
 \end{minipage}
 \end{figure}
 
-Intuitively, the amount of invasion per year increases over time mainly due to factors such as worldwide effects such as the growth of intercontinental trading and an increased worldwide connectivity \cite{intro:ecological}. This claim is indeed supported by the dataset. The number of invasions per year is monotonically increasing (Fig. \ref{fig:invasion_per_year}). The high downward trend around the year 2000 of invasions should not be trusted because the dataset is being constantly updated and most recent data may still be missing. With the same argument, data before 1850 may not be accurate and reliable enough for an in-depth study. For these reasons, we decided to trim the dataset from 1850 to 2010 to ensure the trustiness of the data. 
+\noindent Intuitively, the amount of invasion per year increases over time mainly due to factors such as worldwide effects such as the growth of intercontinental trading and an increased worldwide connectivity \cite{intro:ecological}. This claim is indeed supported by the dataset. The number of invasions per year is monotonically increasing (Fig. \ref{fig:invasion_per_year}). The high downward trend around the year 2000 of invasions should not be trusted because the dataset is being constantly updated and most recent data may still be missing. With the same argument, data before 1850 may not be accurate and reliable enough for an in-depth study. For these reasons, we decided to trim the dataset from 1850 to 2010 to ensure the trustiness of the data. 
 
 % ------- ten most invaded regions ---------
 %\begin{table}[ht]
@@ -439,7 +439,7 @@ We are interested in estimating the configuration of the state $x \in \mathcal{R
 \end{eqfloat}
 
 
-We define $\hat{x}_k^-$ to be our a-priori estimate of the state $x$ at time $k$, given the knowledge of the previous state. Similarly, we define $\hat{x}_k$ to be our a-posteriori estimate at time $k$ given a measurement $y_k$. 
+\noindent We define $\hat{x}_k^-$ to be our a-priori estimate of the state $x$ at time $k$, given the knowledge of the previous state. Similarly, we define $\hat{x}_k$ to be our a-posteriori estimate at time $k$ given a measurement $y_k$. 
 
 We forecast an update of the estimation of $\hat{x} \approx x$ in time
 
@@ -548,7 +548,7 @@ The risk set $\mathcal{R}_t$ \footnote{To avoid confusion, note that Butts origi
 \mathcal{R}_{t} = \{(s,r) \; | \; \textrm{may occurs} \; \textrm{at} \; t_i\}
 \]
 
-The waiting time $T_{s,r}$ for a particular dyad to happen between a species $s$ and a region $r$ is assumed to be exponentially distributed 
+\noindent The waiting time $T_{s,r}$ for a particular dyad to happen between a species $s$ and a region $r$ is assumed to be exponentially distributed 
 
 \[
 T_{s,r} \sim Exp(\lambda(s, r, t)
@@ -561,7 +561,7 @@ In the above equation, the hazard function $\lambda$ is defined as
 \lambda(s, r, t) = \lim_{\delta t \lim 0^+} \frac{P(t \leq T_{s,r} \leq t + \delta t | t \leq T_{s,r})}{\delta t}
 \]
 
-The hazard function can be interpreted as the expected number of relational events in a time interval of length one, conditionally on the previous network events. The most commonly used hazard function is the Cox proportional hazard model. 
+\noindent The hazard function can be interpreted as the expected number of relational events in a time interval of length one, conditionally on the previous network events. The most commonly used hazard function is the Cox proportional hazard model. 
 
 %%Theta is what thet called beta in Igor's paper (change it?)
 
@@ -569,7 +569,7 @@ The hazard function can be interpreted as the expected number of relational even
 \lambda(s, r, t) = \lambda_0(t) \cdot exp({X_{sr}^{(t)} \beta} )
 \]
 
-In this equation, $\lambda_0$ represents a baseline hazard for all dyads in the risk set $\mathcal{R}$. Instead, the variable $X_{sr}^{(t)}$ is some dyadic covariate at time $t$. To estimate the parameters $\beta$ we maximize the partial likelihood of the Cox proportional hazard model 
+\noindent In this equation, $\lambda_0$ represents a baseline hazard for all dyads in the risk set $\mathcal{R}$. Instead, the variable $X_{sr}^{(t)}$ is some dyadic covariate at time $t$. To estimate the parameters $\beta$ we maximize the partial likelihood of the Cox proportional hazard model 
 
 %TODO make the connection between the two models stronger.
 \[
@@ -583,7 +583,7 @@ L(\beta) =  \prod_{i=1}^n P(Y_k | \lambda_k)
 \]
 
 
-Typically the research interest is to estimate the factors that increase, or decrease, the likelihood $L$, more specifically, the parameter $\beta$.
+\noindent Typically the research interest is to estimate the factors that increase, or decrease, the likelihood $L$, more specifically, the parameter $\beta$.
 
 
 \section{Latent space REM}
@@ -596,7 +596,7 @@ Every invasion of a species $s \in S$ and region $r \in R$, where $S, R$ are res
 N_t(s, r) = \textrm{number of invasions of} \; s \; \textrm{in} \; r \; \textrm{in the interval} \; [0, t]
 \]
 
-An alien species is not allowed to leave a region after an invasion has happened and, eventually, invade it a second time. Therefore, an invasion can happen only once. The counting process $N$ is therefore bounded by 1. We define $T(s, r)$ to be a function that returns the time of invasion for specie $s$ an region $r$. The function $N$ can either take a value of one or zero depending on whether an invasion happened previously to $t$ for a determined region and species.
+\noindent An alien species is not allowed to leave a region after an invasion has happened and, eventually, invade it a second time. Therefore, an invasion can happen only once. The counting process $N$ is therefore bounded by 1. We define $T(s, r)$ to be a function that returns the time of invasion for specie $s$ an region $r$. The function $N$ can either take a value of one or zero depending on whether an invasion happened previously to $t$ for a determined region and species.
 
 
 \begin{eqfloat}
@@ -612,7 +612,7 @@ N_t(s, r) = 1 \; if \; t \geq T(s, r)
 
 % Introduce the latent space
 
-We dispose our actors, which are species and regions, into a latent space $X \in \mathcal{R}^n$. Each actor is assigned a position inside $X$. It is worth mentioning, to avoid confusion, that these positions in $X$ are disconnected from the real world. The closeness of two actors in the latent space $X$ does not imply their closeness on the world map. We then define $Y$, the observed state. In our study, the observed state is the observed count of invasions modelled as Poisson. Similarly to the state space model in Eq. \ref{eq:statespace}, we define
+\noindent We dispose our actors, which are species and regions, into a latent space $X \in \mathcal{R}^n$. Each actor is assigned a position inside $X$. It is worth mentioning, to avoid confusion, that these positions in $X$ are disconnected from the real world. The closeness of two actors in the latent space $X$ does not imply their closeness on the world map. We then define $Y$, the observed state. In our study, the observed state is the observed count of invasions modelled as Poisson. Similarly to the state space model in Eq. \ref{eq:statespace}, we define
 
 \begin{eqfloat}
 \begin{equation}
@@ -653,7 +653,7 @@ dist_{dot}(u, v) = u \cdot v
 %\caption{Euclidean distance and dot product}
 \end{eqfloat}
 
-We chose the distance in the vector space $X$ to be the dot product. The Euclidean distance imposes a geometric interpretation. In contrast, the dot product yields a spherical structure to the data. We expect the species-region similarities to be better described by the latter and has the additional advantage to be piecewise linear in the latent locations $X$.
+\noindent We chose the distance in the vector space $X$ to be the dot product. The Euclidean distance imposes a geometric interpretation. In contrast, the dot product yields a spherical structure to the data. We expect the species-region similarities to be better described by the latter and has the additional advantage to be piecewise linear in the latent locations $X$.
 
 %TODO why dot is better?
 
@@ -712,7 +712,7 @@ x_{k} \sim N( \hat{x}_k, \hat{V}_k)
 \hat{V}_k = V[\hat{x}^-_k]
 \]
 
-Where $\hat{x}^-_k$  is an a-priori distribution of the state $x$ at time $k$, given the knowledge of the previous state. Hence, by exploiting the natural formulation of our latent space model (Eq. \ref{eq:latentspace}) we can solve the computationally challenging E-step by means of a Kalman filter by approximating the quantity $Q$ in function of its first two conditioned moments $E$, $V$. 
+\noindent Where $\hat{x}^-_k$  is an a-priori distribution of the state $x$ at time $k$, given the knowledge of the previous state. Hence, by exploiting the natural formulation of our latent space model (Eq. \ref{eq:latentspace}) we can solve the computationally challenging E-step by means of a Kalman filter by approximating the quantity $Q$ in function of its first two conditioned moments $E$, $V$. 
 
 \noindent The initial state $x_0$ is a random vector with a known mean and variance.
 
@@ -787,8 +787,7 @@ K_k = V_k^- H^T_k (H_k V_k^- H^T_k + R_k)^{-1}  \quad , \; H_k = \frac{d}{dx} h(
 %\label{eq:ext_kalmann_update}
 %\end{eqfloat}
 
-%TODO stick this algo to top of the page.
-\begin{algorithm}[H]
+\begin{algorithm}[t]
 \textbf{Initialize: }
 \begin{substeps}
 $\hat{x}_0 = \mu_0 = E[x_0]$ \;
@@ -863,10 +862,9 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 
 \chapter{Results}
 
-In this section, we analyze the results from fitting our model on $15947$ alien species invasions from $1850$ to $2010$, as described in Section \ref{sec:dataset}. In the dataset, there are $1724$ species and $153$ regions. To report the results in the clearest way, we decided to distinguish the region and spaces nodes in the latent space. In Fig. \ref{fig:latentspace_config} the initial and final configuration of the latent space is reported for species and regions. 
+In this section, we analyze the results from fitting our model on $15947$ alien species invasions from $1850$ to $2010$, as described in Section \ref{sec:dataset}. In the dataset, there are $1724$ species and $153$ regions. To report the results in the clearest way, we decided to distinguish the region and spaces nodes in the latent space. In Fig. \ref{fig:latentspace_config} the initial and final configuration of the latent space is reported for species and regions. Here, the trajectories are linear for the sake of visualization.
 
-Unfortunately, due to the high number of nodes, it is hard to see the evolution of the latent space. In Fig. \ref{fig:latentspace_afew} we focus on a set of 25 randomly chosen nodes to highlight the dynamics of nodes in the latent space. The nodes that tend to have similar behavior (i.e. have the tendency to co-invade) will move towards each other. In contrast, nodes that express a contrary behavior will push each other further. The black arrows show the trajectory in time. There are 17 timesteps in total (the years from 1850 to 2010). Some trajectories are linear and others are elliptic. Species that move with the same trajectory in the latent space will have a tendency to co-invade regions, similarly, regions that move with the same trajectory are more likely to be invaded by the same group of species.
-
+\noindent Unfortunately, due to the high number of nodes, it is hard to see the evolution of the latent space. In Fig. \ref{fig:latentspace_afew} we focus on a set of 25 randomly chosen nodes to highlight the dynamics of nodes in the latent space. The nodes that tend to have similar behavior (i.e. have the tendency to co-invade) will be close to each other. In contrast, nodes that express a contrary behavior will push each other further. The black arrows show the trajectory in time. There are 17 timesteps in total (the years from 1850 to 2010). 
 
 \begin{figure}[H] 
   \begin{minipage}[b]{0.5\linewidth}
@@ -879,7 +877,7 @@ Unfortunately, due to the high number of nodes, it is hard to see the evolution 
     \includegraphics[width=\linewidth]{latentspace_region.png} 
     \vspace{4ex}
   \end{minipage}  
-\caption{Latent space initial and final configurations. The black arrows shows the movement in space from the initial state to the final state.}
+\caption{Latent space initial and final configurations. The black arrows shows the movement in space from the initial state (blue) to the final state (red).}
 \label{fig:latentspace_config}
 \end{figure}
 
@@ -907,17 +905,16 @@ Unfortunately, due to the high number of nodes, it is hard to see the evolution 
     \label{fig:trajectories_species}
 \end{figure}
 
-In Fig. \ref{fig:trajectories_species} and \ref{fig:trajectories_region} the trajectories in the latent space by 100 randomly selected species and regions are reported. An in-depth look at these trajectories suggests that there are patterns in the movements of regions and species in the latent space. The trajectories of nodes in the latent space correspond to the co-invasion of species into regions. We now focus our interest on analyzing these patterns in the trajectories. 
-
+\noindent In Fig. \ref{fig:trajectories_species} and \ref{fig:trajectories_region} the trajectories in the latent space by 100 randomly selected species and regions are reported. An in-depth look at these trajectories suggests that there are patterns in the movements of regions and species in the latent space. We now focus our interest on analyzing these patterns in the trajectories.
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.75\textwidth]{trajectories_region.png}
-    \caption{Plot of the evolution of trajectories in time for 100 randomly selected regions. The left image is for the X coordinate, the right image for the Y coordinate.}
+    \caption{Plot of the evolution of trajectories in time for 100 randomly selected regions. The left image is for the horizontal coordinate, the right image for the vertical coordinate.}
     \label{fig:trajectories_region}
 \end{figure}
 
-Species that move in a similar way inside the latent space tend to co-invade. Similarly, regions that move analogously will have the tendency to be co-invaded by the same group of species. To detect nodes that move in a homogeneous way we decided to use a clustering algorithm. We settled on using a \textit{Ordering points to identify the clustering structure} (\textbf{OPTICS}) algorithm to perform the clustering. OPTICS is a variation of the DBScan clustering algorithm, which an in-depth cover is out of the scope of this thesis. This algorithm is really similar to DBSCan but addresses one of the major flaws of the algorithm. DBSCan does not perform very well on data with a non-uniform density. 
+Species that move in a similar way inside the latent space tend to co-invade. Similarly, regions that move analogously will have the tendency to be co-invaded by the same group of species. To detect nodes that move in a homogeneous way we decided to use a clustering algorithm over the estimated trajectories. We settled on using a \textit{Ordering points to identify the clustering structure} (\textbf{OPTICS}) algorithm to perform the clustering. OPTICS is a variation of the DBScan clustering algorithm, which an in-depth cover is out of the scope of this thesis. This algorithm is really similar to DBSCan but addresses one of the major flaws of the algorithm. DBSCan does not perform very well on data with a non-uniform density. 
 
 Applying OPTICS to the species and regions in the latent space detected 67 clusters for species and 5 clusters for regions \ref{fig:cluster_density}. The dynamics of the clusters are reported in Fig. \ref{fig:latentspace_cluster} with all the nodes not belonging in any cluster greyed out. 
 
@@ -1023,7 +1020,7 @@ Slovakia  & Somalia                   & Suriname   & Libya               & Zambi
 %1. Methodological contribution
 The problem of alien species requires real action but without first understanding the in-depth drivers of invasion it's hard to come up with any action at all. In the last decades, relational event models have been successfully used to study the underneath drivers of dynamic social networks. Originally, relational event models were designed for small scale social networks. However, a traditional REM approach might not be always feasible due to the large size and complexity of a dataset and its high computationally cost.
 
-In this thesis, we showed how to dispose of the actors of a relational event model in a 2-dimensional latent space and how to make inferences about it. Our inference approach combined many different tools such as the Expectation-Maximization algorithm, Kalman filters, and smoothers. Our method formulation can be applied to many different use cases and has many advantages over traditional statistical tools such as dimensionality reduction, a compact local configuration history of nodes, and large flexibility. Our study on the alien species co-invasion shows that the method is feasible for a real-world study. However, with the correct amount of modifications, our model can be applied to different problems and is not only limited to the study of a bipartite unidirectional graph as presented in this thesis. 
+In this thesis, we showed how to dispose a relational event model actors in a 2-dimensional latent space and how to make inferences on their latent coordinates. Our inference approach combined many different tools such as the Expectation-Maximization algorithm, Kalman filters, and smoothers. Our method formulation can be applied to many different use cases and has many advantages over traditional statistical tools such as dimensionality reduction, a compact local configuration history of nodes, and large flexibility. Our study on the alien species co-invasion shows that the method is feasible for a real-world study. However, with the correct amount of modifications, our model can be applied to different problems and is not only limited to the study of a bipartite unidirectional graph as presented in this thesis. 
 
 %2. Analysis done
 We showed the applicability of our model by analyzing 15947 alien species invasions given by First Records Dataset. The analysis of the results of our model is based on studying clusters of trajectories in the latent space for both species and regions. We detected 67 clusters for the species and 5 for the regions in the latent space. Due to the high number of clusters found in the species, we focused on the 5 largest ones resulting in a non-exhaustive analysis. This approach is acceptable for a first analysis and to show the capabilities of our custom latent space REM, but, for an in-depth study of the co-invasion of species, this is not sufficient. A more exhaustive approach would have been to study the probability of, given a species, or a taxonomic family, finding another species inside all the clusters found in the analysis. 
@@ -1031,7 +1028,7 @@ We showed the applicability of our model by analyzing 15947 alien species invasi
 %3. limitation: sigma choice is somehow arbitrary
 Our approach requires the user to select the amount of noise $\Sigma$ that our model will use in the latent space process. A large $\Sigma$ will grant the model more dynamicity. In contrast, a small $\Sigma$ will make the model more conservative. The choice of this parameter is somehow arbitrary. A user might want to try different values of $\Sigma$ and analyze the dynamics of the latent space. Then, based on this feedback, update the value $\Sigma$ by either increasing or decreasing it. 
 
-The First Records Dataset is currently the most comprehensive and largest dataset available for first-time records of alien species. However, it is a biased dataset towards regions such as Europe as a whole and taxonomic groups such as plants and insects. Furthermore, the information about the year of introduction of an alien species in a region is not precise and most of the time does not correspond to the year of actual introduction, which might have happened decades later. These biases and the unreliability of the dataset affected our results.
+The First Records Dataset is currently the most comprehensive and largest dataset available for first-time records of alien species. However, it is an unevenly populated dataset towards regions such as Europe as a whole and taxonomic groups such as plants and insects. Furthermore, the information about the year of an alien species introduction in a region is not precise and most of the time does not correspond to the year of actual introduction, which might have happened decades later. These biases and the unreliability of the dataset affected our results.
 
 % Recap + conclusion
 Concluding, we showed how a relational event model can be applied to a bipartite dynamic network and extended by including a latent space configuration of the nodes. We then presented to the reader a framework to analyze the results based on a clustering algorithm. The improvements and extension of already existing tools such as relational event models into more advanced and efficient methods capable of performing time-dependent analysis such as the study of alien species' first records will help ecologists to investigate this ecological phenomenon in-depth and to come up with real-world actions. 
