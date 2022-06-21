@@ -101,7 +101,7 @@ During the last centuries, human research on the diffusion of species substantia
 In this thesis, we present a novel relational event model approach with an underlying latent space framework. We show how this model can be applied to a bipartite unidirectional graph by studying the real-world case of alien species invasions. We fit our model to the most exhaustive dataset of first alien species records currently available.
 
 %% What we got
-Using years of first records of 36013 invasions of alien species from 18 taxonomic groups spanning from 1850 to 2010 we show how a custom relational event model can be used to model the dynamics of species co-invasion by embedding the species-region interactions into a latent space. We then show how to infer the structure of this space and the relationship between species and regions. 
+Using years of first records of 15947 invasions of alien species from 18 taxonomic groups spanning from 1850 to 2010 we show how a custom relational event model can be used to model the dynamics of species co-invasion by embedding the species-region interactions into a latent space. We then show how to infer the structure of this space and the relationship between species and regions. 
 
 %Furthermore, due to the high size of the dataset, we also present a high-performance python implementation of our model.
 
@@ -152,7 +152,7 @@ We structure the rest of this thesis as follows. In chapter 2 we make a prelimin
 
 \chapter{Materials and methods}
 \label{sec:dataset}
-Our study of the co-invasion of species is based on the Alien Species First Records database \cite{intro:dataset} which to date is the most exhaustive source of first records of alien species currently available. The dataset contains the years of the first establishment of alien species in regions worldwide. This dataset has been updated many times to include a more in-depth amount of data on the alien species \cite{intro:datasetv2} and nowadays still in continuously update. The current version includes 61,751 invasions of 23,191 species divided into 18 taxonomic families (listed in Tab. \ref{table:families}) in 276 regions\footnote{Regions generally correspond to countries but in the dataset available almost half regions are islands.} ranging from 7000 BC to 2020 AD.
+Our study of the co-invasion of species is based on the Alien Species First Records database \cite{intro:dataset} which to date is the most exhaustive source of first records of alien species currently available. The dataset contains the years of the first establishment of alien species in regions worldwide. This dataset has been updated many times to include a more in-depth amount of data on the alien species \cite{intro:datasetv2} and nowadays still in continuously update. The current version includes 61,751 invasions of 23,191 species divided into 18 taxonomic families, listed in Table \ref{table:families}, in 276 regions\footnote{Regions generally correspond to countries but in the dataset available almost half regions are islands.} ranging from 7000 BC to 2020 AD.
 
 
 \begin{table}[H]
@@ -255,7 +255,7 @@ Contrary to what was expected, some regions have a significantly larger number o
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{coinvasion.png}
-    \caption{Symmetric interactions between insects in co-invading events. Each node represents a species and the edge represents the strength of the co-invasion factor. A thick edge indicates that a spread of one of the two species in the relationship is typically followed by the invasion of the second. Image gently taken from \cite{intro:ecological}}
+    \caption{Symmetric interactions between insects in co-invading events. Each node represents a species and the edge represents the strength of the co-invasion factor. A thick edge indicates that a spread of one of the two species in the relationship is typically followed by the invasion of the second. Image gently taken from \citet{intro:ecological}}
     \label{fig:hist_tax_fam}
 \end{figure}
 
@@ -395,7 +395,7 @@ The computation of the expectation $E[Q(\theta^n)]$ is typically computationally
 \section{Kalman Filter}
 \label{sec:kalman}
 
-In 1960 R.E. Kalman published his paper describing a recursive solution to the discrete-data linear filtering problem (\citet{paper:kalmanfilter}). Since then, the Kalman filter gained extreme popularity in the machine learning and robotics research field, particularly in the area of autonomous navigation systems. The Kalman filter estimates the evolution of a process by using feedback control. The filter first computes an estimation of the current process state at some time, then, tries to "filter out" the measurement noise in an iterative process. As such, the Kalman filter equations can be subdivided into two categories: the prediction step and the update step. The prediction step is responsible for projecting forward in time the current state of the system. The update step takes the a-prior estimate given from the prediction step and by taking new measurements of the error tries to obtain an improved a-posterior estimate of the state. Indeed, the general form of the algorithm resembles a predictor-corrector algorithm for solving numerical problems. In this chapter, a brief non-technical overview of the Kalman filter is provided. A reader interested in a more in-depth discussion of the formulation of the Kalman filter is advised to read \citet{paper:Maybeck79}.
+In 1960 R.E. Kalman published his paper describing a recursive solution to the discrete-data linear filtering problem \citet{paper:kalmanfilter}. Since then, the Kalman filter gained extreme popularity in the machine learning and robotics research field, particularly in the area of autonomous navigation systems. The Kalman filter estimates the evolution of a process by using feedback control. The filter first computes an estimation of the current process state at some time, then, tries to "filter out" the measurement noise in an iterative process. As such, the Kalman filter equations can be subdivided into two categories: the prediction step and the update step. The prediction step is responsible for projecting forward in time the current state of the system. The update step takes the a-prior estimate given from the prediction step and by taking new measurements of the error tries to obtain an improved a-posterior estimate of the state. Indeed, the general form of the algorithm resembles a predictor-corrector algorithm for solving numerical problems. In this chapter, a brief non-technical overview of the Kalman filter is provided. A reader interested in a more in-depth discussion of the formulation of the Kalman filter is advised to read \citet{paper:Maybeck79}.
 
 %A very “friendly” introduction to the
 %general idea of the Kalman filter can be found in Chapter 1 of [Maybeck79], while a more complete
@@ -736,7 +736,7 @@ x_{k} \sim N( \hat{x}_k, \hat{V}_k)
 \hat{V}_k^- =  V_{k-1} + \Sigma
 \end{array}
 \end{equation}
-%\caption{Prediction step}
+\caption{}
 \label{eq:ext_kalmann_prediction}
 \end{eqfloat}
 
@@ -749,7 +749,7 @@ x_{k} \sim N( \hat{x}_k, \hat{V}_k)
 V_k = (I-K_k H_k)V_k^-
 \end{array}
 \end{equation}
-%\caption{Prediction step}
+\caption{}
 \label{eq:ext_kalmann_forward}
 \end{eqfloat}
 
@@ -765,7 +765,7 @@ V_k = (I-K_k H_k)V_k^-
 \begin{equation}
 K_k = V_k^- H^T_k (H_k V_k^- H^T_k + R_k)^{-1}  \quad , \; H_k = \frac{d}{dx} h(x)
 \end{equation}
-%\caption{Prediction step}
+\caption{}
 \label{eq:ext_kalmann_gain_matrix}
 \end{eqfloat}
 %
@@ -773,7 +773,7 @@ K_k = V_k^- H^T_k (H_k V_k^- H^T_k + R_k)^{-1}  \quad , \; H_k = \frac{d}{dx} h(
 %K_k = V_k^- H^T_k (H_k V_k^- H^T_k + R_k)^{-1}  \quad , \; H_k = \frac{d}{dx} h(x)
 %\]
 %
-\noindent We know updated the a-priori estimates of the mean and variance in Eq. \ref{eq:ext_kalmann_prediction} with the observation of state $y$. By combining equations (\ref{eq:ext_kalmann_prediction}), (\ref{eq:eq:ext_kalmann_forward}) and \ref{eq:ext_kalmann_gain_matrix} we get an algorithm for the Extended Kalman, described in Algorithm \ref{algo:ext_kalmann}. \\
+\noindent We know updated the a-priori estimates of the mean and variance in Eq. \ref{eq:ext_kalmann_prediction} with the observation of state $y$. By combining equations \ref{eq:ext_kalmann_prediction}, \ref{eq:ext_kalmann_forward} and \ref{eq:ext_kalmann_gain_matrix} we get an algorithm for the Extended Kalman, described in Algorithm \ref{algo:ext_kalmann}. \\
 
 %\begin{eqfloat}[H]
 %\begin{equation}
@@ -1053,7 +1053,7 @@ Concluding, we showed how a relational event model can be applied to a bipartite
 %\bibliography{biblio}
 
 %\bibliographystyle{abbrvnat}
-\bibliographystyle{plain} % We choose the "plain" reference style
+\bibliographystyle{plainnat} % We choose the "plain" reference style
 \bibliography{biblio} % Entries are in the refs.bib file
 %\cleardoublepage
 %\theindex %optional, use only if you have an index, must use
