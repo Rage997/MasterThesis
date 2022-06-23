@@ -27,6 +27,7 @@
 %\graphicspath{{Images/}{./}} % Specifies where to look for included images (trailing slash required)
 \graphicspath{ {../latex/figures/} }
 \usepackage{tabularx} % in the preamble
+\usepackage{movie15}
 
 \usepackage[linesnumbered,nosemicolon,noline]{algorithm2e}
 \usepackage{algpseudocode}
@@ -278,17 +279,6 @@ The most abdundant families are Vascularp Plants and Insects.
 
 \end{frame}
 
-\begin{frame}
-
-	The peak number of invasions per year is close to 5000 invasions around the year 2000, with an average number of invasions per year during the study of about 2800. Considering this number of average invasions per year and the fact that there are more than 20’000 species the dataset is considered to be sparse.
-
-\begin{figure}
-\includegraphics[width=0.5\linewidth]{invasion_per_year}
-		\caption{Number of species per taxonomic family.}
-	\end{figure}
-
-\end{frame}
-
 \subsection{Filtering the dataset}
 \begin{frame}
 	\frametitle{Filtering assumptions}
@@ -307,6 +297,18 @@ We are mainly interested in the interactions between larger regions. Islands are
     \centering
     \includegraphics[width=0.95\textwidth]{region_invasion.png}
 \end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Assumption 2: Remove non-relevant alien species}
+	The peak number of invasions per year is close to 5000 invasions around the year 2000, with an average number of invasions per year during the study of about 2800. Considering this number of average invasions per year and the fact that there are more than 20’000 species the dataset is considered to be sparse.
+
+\begin{figure}
+\includegraphics[width=0.5\linewidth]{invasion_per_year}
+		\caption{Number of species per taxonomic family.}
+	\end{figure}
 
 \end{frame}
 
@@ -340,6 +342,7 @@ Under these two assumption, we focused our research on $1724$ species and $153$ 
 % Model section 10 minutes
 %------------------------------------------------
 \section{Model}
+\subsection{Relational Event model}
 \begin{frame}
 	\frametitle{Relational Event Model (REM)}
 	
@@ -389,6 +392,7 @@ N_t(s, r) = \textrm{number of invasions of} \; s \; \textrm{in} \; r \; \textrm{
 An alien species is not allowed to leave a region after an invasion has happened and, eventually, invade it a second time. Therefore, an invasion can happen only once. The counting process $N$ is therefore bounded by 1.
 \end{frame}
 
+\subsection{Latent space REM}
 \begin{frame}
 	\frametitle{A latent space relational event model}
 	We dispose species and regions into a latent space $X \in \mathcal{R}^n$. Each actor is assigned a position inside $X$.
@@ -415,6 +419,10 @@ The observed counts $y$ are a result of the dynamics of the actor's positions an
 
 \[ \lambda^{s, r, k} = exp\left(\alpha-dist(x_s(k), x_r(k)) \cdot \lambda_1(k) \right) \cdot I \]
 
+\bigskip
+
+The matrix $I$ is a censoring matrix with entries $I_{s,r} = 0$ if an invasion has already happened.
+
 \end{frame}
 
 
@@ -434,6 +442,9 @@ The observed counts $y$ are a result of the dynamics of the actor's positions an
 %----------------------------------------------------------------------------------------
 % 	INFERENCE
 %----------------------------------------------------------------------------------------
+\section{Inference}
+
+\subsection{Expectation Maximization}
 \begin{frame}
 \title{Inference}
 
@@ -456,7 +467,7 @@ However a direct maximization is not possible. To infer on the structure of the 
 %with $Q(\beta^{n}, \Sigma^{n}) = E_{x|y} \left( log(p(x, y | \beta^{n-1}, \Sigma^{n-1}) \right)$
 
 \end{frame}
-
+\subsection{Kalman Filter}
 \begin{frame}
  By exploiting the natural formulation of our latent space model we can solve the computationally challenging E-step by means of a Kalman filter by approximating the quantity $Q$ in function of its first two conditioned moments $E$, $V$. 
 \end{frame}
@@ -544,6 +555,7 @@ Where $f = I$ and $h$ is a function dependent on the latent space $x$. Providing
 %
 %\end{frame}
 
+\subsection{Latent space REM inference framework}
 \begin{frame}
 \frametitle{Inference framework}
 \smallskip
@@ -566,7 +578,7 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 	$\beta = \textrm{argmax}_{\beta} Q$ \; 
 	\end{substeps}  	
 }
-\caption{Latent space REM inference.}
+\caption{Latent space REM infer framework.}
 \label{algo:rem_latent}
 \end{algorithm}
 \end{frame}
@@ -575,12 +587,16 @@ $\hat{V}_0 = V_0 = E[(x_0-\hat{x}_0)(x_0-\hat{x}_0)^T]$  \;
 %----------------------------------------------------------------------------------------
 
 \section{Results}
-
 \begin{frame}
 \frametitle{Results}
 
 We now focus on the results of our model applied to the dataset and the dynamics of the species and regions in the latent space.
 \end{frame}
+%
+%\begin{frame}
+%\includegraphics{dynamics.gif}
+%
+%\end{frame}
 
 %%TODO show video or gif and not pictures
 %\begin{frame}
@@ -674,10 +690,11 @@ Applying \textit{Ordering points to identify the clustering structure} OPTICS to
 %\end{figure}
 %\end{frame}
 
+\subsection{Insights from the species clusters}
 \begin{frame}
 %TODO table is outside....
 \frametitle{Insights from the species clusters}
-We select the five largest species and clusters.
+We select the five largest species clusters.
 \begin{table}[H]
 \smaller
 \centering
@@ -699,10 +716,10 @@ Vascular plants & 64 \%     & 75 \%      & 53 \%      & 81 \%      & 57 \%      
 \end{table}
 
 \end{frame}
-
+\subsection{Insights from the region clusters}
 \begin{frame}
-\frametitle{Insights from the reguon clusters}
-We select the five largest species and clusters.
+\frametitle{Insights from the region clusters}
+We select the five largest region clusters.
 
 \begin{table}[H]
 \smaller
@@ -750,7 +767,7 @@ The First Records Dataset is currently the largest dataset available for first-t
 
 \begin{itemize}
 \item it is  an unevenly populated dataset towards taxonomic groups such as plants and insects
-\item it is an unevenly populated dataset towards regions such as Europe as a whole
+\item regions such as Europe as a whole are much more fragmented that other regions such as the USA
 \item the information about the year of an alien species introduction in a region is not precise and most of the time does not correspond to the year of actual introduction, which might have happened decades later
 \end{itemize}
 \end{frame}
@@ -772,7 +789,6 @@ The First Records Dataset is currently the largest dataset available for first-t
 %    \label{fig:worldmap_cluster}
 %\end{figure}
 %\end{frame}
-
 
 \begin{frame}
 \frametitle{Conclusion}
@@ -869,7 +885,7 @@ The First Records Dataset is currently the largest dataset available for first-t
 
 \begin{frame}[plain] % The optional argument 'plain' hides the headline and footline
 	\begin{center}
-		{\Huge Thank you for you attention.}
+		{\Huge Thank you for your attention}
 		
 		\bigskip 
 		
@@ -888,6 +904,15 @@ The First Records Dataset is currently the largest dataset available for first-t
 	%\tableofcontents[pausesections] % Output the table of contents (break sections up across separate slides)
 \end{frame}
 
+%\begin{frame}
+%\frametitle{How do you choose \theta?}
+%\end{frame}
+%
+%
+%\begin{frame}
+%\frametitle{What distance did you choose in the latent space?}
+%\end{frame}
+%
 
 
 %----------------------------------------------------------------------------------------

@@ -1,0 +1,172 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf600
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fmodern\fcharset0 Courier;\f2\froman\fcharset0 Times-Roman;
+\f3\froman\fcharset0 Times-Italic;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red15\green112\blue1;\red24\green24\blue24;
+}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c0\c50196\c0;\cssrgb\c12549\c12549\c12549;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww26160\viewh17280\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs32 \cf0 \'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97 Introduction \'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97 \
+\
+Hello, my name is Niccolo Zuppichini and today I\'92m gonna present my master\'92s thesis. My advisor is prof. Ernst Wit and my co-advisor is Igor Artico.\
+\
+My thesis title is alien species modelling via relational event models.\
+\
+Not everyone might be familiar with the terminology \'93alien species\'94 -> definition\
+\
+As you can see in this graph the number of alien species is monotonically increasing. \
+\
+Alien species are problematic for a number of reasons. Remarkably:\
+\
+1. They are problematic to biodiversity. Alien species generally become predators or competitors in a new ecosystem. This also includes viruses and parasites that may negatively affect native animals\
+2. An estimate of the economic impact of alien species is close to 13 billion dollars annually.\
+\
+\
+It\'92s evident that alien species are a problem that needs to be addressed.\
+\
+Our study is interested in the dynamics of co-invasion of species. \
+\
+To this end, we employed the most exaustive dataset of alien species first records worldwide. This dataset includes more than 60\'92000 invasions of 23\'92000 alien species in 278 regions\
+\
+The species are divided in 18 un-evenly populated taxonomic families. Vascular plants and insects are the most popular. \
+\
+We decided to focus our research study in the timeframe ranging from 1850 to 2010 to ensure the reliability of the dataset. We excluded anything before 1850 with the assumption that the record may not be accurate and everything after 2010 because the dataset is continuously being updated and data may still be lacking behind.\
+\
+\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97 Spatial complexity \'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97 \
+\
+Unfortunately, the large number of 20\'92000 alien species is numerically unfeasible.\
+ \
+To reduce the number of alien species we made two assumptions.\
+\
+1 assumption: remove islands\
+Half of the regions in the dataset are islands. We are interested in studying the interactions between larger regions such as countries. Islands are not large enough to be interesting in our study. \
+\
+2 assumption: remove non-relevant species\
+\
+However, the dataset is sparse. The peak number of invasions is 5\'92000 and the number of species is 20\'92000.\
+\
+In these two pictures you can see 2 Probability Density Functions (PDF). The one on the left is largely left skewed with a mean of 4. That means that, on average, an alien species only invaded 4 regions out of the 276. On the right I reported the Probability Density Function after removing the alien species that did not invade a significant number of regions. The second assumption is to filter out all the species that did non invade a significant number of regions.\
+\
+Under these two assumptions, we focused our research 
+\f1 \cf2 \expnd0\expndtw0\kerning0
+on \cf3 15947\cf2  invasions lasting from \cf3 $1850$\cf2  to \cf3 $2010$\cf2 .\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0 \cf0 \kerning1\expnd0\expndtw0  \
+\
+\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97 Our Model \'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97 \
+\
+
+\fs40 Relational event model
+\fs32 \
+	A relational event is the interaction of a sender and receiver. In our case, the sender is a species and the receiver a region. A relational event\
+	is generally defined a tripled of a sender, receiver and time of event. In our study the relational event is given by alien species, region and time of invasion\
+	\
+	The REM framework is capable of studying temporal patterns and it\'92s an adaptable hypothesis testing tool. \
+	However due to the large number of possible local configurations (such as k-stars) it\'92s hard for a REM to keep track of the past configurations when applied to dynamics networks.\
+\
+	We define the Risk set as the set of all dyads for which, at a given time t, an event might occur.\
+	We assume the waiting time T for an invasion to happen between a species and a region to be exponentially distributed. \
+	The hazard function is the expected number of relational events in a time interval of lenght 1, conditionally on the previous network events \
+\
+	We model every invasion as a multivariate Poisson counting N. For a timestep t, the poisson counting N gives the number of invasions happened between r and s up to t.\
+	A species is not allowed to leave a country and invade it afterward. Therefore, the counting process is bounded by 1.\
+\
+
+\fs40 LATENT SPACE\
+
+\fs32 	We now dispose the species and regions into a latent space of dimension n. \
+	The equation shows the latent space dynamcis. X is the latent state and Y is the observed state. \
+\
+	In our study, the observed state is the number of invasions, modelled as Poisson. The observed state is a result of the dynamics in the latent state and interaction in the REM.\
+	The stochastic intensity of the counting process N is modelled by hazard lambda. Heuristically, we assume that lambda is a function of the distance of the nodes in the latent space.\
+	The rates lambda are censured by multiplying by the matrix I. The matrix I entires are either one or zero depeding if an invasion of a species into a region has already occurred.\
+\
+	Inside the latent space, the position of the nodes in the latent space is constrained by the distance to all  nodes in the latent space. \
+	The distances of the nodes in the latent space are given by their affinity to create a connection (which in our case is to invade) to a region. \
+	We therefore expect species that have the tendency to co-invade to be close in the latent space and regions that are invaded by the same group of species to be close as well under 	the same argument. \
+	Note that the position of the regions in the latent space has no direct relation with the real geospatial position in the world.\
+	We are interested in studying the structure of the latent space X\
+\
+Our goal is to maximise the marginal likelihood, however a direct maximization is not possible. To infer on the strucutre of the latent space X and the parameters theta, sigma we use the EM algorithm. \
+\
+Our latent space formulation allows us to solve the computationally expensive expectation step using a Kalman Filter. We approximate the quantity Q in terms of its first two moments.\
+\
+However, the process y is not linear. Here I report the latent space equations in a more general way. The function f is the identity function in our case and h is a function dependent on the latent space. The function h is not linear because it\'92s Poisson Distributed but we can linearise it around the mean and reconduct to the basic linear problem by means of a taylor expansion. \
+\
+We now have all the ingredients to make inference about our latent space relational event model\
+\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97 Results \'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97 \
+\
+We now comment our results from applying the model to the dataset. This movie shows the evolution of species and regions in the latent space.\
+To better comment on the dynamics of nodes in the latent space I selected 25 random nodes. Some nodes are moving closesly, other are moving far apart. \
+\
+Species that move in homogenoues trajectories inside the latent space have the tendency to co-invade regions. Similarly, regions that move in similar manner will have the tendency to be co-invaded by the same group of species.\
+To detect the nodes that move in a homogeneous way we decided to use a clustering algorithm. We settled on using OPTICS to cluster the trajectories. \
+\
+In this picture I reported the clusters. Each cluster is assigned a colour. The nodes that are grayed out do not belong in any cluster. Nodes belonging to the same cluster have the tendency to co-invade.\
+
+\f1 \cf2 \expnd0\expndtw0\kerning0
+\
+
+\f0 \cf0 \kerning1\expnd0\expndtw0 We report the five largest clusters for species and regions. \
+\
+1. Comment species clusters: \
+	Out of the 18 taxonomic families only 9 are present on the five largest clusters. This shows that some taxonomic families have an higher tendency to co-invade with species belonging to other families.\
+	Vascular plants are present in all clusters.\
+	Birds and insects families belong do the same clusters, meaning that these two families might have a tendency to co-invade\
+	\
+	However, the dimension of taxonomic families is not homogenoues and a species has an higer probability of interacting with species belonging to one of the largest taxonomic families. Which are infact plants and insects.
+\f2\fs24 \cf2 \expnd0\expndtw0\kerning0
+\
+
+\f0\fs32 \cf0 \kerning1\expnd0\expndtw0 \
+\
+2. Comment region clusters: \
+	The cluster of regions are interesting as well.\
+	some clusters have regions that are geospatially close. other clusters do not. In the latter, international trade, tourism or other global effects may have affected the diffusion of alien species\
+\
+\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97 Conclusion \'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97 \
+\
+
+\fs40 Dataset bias\
+\
+	
+\fs32 1. taxonomic groups\
+	2. the dataset contains much more detail on regions in europe. To make an example, america is considered as a whole and europe is really fragmented.\
+	3. an alien species might have been introduced decades earlier than the discovery year. Hence, the first introduction year in the dataset likely does not correspond to the actual introduction year
+\fs40 \
+
+\fs32 	These biases clearly affected our results.\
+\
+The contribution of this thesis is two fold:\
+	1. We showed a novel latent space relational event model formulation\
+	2. We showed a real world application of such model to the problem of alien species invasion worldwide\
+\
+Thank you for your attention.\
+\
+Please, questions\
+\
+\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97 QUESTIONS \'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97 \
+\
+Q1 comment on the choice of the distance\
+\
+Pretty much any distance. Generally, euclidean distance or dot product is chosen. \
+\pard\pardeftab720\sl300\sa240\partightenfactor0
+
+\f2\fs26\fsmilli13333 \cf2 \expnd0\expndtw0\kerning0
+The Euclidean distance imposes a geometric interpretation. In contrast, the dot product yields a spherical structure to the data. We expect the species-region similarities to be better described by the latter and has the additional advantage to be piecewise linear in the latent locations 
+\f3\i X 
+\f2\i0 . 
+\f0\fs32 \cf0 \kerning1\expnd0\expndtw0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+Q2 why those dynamics in the latent space?\
+\
+Each \'93jump\'94 in the latent space has a price. In some sense, our model is trying to be cheap with those jumps. Apparently it\'92s more convenient to move regions rather than species. My insights for this behaviour is that species are invading the same regions and for this reason it\'92s more convenient to move the regions rather than species in the latent space. This also means that the OPTCIS clustering algorithm failed to detect all the analogous trajectories of the species.\
+\
+\
+Q3 how do you choose theta?\
+\
+Theta is noise of the dynamics in the latent state. A large noise will allow larger jumps. A small noise will give a more static latent state. A large theta also allows your model to be more flexible on the data, that means that if you assumption is not true the model might still be able to describe the data.}
